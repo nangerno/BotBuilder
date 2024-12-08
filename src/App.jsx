@@ -12,10 +12,26 @@ import "react-flow-renderer/dist/theme-default.css";
 // Define custom node types
 const CustomNode = ({ data }) => {
   return (
-    <div style={{ padding: 10, border: '1px solid #222', borderRadius: '5px', backgroundColor: '#fff' }}>
+    <div style={{
+      padding: '15px',
+      border: '2px solid #007bff', // A blue border for nodes
+      borderRadius: '8px',
+      backgroundColor: '#f9f9f9', // Light background for nodes
+      boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Slight shadow for better visibility
+      width: '200px'
+    }}>
       <strong>{data.label}</strong>
-      <Handle type="source" position="right" />
-      <Handle type="target" position="left" />
+      {data.options && (
+        <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+          {data.options.map((option, index) => (
+            <li key={index} style={{ margin: '5px 0', fontSize: '14px' }}>
+              {option}
+            </li>
+          ))}
+        </ul>
+      )}
+      <Handle type="source" position="right" style={{ background: '#007bff' }} />
+      <Handle type="target" position="left" style={{ background: '#007bff' }} />
     </div>
   );
 };
@@ -23,25 +39,27 @@ const CustomNode = ({ data }) => {
 const initialNodes = [
   {
     id: "1",
-    type: "input",
-    data: { label: "I'm Wobi's bot" },
+    type: "custom", // Using custom type
+    data: { label: "I'm Wobi's bot", options: ["1", "2", "No match", "No reply"] }, // Added options to the main node
     position: { x: 250, y: 5 },
   },
   {
     id: "2",
-    data: { label: "Option A" },
-    position: { x: 100, y: 100 },
+    type: "custom",
+    data: { label: "Option A", options: ["1", "No match"] },
+    position: { x: 100, y: 150 },
   },
   {
     id: "3",
-    data: { label: "Option B" },
-    position: { x: 400, y: 100 },
+    type: "custom",
+    data: { label: "Option B", options: ["2", "No reply"] },
+    position: { x: 400, y: 150 },
   },
 ];
 
 const initialEdges = [
-  { id: "e1-2", source: "1", target: "2", animated: true },
-  { id: "e1-3", source: "1", target: "3", animated: true },
+  { id: "e1-2", source: "1", target: "2", animated: true, style: { stroke: "#007bff", strokeWidth: 2 } },
+  { id: "e1-3", source: "1", target: "3", animated: true, style: { stroke: "#007bff", strokeWidth: 2 } },
 ];
 
 function App() {
@@ -58,10 +76,7 @@ function App() {
   return (
     <div style={{ height: "100vh", width: "100%" }}>
       <ReactFlow
-        nodes={nodes.map((node) => ({
-          ...node,
-          type: node.type || 'custom', // Use custom type if defined
-        }))}
+        nodes={nodes}
         edges={edges}
         onConnect={onConnect}
         fitView
@@ -72,7 +87,7 @@ function App() {
         <Controls />
         <MiniMap />
       </ReactFlow>
-      
+
       {/* Deploy Button */}
       <div style={{ position: 'absolute', bottom: '20px', left: '20px' }}>
         <button onClick={handleDeploy} style={{

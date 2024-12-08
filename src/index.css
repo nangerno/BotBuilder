@@ -10,4 +10,48 @@ body {
     justify-content: center;
     align-items: center;
   }
-  
+/* App.css */
+.react-flow__node-default {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.react-flow__node {
+  width: 200px;
+  height: 80px;
+}
+
+.react-flow__edge {
+  stroke: #ddd;
+  stroke-width: 2px;
+}
+
+.react-flow__minimap {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.react-flow__controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.custom-node {
+  background-color: #e0e0e0;
+  padding: 10px;
+  border-radius: 10px;
+  width: 150px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.custom-node .react-flow__handle {
+  background: #555;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+}

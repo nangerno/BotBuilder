@@ -46,21 +46,15 @@ const initialNodes = [
   {
     id: "1",
     type: "custom",
-    data: { label: "I'm Wobi's bot", options: ["1", "2", "No match", "No reply"] },
+    data: { label: "New Block1", options: ["I'm Wobi's bot"] },
     position: { x: 100, y: 100 },
   },
   {
     id: "2",
     type: "custom",
-    data: { label: "Option A", options: ["1", "No match"] },
+    data: { label: "New Block2", options: ["1", "2", "No match", "No reply"] },
     position: { x: 550, y: 20 },
-  },
-  {
-    id: "3",
-    type: "custom",
-    data: { label: "Option B", options: ["2", "No reply"] },
-    position: { x: 550, y: 200 },
-  },
+  }
 ];
 
 const initialEdges = [
@@ -179,7 +173,7 @@ function App() {
       </div>
 
       {/* Deploy Button */}
-      <div style={{ position:"absolute", top:"60px", left:"20px" }}>
+      <div style={{ position:"absolute", top:"60px", left:"20px",  zIndex:"1000" }}>
         <button
           onClick={handleDeploy}
           style={{

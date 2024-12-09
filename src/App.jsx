@@ -9,7 +9,7 @@ import ReactFlow, {
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
 
-// Define CustomNode outside of the App component
+// Custom Node Component
 const CustomNode = ({ data }) => {
   return (
     <div

@@ -11,8 +11,10 @@ import ReactFlow, {
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
 
-// Custom Node Component
 const CustomNode = ({ data }) => {
+  const itemHeight = 0; // Set a fixed height for each list item
+  const handleOffset = 10; // Offset for handle positioning
+
   return (
     <div
       style={{
@@ -29,13 +31,17 @@ const CustomNode = ({ data }) => {
       {data.options && (
         <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
           {data.options.map((option, index) => (
-            <li key={index} style={{ margin: "5px 0", fontSize: "14px" }}>
+            <li key={index} style={{ margin: "5px 0", fontSize: "14px", position: 'relative' }}>
               {option}
               <Handle
                 type="source"
                 position="right"
-                id={`${data.label}-${option}-handle`} // Unique ID for each handle
-                style={{ top: `${50 + index * 20}%`, background: "#007bff" }}
+                id={`${option}-handle`}
+                style={{
+                  position: 'absolute',
+                  top: `${(index + 1) * itemHeight + handleOffset}px`, // Adjust based on item height
+                  background: "#007bff"
+                }}
               />
             </li>
           ))}
@@ -69,8 +75,8 @@ const initialNodes = [
 ];
 
 const initialEdges = [
-  { id: "e1-2", source: "1", target: "2", sourceHandle: "Start-Option A-handle" },
-  { id: "e1-3", source: "1", target: "3", sourceHandle: "Start-Option B-handle" },
+  { id: "e1-2", source: "1", target: "2", sourceHandle: "Option A-handle" },
+  { id: "e1-3", source: "1", target: "3", sourceHandle: "Option B-handle" },
 ];
 
 function App() {
@@ -140,7 +146,7 @@ function App() {
         onConnect={onConnect}
         fitView
         nodeTypes={nodeTypes}
-        style={{ backgroundColor:"#f0f0f0" }}
+        style={{ backgroundColor: "#f0f0f0" }}
         nodesDraggable={true}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
@@ -152,16 +158,15 @@ function App() {
         <MiniMap />
       </ReactFlow>
 
-      {/* Dropdown to add nodes */}
-      <div style={{ position:"absolute", top:"20px", left:"20px", zIndex:"1000" }}>
+      <div style={{ position: "absolute", top: "20px", left: "20px", zIndex: "1000" }}>
         <select
           onChange={(e) => {
             if (e.target.value) {
-              addNode(e.target.value, ["Option A", "Option B"]);
-              e.target.value = ""; // Reset the dropdown after adding a node
+              addNode(e.target.value, ["Option 1", "Option 2", "Option 3"]);
+              e.target.value = "";
             }
           }}
-          style={{ padding:"5px", fontSize:"16px" }}
+          style={{ padding: "5px", fontSize: "16px" }}
         >
           <option value="">Add New Node</option>
           <option value="Decision Node">Decision Node</option>
@@ -169,17 +174,16 @@ function App() {
         </select>
       </div>
 
-      {/* Deploy Button */}
-      <div style={{ position:"absolute", top:"60px", left:"20px", zIndex:"1000" }}>
+      <div style={{ position: "absolute", top: "60px", left: "20px", zIndex: "1000" }}>
         <button
           onClick={handleDeploy}
           style={{
-            padding:"10px",
-            backgroundColor:"#007bff",
-            color:"#fff",
-            borderRadius:"5px",
-            border:"none",
-            cursor:"pointer"
+            padding: "10px",
+            backgroundColor: "#007bff",
+            color: "#fff",
+            borderRadius: "5px",
+            border: "none",
+            cursor: "pointer"
           }}
         >
           Deploy Bot

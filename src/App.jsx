@@ -140,6 +140,7 @@ function App() {
         nodesDraggable={true} // Ensure this is set to true
         onNodeDoubleClick={onNodeDoubleClick}
         onNodeContextMenu={onNodeContextMenu}
+        draggable={true} // Ensure the entire canvas is draggable
       >
         <Background />
         <Controls />
@@ -164,7 +165,7 @@ function App() {
       </div>
 
       {/* Deploy Button */}
-      <div style={{ position:"absolute", bottom:"20px", left:"20px" }}>
+      <div style={{ position:"absolute", top:"60px", left:"20px" }}>
         <button
           onClick={handleDeploy}
           style={{

@@ -1,10 +1,12 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import ReactFlow, {
   addEdge,
   Background,
   Controls,
   MiniMap,
   Handle,
+  applyNodeChanges,
+  applyEdgeChanges,
 } from "react-flow-renderer";
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
@@ -45,19 +47,19 @@ const initialNodes = [
     id: "1",
     type: "custom",
     data: { label: "I'm Wobi's bot", options: ["1", "2", "No match", "No reply"] },
-    position: { x: 250, y: 5 },
+    position: { x: 100, y: 100 },
   },
   {
     id: "2",
     type: "custom",
     data: { label: "Option A", options: ["1", "No match"] },
-    position: { x: 100, y: 150 },
+    position: { x: 550, y: 20 },
   },
   {
     id: "3",
     type: "custom",
     data: { label: "Option B", options: ["2", "No reply"] },
-    position: { x: 400, y: 150 },
+    position: { x: 550, y: 200 },
   },
 ];
 
@@ -128,6 +130,17 @@ function App() {
     alert("Bot deployed! (This is a placeholder action.)");
   };
 
+  // Handle changes to nodes and edges
+  const onNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
+  );
+
+  const onEdgesChange = useCallback(
+    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    []
+  );
+
   return (
     <div style={{ height: "100vh", width: "100%" }}>
       <ReactFlow
@@ -138,9 +151,10 @@ function App() {
         nodeTypes={nodeTypes} // Use the memoized nodeTypes
         style={{ backgroundColor:"#f0f0f0" }}
         nodesDraggable={true} // Ensure this is set to true
+        onNodesChange={onNodesChange} // Handle nodes change
+        onEdgesChange={onEdgesChange} // Handle edges change
         onNodeDoubleClick={onNodeDoubleClick}
         onNodeContextMenu={onNodeContextMenu}
-        draggable={true} // Ensure the entire canvas is draggable
       >
         <Background />
         <Controls />

@@ -7,39 +7,54 @@ import ReactFlow, {
   Handle,
   applyNodeChanges,
   applyEdgeChanges,
+  MarkerType
 } from "react-flow-renderer";
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
 
 const CustomNode = ({ data }) => {
-  const itemHeight = 0; // Set a fixed height for each list item
-  const handleOffset = 10; // Offset for handle positioning
+  const itemHeight = 2;
+  const handleOffset = 10;
 
   return (
+      
     <div
       style={{
         padding: "15px",
-        border: "2px solid #007bff",
+        border: "2px solid rgb(255, 255, 255)",
         borderRadius: "8px",
-        backgroundColor: "#f9f9f9",
+        backgroundColor: "rgba(163, 181, 192)",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         width: "200px",
         cursor: 'move',
       }}
     >
       <strong>{data.label}</strong>
+      <div style={{backgroundColor:'rgba(255, 255, 255)'}}>
       {data.options && (
         <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
           {data.options.map((option, index) => (
-            <li key={index} style={{ margin: "5px 0", fontSize: "14px", position: 'relative' }}>
-              {option}
+            <li key={index} style={{ padding: '2px', fontSize: "14px", position: 'relative' }}>
+              <button
+                style={{
+                  padding: '5px',
+                  backgroundColor: '#007bff',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => alert(`Option selected: ${option}`)}
+              >
+                {option}
+              </button>
               <Handle
                 type="source"
                 position="right"
                 id={`${option}-handle`}
                 style={{
                   position: 'absolute',
-                  top: `${(index + 1) * itemHeight + handleOffset}px`, // Adjust based on item height
+                  top: `${(index + 1) * itemHeight + handleOffset}px`,
                   background: "#007bff"
                 }}
               />
@@ -48,6 +63,7 @@ const CustomNode = ({ data }) => {
         </ul>
       )}
       <Handle type="target" position="left" style={{ background: "#007bff" }} />
+      </div>
     </div>
   );
 };
@@ -75,17 +91,43 @@ const initialNodes = [
 ];
 
 const initialEdges = [
-  { id: "e1-2", source: "1", target: "2", sourceHandle: "Option A-handle" },
-  { id: "e1-3", source: "1", target: "3", sourceHandle: "Option B-handle" },
+  {
+    id: "e1-2",
+    source: "1",
+    target: "2",
+    sourceHandle: "Option A-handle",
+    type: 'smoothstep',
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      color: '#888888',
+    },
+  },
+  {
+    id: "e1-3",
+    source: "1",
+    target: "3",
+    sourceHandle: "Option B-handle",
+    type: 'smoothstep',
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      color: '#888888',
+    },
+  },
 ];
 
-function App() {
+function Basic() {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
 
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge({
+    ...params, type: 'smoothstep',
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      color: '#888888',
+    }
+  }, eds)), []);
 
   const addNode = useCallback((label, options) => {
     const newNode = {
@@ -162,7 +204,7 @@ function App() {
         <select
           onChange={(e) => {
             if (e.target.value) {
-              addNode(e.target.value, ["Option 1", "Option 2", "Option 3"]);
+              addNode(e.target.value, ["Option A", "Option B", "Option C"]);
               e.target.value = "";
             }
           }}
@@ -189,8 +231,21 @@ function App() {
           Deploy Bot
         </button>
       </div>
+
+      {/* Color Picker Section */}
+      <div style={{ position: "absolute", top: "100px", left: "20px", zIndex: "1000" }}>
+        <input
+          type="color"
+          onChange={(e) => {
+            document.documentElement.style.setProperty('--main-color', e.target.value);
+          }}
+          defaultValue="#007bff"
+          title="Pick a color for nodes and edges"
+        />
+      </div>
+
     </div>
   );
 }
 
-export default App;
+export default Basic;

@@ -36,7 +36,7 @@ const CustomNode = ({ data, onClick }) => {
     <div
       style={{
         padding: "10px",
-        border: "2px solid #ffffff",
+        border: "2px solid rgb(245, 242, 242)",
         borderRadius: "10px",
         fontWeight: "400",
         backgroundColor: "#dde4ea",

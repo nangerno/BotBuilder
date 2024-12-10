@@ -360,7 +360,7 @@ function Message() {
               onChange={(e) => handleRangeChange(e.target.value)} // Define this function to handle changes
               style={{ marginTop: '10px', width: '100%' }}
             />
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               <button
                 onClick={() => handleColorChange("#ff0000")}
                 style={{
@@ -429,12 +429,12 @@ function Message() {
               style={{
                 position: "absolute",
                 top: "0",
-                left: "100%", // Position the dropdown to the right of the icon
-                marginLeft: "10px", // Space between the icon and the dropdown
+                left: "100%",
+                marginLeft: "10px",
                 backgroundColor: "#fff",
                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                 zIndex: "1001",
-                width: "150px", // Adjust dropdown width
+                width: "150px",
               }}
             >
               <div
@@ -588,21 +588,21 @@ function Message() {
   onClick={addVariant}
   style={{
     border: 'none',
-    backgroundColor: "#007BFF", // Vibrant blue color
-    color: '#fff', // White text for contrast
-    fontSize: '24px', // Adjusted font size for a circular button
-    width: '20px', // Set width
-    height: '20px', // Set height to match width for a perfect circle
-    borderRadius: '50%', // Make the button fully circular
-    display: 'flex', // Center the text horizontally and vertically
+    backgroundColor: "#007BFF",
+    color: '#fff',
+    fontSize: '24px',
+    width: '20px',
+    height: '20px',
+    borderRadius: '50%',
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    cursor: 'pointer', // Pointer cursor on hover
-    transition: 'all 0.3s ease', // Smooth transition for hover effects
-    float: 'right', // Keep floating right if necessary
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    float: 'right',
   }}
-  onMouseEnter={(e) => e.target.style.backgroundColor = '#0056b3'} // Darker blue on hover
-  onMouseLeave={(e) => e.target.style.backgroundColor = '#007BFF'} // Return to original color
+  onMouseEnter={(e) => e.target.style.backgroundColor = '#0056b3'}
+  onMouseLeave={(e) => e.target.style.backgroundColor = '#007BFF'}
 >
   +
 </button>
@@ -614,18 +614,18 @@ function Message() {
               onClick={() => removeVariant(variant.id)}
               style={{
                 border: 'none',
-                backgroundColor: "#007BFF", // Vibrant blue color
-                color: '#fff', // White text for contrast
-                fontSize: '24px', // Adjusted font size for a circular button
-                width: '20px', // Set width
-                height: '20px', // Set height to match width for a perfect circle
-                borderRadius: '50%', // Make the button fully circular
-                display: 'flex', // Center the text horizontally and vertically
+                backgroundColor: "#007BFF",
+                color: '#fff',
+                fontSize: '24px',
+                width: '20px',
+                height: '20px',
+                borderRadius: '50%',
+                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                cursor: 'pointer', // Pointer cursor on hover
-                transition: 'all 0.3s ease', // Smooth transition for hover effects
-                float: 'right', // Keep floating right if necessary
+                cursor: 'pointer',
+                transition: 'all 0.3s ease', 
+                float: 'right',
               }}
             >
               -
@@ -702,7 +702,6 @@ function Message() {
               borderRadius: "5px",
               border: "none",
               cursor: "pointer",
-              // marginTop: "10px",
               width: '100%'
             }}
           >

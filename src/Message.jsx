@@ -70,6 +70,8 @@ function Message() {
   const [showCondition, setShowCondition] = useState(false);
   const [variants, setVariants] = useState([{ id: 0, message: "" }]);
   const [visibleCondition, setVisibleCondition] = useState(null);
+  const [conditions, setConditions] = useState([{ id: 1 }]);
+  const [conditionCount, setConditionCount] = useState(1);
 
 
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
@@ -199,6 +201,15 @@ function Message() {
       prevCondition ? { ...prevCondition, activeTab: tab } : null
     );
   };
+  const addCondition = () => {
+    setConditionCount(prevCount => prevCount + 1);
+    setConditions([...conditions, { id: conditions.length + 1 }]);
+  };
+  
+  const removeCondition = (id) => {
+    setConditions(conditions.filter(condition => condition.id !== id));
+    setConditionCount(prevCount => Math.max(1, prevCount - 1));
+  };
 
   return (
     <div style={{ display: "flex", height: "100vh", width: "100%" }}>
@@ -240,21 +251,22 @@ function Message() {
       </div>
       {visibleCondition !== null && (
         <div
-          style={{
-            width: "400px",
-            height: "75px",
-            backgroundColor: "#f9f9f9",
-            padding: "20px",
-            borderLeft: "1px solid #ddd",
-            display: "block",
-            position: "absolute",
-            top: `${450 + variants.findIndex(v => v.id === visibleCondition.variantId) * 115}px`,
-            right: "350px",
-            overflow: "auto",
-            borderRadius: '10px',
-            zIndex: 10001
-          }}
-        >
+        style={{
+          width: "400px",
+          height: `${50 + (conditionCount - 1) * 40}px`,
+          backgroundColor: "#f9f9f9",
+          padding: "20px",
+          borderLeft: "1px solid #ddd",
+          display: visibleCondition !== null ? "block" : "none",
+          position: "absolute",
+          top: `${450 + variants.findIndex(v => v.id === visibleCondition.variantId) * 115}px`,
+          right: "350px",
+          overflow: "hidden",
+          borderRadius: '10px',
+          zIndex: 10001,
+          transition: "height 0.3s ease-in-out"
+        }}
+      >
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
             <div style={{ display: "flex", borderBottom: "1px solid #ddd", width: "70%" }}>
               <div
@@ -281,21 +293,30 @@ function Message() {
               </div>
             </div>
             <div>
-              <button style={{ marginRight: "5px" }}>?</button>
-              <button>+</button>
+              <button style={{ marginRight: "5px",  cursor:'pointer' }}>?</button>
+              <button style={{ cursor: 'pointer' }} onClick={addCondition}>+</button>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-            <select style={{ marginRight: "5px" }}>
-              <option>if</option>
-            </select>
-            <select style={{ marginRight: "5px" }}>
-              <option>variable</option>
-            </select>
-            <p style={{ margin: "0 5px" }}>is</p>
-            <input type="text" placeholder="value or {var}" style={{ marginRight: "5px", border: 'none' }} />
-            <button>-</button>
-          </div>
+          {conditions.map((condition, index) => (
+  <div key={condition.id} style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+    <p style={{ margin: "0 5px" }}>if</p>
+    <select style={{ marginRight: "15px", border: 'none' }}>
+      <option>variable</option>
+    </select>
+    <p style={{ margin: "0 5px" }}>is</p>
+    <input type="text" placeholder="value or {var}" style={{ marginRight: "5px", border: 'none' }} />
+    <button 
+      style={{ 
+        cursor: conditions.length > 1 ? 'pointer' : 'not-allowed',
+        opacity: conditions.length > 1 ? 1 : 0.5
+      }} 
+      onClick={() => conditions.length > 1 && removeCondition(condition.id)}
+      disabled={conditions.length === 1}
+    >
+      -
+    </button>
+  </div>
+))}
         </div>
       )}
       <div

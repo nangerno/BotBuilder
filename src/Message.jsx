@@ -368,11 +368,11 @@ function Message() {
           {conditions.map((condition, index) => (
             <div key={condition.id} style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
               <p style={{ margin: "0 5px" }}>if</p>
-              <select style={{ marginRight: "15px", border: 'none' }}>
+              <select style={{ marginRight: "15px", border: 'none', backgroundColor: "#f9f9f9" }}>
                 <option>variable</option>
               </select>
               <p style={{ margin: "0 5px" }}>is</p>
-              <input type="text" placeholder="value or {var}" style={{ marginRight: "5px", border: 'none' }} />
+              <input type="text" placeholder="value or {var}" style={{ backgroundColor: "#f9f9f9", marginRight: "5px", border: 'none' }} />
               <button
                 style={{
                   cursor: conditions.length > 1 ? 'pointer' : 'not-allowed',

@@ -29,7 +29,7 @@ const CustomNode = ({ data, onClick }) => {
       }}
       onClick={onClick}
     >
-      <strong style={{ fontSize: "1.1rem", color: "#737376" }}>{data.label}</strong>
+      <strong style={{ fontSize: "0.8rem", color: "#737376" }}>{data.label}</strong>
       <div
         style={{
           backgroundColor: "#ffffff",
@@ -39,7 +39,7 @@ const CustomNode = ({ data, onClick }) => {
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <p style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}>{data.message}</p>
+        <p style={{ margin: 0, fontSize: "0.8rem", color: "#555" }}>{data.message}</p>
       </div>
       <Handle type="target" position="left" style={{ background: "#007bff", marginTop: "10px"}} />
       <Handle type="source" position="right" style={{ background: "#007bff", marginTop: "10px" }} />  

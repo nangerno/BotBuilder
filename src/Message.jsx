@@ -9,7 +9,7 @@ import ReactFlow, {
   applyEdgeChanges,
   MarkerType
 } from "react-flow-renderer";
-import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaPlay, FaClock, FaRobot } from "react-icons/fa";
+import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaPlay, FaClock, FaRobot, FaMinus } from "react-icons/fa";
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
 
@@ -212,7 +212,7 @@ function Message() {
         )
       );
     }
-    
+
     // setVariants(variants.map(variant =>
     //   variant.id === id ? { ...variant, message: value } : variant
     // ));
@@ -541,19 +541,18 @@ function Message() {
           display: selectedNode ? "block" : "none",
         }}
       >
-        <h3 style={{ borderBottom: "1px solid #ddd", padding: '10px', fontWeight: 'bold' }}>Message</h3>
-        <div style={{ marginBottom: "10px" }}>
-          <div style={{ marginBottom: '5px' }}>
-            <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>
-            <button onClick={() => handleFormatText('bold')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
-            <button onClick={() => handleFormatText('italic')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
-            <button onClick={() => handleFormatText('underline')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
-            <button onClick={() => handleFormatText('strikeThrough')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
-            <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaLink /></button>
+        <h3 style={{ borderBottom: "1px solid #ddd", padding: '10px' }}>Message</h3>
+        <div style={{ marginBottom: "10px", borderBottom: '1px solid #ddd' }}>
+          <div>
+            <button onClick={handlePlay} style={{ marginRight: "5px", marginBottom: '5px', border: 'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>
+            <button onClick={() => handleFormatText('bold')} style={{ marginRight: "5px", marginBottom: '5px', border: 'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
+            <button onClick={() => handleFormatText('italic')} style={{ marginRight: "5px", marginBottom: '5px', border: 'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
+            <button onClick={() => handleFormatText('underline')} style={{ marginRight: "5px", marginBottom: '5px', border: 'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
+            <button onClick={() => handleFormatText('strikeThrough')} style={{ marginRight: "5px", marginBottom: '5px', border: 'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
+            <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', marginBottom: '5px', backgroundColor: "#f9f9f9" }}><FaLink /></button>
             <button onClick={handleDelay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
           </div>
           <div style={{ position: 'relative' }}>
-            {/* Placeholder */}
             {!isFocused && !newMessage && (
               <span style={{
                 position: 'absolute',
@@ -572,7 +571,7 @@ function Message() {
               onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
               style={{
                 minHeight: '100px',
-                padding: '5px',
+                paddingTop: '10px',
                 fontSize: '16px',
                 backgroundColor: "#f9f9f9",
                 outline: 'none',
@@ -584,27 +583,77 @@ function Message() {
             />
           </div>
         </div>
-        <hr></hr>
         <strong>Variants</strong>
-        <button onClick={addVariant} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9", float: 'right' }}>+</button>
-        <br /><br />
+        <button
+  onClick={addVariant}
+  style={{
+    border: 'none',
+    backgroundColor: "#007BFF", // Vibrant blue color
+    color: '#fff', // White text for contrast
+    fontSize: '24px', // Adjusted font size for a circular button
+    width: '20px', // Set width
+    height: '20px', // Set height to match width for a perfect circle
+    borderRadius: '50%', // Make the button fully circular
+    display: 'flex', // Center the text horizontally and vertically
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer', // Pointer cursor on hover
+    transition: 'all 0.3s ease', // Smooth transition for hover effects
+    float: 'right', // Keep floating right if necessary
+  }}
+  onMouseEnter={(e) => e.target.style.backgroundColor = '#0056b3'} // Darker blue on hover
+  onMouseLeave={(e) => e.target.style.backgroundColor = '#007BFF'} // Return to original color
+>
+  +
+</button>
+  <br></br>
+  <br></br>
         {variants.map((variant, index) => (
-          <div key={variant.id} style={{ marginBottom: "10px" }}>
-            <div style={{ marginBottom: '5px' }}>
-              <button
-                onClick={() => removeVariant(variant.id)}
-                style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9", float: 'right' }}
-              >
-                -
+          <div key={variant.id} style={{ marginBottom: "10px", marginTop: '15px', paddingBotton: '10px', borderBottom: '1px solid #ddd' }}>
+            <button
+              onClick={() => removeVariant(variant.id)}
+              style={{
+                border: 'none',
+                backgroundColor: "#007BFF", // Vibrant blue color
+                color: '#fff', // White text for contrast
+                fontSize: '24px', // Adjusted font size for a circular button
+                width: '20px', // Set width
+                height: '20px', // Set height to match width for a perfect circle
+                borderRadius: '50%', // Make the button fully circular
+                display: 'flex', // Center the text horizontally and vertically
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer', // Pointer cursor on hover
+                transition: 'all 0.3s ease', // Smooth transition for hover effects
+                float: 'right', // Keep floating right if necessary
+              }}
+            >
+              -
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+              <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}>
+                <FaPlay />
               </button>
-              <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>
-              <button onClick={() => handleFormatText('bold')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
-              <button onClick={() => handleFormatText('italic')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
-              <button onClick={() => handleFormatText('underline')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
-              <button onClick={() => handleFormatText('strikeThrough')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
-              <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaLink /></button>
-              <button onClick={handleDelay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
+              <button onClick={() => handleFormatText('bold')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}>
+                <FaBold />
+              </button>
+              <button onClick={() => handleFormatText('italic')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}>
+                <FaItalic />
+              </button>
+              <button onClick={() => handleFormatText('underline')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}>
+                <FaUnderline />
+              </button>
+              <button onClick={() => handleFormatText('strikeThrough')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}>
+                <FaStrikethrough />
+              </button>
+              <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}>
+                <FaLink />
+              </button>
+              <button onClick={handleDelay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}>
+                <FaClock />
+              </button>
             </div>
+
             <div style={{ position: 'relative' }}>
               {!isFocused && !variant.message && (
                 <span style={{
@@ -635,14 +684,14 @@ function Message() {
               />
             </div>
             <button
-              style={{ marginTop: '5px', border: '1px solid black', borderRadius: '4px' }}
+              style={{ marginTop: '5px', marginBottom: '10px', border: '1px solid black', borderRadius: '4px' }}
               onClick={() => handleCondition(variant.id)}
             >
               Condition
             </button>
           </div>
         ))}
-        <hr></hr>
+
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           <button
             onClick={handleSaveMessage}
@@ -653,7 +702,7 @@ function Message() {
               borderRadius: "5px",
               border: "none",
               cursor: "pointer",
-              marginTop: "10px",
+              // marginTop: "10px",
               width: '100%'
             }}
           >

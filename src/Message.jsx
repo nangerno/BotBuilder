@@ -9,14 +9,14 @@ import ReactFlow, {
   applyEdgeChanges,
   MarkerType
 } from "react-flow-renderer";
-import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaPlay, FaClock } from "react-icons/fa";
+import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaPlay, FaClock, FaRobot } from "react-icons/fa";
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
+
 const CustomNode = ({ data, onClick }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedLabel, setEditedLabel] = useState(data.label);
   const [isHovered, setIsHovered] = useState(false);
-
   const handleLabelClick = (e) => {
     e.stopPropagation();
     setIsEditing(true);
@@ -63,9 +63,9 @@ const CustomNode = ({ data, onClick }) => {
             border: "none",
             background: "transparent",
             width: "100%",
-            pointerEvents: 'auto', // Allow interactions with the input
+            pointerEvents: 'auto',
           }}
-          onClick={(e) => e.stopPropagation()} // Prevent click events from bubbling up
+          onClick={(e) => e.stopPropagation()}
         />
       ) : (
         <strong
@@ -129,7 +129,11 @@ function Message() {
   const [conditions, setConditions] = useState([{ id: 1 }]);
   const [conditionCount, setConditionCount] = useState(1);
   const [isFocused, setIsFocused] = useState(false);
+  //state to manage color
+  const [selectedColorValue, setSelectedColorValue] = useState(255);
+  const [circleColors, setCircleColors] = useState(["#ff0000", "#00ff00", "#0000ff", "#ffff00"]);
 
+  const [contextMenuPosition, setContextMenuPosition] = useState(null);
 
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
@@ -182,11 +186,21 @@ function Message() {
 
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
-    if (window.confirm(`Delete node "${node.data.label}"?`)) {
-      setNodes((nds) => nds.filter((n) => n.id !== node.id));
-      setEdges((eds) => eds.filter((edge) => edge.source !== node.id && edge.target !== node.id));
-    }
+    setContextMenuPosition({ x: event.clientX, y: event.clientY });
+    console.log("yes")
+    // if (window.confirm(`Delete node "${node.data.label}"?`)) {
+    //   setNodes((nds) => nds.filter((n) => n.id !== node.id));
+    //   setEdges((eds) => eds.filter((edge) => edge.source !== node.id && edge.target !== node.id));
+    // }
   }, []);
+  const handleColorChange = (color) => {
+    setSelectedColorValue(color);
+    // Example logic to change circle colors
+    setCircleColors(circleColors.map((_, index) => (index === 0 ? color : circleColors[index])));
+
+    // Hide context menu after selection
+    setContextMenuPosition(null);
+  };
 
   const handleMessageChange = (id, value) => {
     if (id === 'main') {
@@ -198,6 +212,7 @@ function Message() {
         )
       );
     }
+    
     // setVariants(variants.map(variant =>
     //   variant.id === id ? { ...variant, message: value } : variant
     // ));
@@ -206,8 +221,10 @@ function Message() {
 
   const handleSaveMessage = () => {
     if (selectedNode) {
-      editNode(selectedNode.id, selectedNode.data.label, newMessage); // Save the new message to the node
+      const currentContent = document.getElementById('messageInput').innerHTML;
+      editNode(selectedNode.id, selectedNode.data.label, currentContent);
     }
+    setSelectedNode(null);
   };
 
   useEffect(() => {
@@ -233,14 +250,16 @@ function Message() {
   };
 
   const handlePlay = () => {
-    alert("Play Action");
+    const currentContent = document.getElementById('messageInput').innerHTML;
+    setNewMessage(currentContent);
+    editNode(selectedNode.id, selectedNode.data.label, currentContent);
   };
   const handleDelay = () => {
     alert("Delay Action");
   };
 
   const handleInsertLink = () => {
-    const url = prompt("Enter the URL"); // Prompt user for URL
+    const url = prompt("Enter the URL");
     if (url) {
       document.execCommand('createLink', false, url);
       handleMessageChange(newMessage);
@@ -285,7 +304,20 @@ function Message() {
     setConditions(conditions.filter(condition => condition.id !== id));
     setConditionCount(prevCount => Math.max(1, prevCount - 1));
   };
+  const handleRangeChange = (value) => {
+    setSelectedColorValue(value);
+    handleColorChange(`rgb(${value}, 0, 0)`);
+  };
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(prevState => !prevState);
+  };
+
+  const handleNodeSelection = (nodeType) => {
+    addNode(nodeType);
+    setIsDropdownOpen(false); // Close dropdown after selection
+  };
   return (
     <div style={{ display: "flex", height: "100vh", width: "100%" }}>
       <div style={{ flex: 1 }}>
@@ -306,22 +338,126 @@ function Message() {
           <Controls />
           {/* <MiniMap /> */}
         </ReactFlow>
-
-        {/* Add Node Dropdown */}
-        <div style={{ position: "absolute", top: "20px", left: "20px", zIndex: "1000" }}>
-          <select
-            onChange={(e) => {
-              if (e.target.value) {
-                addNode(e.target.value);
-                e.target.value = "";
-              }
+        {contextMenuPosition && (
+          <div
+            style={{
+              position: 'absolute',
+              top: contextMenuPosition.y,
+              left: contextMenuPosition.x,
+              backgroundColor: 'white',
+              borderRadius: '5px',
+              boxShadow: '0px 2px 4px rgba(0,0,0,0.2)',
+              zIndex: '100',
+              padding: '10px',
             }}
-            style={{ padding: "5px", fontSize: "16px" }}
           >
-            <option value="">Add New Node</option>
-            <option value="Decision Node">Decision Node</option>
-            <option value="Action Node">Action Node</option>
-          </select>
+            {/* Range input for color selection */}
+            <input
+              type="range"
+              min="0"
+              max="255"
+              value={selectedColorValue} // Assume you have a state for this
+              onChange={(e) => handleRangeChange(e.target.value)} // Define this function to handle changes
+              style={{ marginTop: '10px', width: '100%' }}
+            />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <button
+                onClick={() => handleColorChange("#ff0000")}
+                style={{
+                  backgroundColor: "#ff0000",
+                  color: "white",
+                  border: "none",
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  margin: '5px'
+                }}
+              />
+              <button
+                onClick={() => handleColorChange("#00ff00")}
+                style={{
+                  backgroundColor: "#00ff00",
+                  color: "white",
+                  border: "none",
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  margin: '5px'
+                }}
+              />
+              <button
+                onClick={() => handleColorChange("#0000ff")}
+                style={{
+                  backgroundColor: "#0000ff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  margin: '5px'
+                }}
+              />
+              <button
+                onClick={() => handleColorChange("#ffff00")}
+                style={{
+                  backgroundColor: "#ffff00",
+                  color: "black",
+                  border: "none",
+                  borderRadius: '50%',
+                  width: '40px',
+                  height: '40px',
+                  margin: '5px'
+                }}
+              />
+
+
+            </div>
+          </div>
+        )}
+        <div style={{ position: "fixed", top: "20px", left: "20px", zIndex: "1000" }}>
+          <FaRobot
+            size={40}
+            color="#333"
+            style={{
+              cursor: "pointer",
+            }}
+            onClick={toggleDropdown}
+          />
+
+          {isDropdownOpen && (
+            <div
+              style={{
+                position: "absolute",
+                top: "0",
+                left: "100%", // Position the dropdown to the right of the icon
+                marginLeft: "10px", // Space between the icon and the dropdown
+                backgroundColor: "#fff",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                zIndex: "1001",
+                width: "150px", // Adjust dropdown width
+              }}
+            >
+              <div
+                onClick={() => handleNodeSelection("Decision Node")}
+                style={{
+                  padding: "10px",
+                  cursor: "pointer",
+                  borderBottom: "1px solid #ddd",
+                }}
+              >
+                Decision Node
+              </div>
+              <div
+                onClick={() => handleNodeSelection("Action Node")}
+                style={{
+                  padding: "10px",
+                  cursor: "pointer",
+                }}
+              >
+                Action Node
+              </div>
+            </div>
+          )}
         </div>
       </div>
       {visibleCondition !== null && (
@@ -426,10 +562,11 @@ function Message() {
                 color: '#aaa',
                 pointerEvents: 'none',
               }}>
-                Enter your message...
+                {/* Enter your message... */}
               </span>
             )}
             <div
+              id="messageInput"
               contentEditable
               suppressContentEditableWarning
               onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
@@ -477,7 +614,7 @@ function Message() {
                   color: '#aaa',
                   pointerEvents: 'none',
                 }}>
-                  Enter your message...
+                  {/* Enter your message... */}
                 </span>
               )}
               <div

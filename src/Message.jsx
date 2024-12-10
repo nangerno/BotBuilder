@@ -31,7 +31,7 @@ const CustomNode = ({ data, onClick }) => {
       setIsEditing(false);
     }
   };
-
+  console.log(data.message)
   return (
     <div
       style={{
@@ -39,7 +39,7 @@ const CustomNode = ({ data, onClick }) => {
         border: "2px solid rgb(245, 242, 242)",
         borderRadius: "10px",
         fontWeight: "400",
-        backgroundColor: "#dde4ea",
+        backgroundColor: `${data.style.backgroundColor}`,
         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
         width: "220px",
         display: "flex",
@@ -110,6 +110,7 @@ const initialNodes = [
     data: {
       label: "Rename",
       message: "Hi, I'm Wobi's bot, here to help you with your accident. What's your name, is it an accident or theft, and in what city did it happen?",
+      style: { backgroundColor: '#dde4ea' }
     },
     position: { x: 100, y: 100 },
   },
@@ -117,10 +118,11 @@ const initialNodes = [
 
 const initialEdges = [];
 
-function Message() {
+const Message = () => {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
   const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedColorNode, setSelectedColorNode] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const messageDivRef = useRef(null);
   const conditionDivRef = useRef(null);
@@ -168,37 +170,59 @@ function Message() {
       )
     );
   }, []);
+  const editNodeColor = useCallback((id, newColor) => {
+    setNodes((prevNodes) =>
+      prevNodes.map((node) =>
+        node.id === id
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                style: { ...node.data.style, backgroundColor: newColor }
+              }
+            }
+          : node
+      )
+    );
+  }, []);
+  
 
   const onNodeClick = useCallback((event, node) => {
-    // setSelectedNode(node);
     setNewMessage(node.data.message);
     setSelectedNode(prevNode => {
       if (prevNode && prevNode.id === node.id) {
         // If clicking the same node, hide the message dashboard
-        return null;
+        // return null;
+        setSelectedNode(node)
       } else {
         // If clicking a different node, show its message
         setNewMessage(node.data.message);
         return node;
       }
     });
+    setContextMenuPosition(null);
   }, []);
 
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
+    event.stopPropagation();
     setContextMenuPosition({ x: event.clientX, y: event.clientY });
-    console.log("yes")
     // if (window.confirm(`Delete node "${node.data.label}"?`)) {
     //   setNodes((nds) => nds.filter((n) => n.id !== node.id));
     //   setEdges((eds) => eds.filter((edge) => edge.source !== node.id && edge.target !== node.id));
     // }
+    console.log(event.button)
+    if(event.button==2){
+      console.log(node)
+      setSelectedColorNode(node)
+    } else {
+      setSelectedNode(node)
+    }
   }, []);
   const handleColorChange = (color) => {
     setSelectedColorValue(color);
-    // Example logic to change circle colors
-    setCircleColors(circleColors.map((_, index) => (index === 0 ? color : circleColors[index])));
-
-    // Hide context menu after selection
+    // setCircleColors(circleColors.map((_, index) => (index === 0 ? color : circleColors[index])));
+    editNodeColor(selectedColorNode.id, color);
     setContextMenuPosition(null);
   };
 

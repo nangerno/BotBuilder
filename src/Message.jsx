@@ -706,7 +706,7 @@ function Message() {
               width: '100%'
             }}
           >
-            Generate
+            Save
           </button>
         </div>
       </div>

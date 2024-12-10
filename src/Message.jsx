@@ -39,7 +39,7 @@ const CustomNode = ({ data, onClick }) => {
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <p style={{ margin: 0, fontSize: "0.95rem", color: "#555"}}>{data.message}</p>
+        <p style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}>{data.message}</p>
       </div>
       <Handle type="target" position="left" style={{ background: "#007bff", marginTop: "10px" }} />
     </div>
@@ -65,7 +65,12 @@ function Message() {
   const [edges, setEdges] = useState(initialEdges);
   const [selectedNode, setSelectedNode] = useState(null);
   const [newMessage, setNewMessage] = useState("");
-  const messageDivRef = useRef(null); 
+  const messageDivRef = useRef(null);
+  const [activeTab, setActiveTab] = useState("all");
+  const [showCondition, setShowCondition] = useState(false);
+  const [variants, setVariants] = useState([{ id: 0, message: "" }]);
+  const [visibleCondition, setVisibleCondition] = useState(null);
+
 
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
@@ -109,6 +114,9 @@ function Message() {
   }, []);
 
   const handleMessageChange = (event) => {
+    setVariants(variants.map(variant =>
+      variant.id === id ? { ...variant, message: value } : variant
+    ));
     setNewMessage(event.target.value); // Update the message as it is being edited
   };
 
@@ -123,17 +131,17 @@ function Message() {
 
       if (messageDivRef.current && !messageDivRef.current.contains(event.target)) {
         console.log("Outside click detected");
-        setSelectedNode(null); // Close the message div
+        // setSelectedNode(null);
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
-  
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
 
   const handlePlay = () => {
     alert("Playing the bot message! (This is a placeholder action.)");
@@ -169,6 +177,28 @@ function Message() {
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
   );
+  const addVariant = () => {
+    setVariants([...variants, { id: variants.length, message: "" }]);
+  };
+
+  const removeVariant = (variantId) => {
+    setVariants(prevVariants => prevVariants.filter(v => v.id !== variantId));
+
+    // Remove the condition div if it's visible for the removed variant
+    setVisibleCondition(prevCondition =>
+      prevCondition && prevCondition.variantId === variantId ? null : prevCondition
+    );
+  };
+  const handleCondition = (variantId) => {
+    setVisibleCondition(prevCondition =>
+      prevCondition && prevCondition.variantId === variantId ? null : { variantId, activeTab: "all" }
+    );
+  };
+  const setActiveTabForCondition = (tab) => {
+    setVisibleCondition(prevCondition =>
+      prevCondition ? { ...prevCondition, activeTab: tab } : null
+    );
+  };
 
   return (
     <div style={{ display: "flex", height: "100vh", width: "100%" }}>
@@ -208,6 +238,66 @@ function Message() {
           </select>
         </div>
       </div>
+      {visibleCondition !== null && (
+        <div
+          style={{
+            width: "400px",
+            height: "75px",
+            backgroundColor: "#f9f9f9",
+            padding: "20px",
+            borderLeft: "1px solid #ddd",
+            display: "block",
+            position: "absolute",
+            top: `${450 + variants.findIndex(v => v.id === visibleCondition.variantId) * 115}px`,
+            right: "350px",
+            overflow: "auto",
+            borderRadius: '10px',
+            zIndex: 10001
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+            <div style={{ display: "flex", borderBottom: "1px solid #ddd", width: "70%" }}>
+              <div
+                style={{
+                  padding: "5px 10px",
+                  cursor: "pointer",
+                  backgroundColor: visibleCondition.activeTab === "all" ? "#fff" : "#f0f0f0",
+                  borderBottom: visibleCondition.activeTab === "all" ? "2px solid #007bff" : "none"
+                }}
+                onClick={() => setActiveTabForCondition("all")}
+              >
+                Match all
+              </div>
+              <div
+                style={{
+                  padding: "5px 10px",
+                  cursor: "pointer",
+                  backgroundColor: visibleCondition.activeTab === "any" ? "#fff" : "#f0f0f0",
+                  borderBottom: visibleCondition.activeTab === "any" ? "2px solid #007bff" : "none"
+                }}
+                onClick={() => setActiveTabForCondition("any")}
+              >
+                Match any
+              </div>
+            </div>
+            <div>
+              <button style={{ marginRight: "5px" }}>?</button>
+              <button>+</button>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+            <select style={{ marginRight: "5px" }}>
+              <option>if</option>
+            </select>
+            <select style={{ marginRight: "5px" }}>
+              <option>variable</option>
+            </select>
+            <p style={{ margin: "0 5px" }}>is</p>
+            <input type="text" placeholder="value or {var}" style={{ marginRight: "5px", border: 'none' }} />
+            <button>-</button>
+          </div>
+        </div>
+      )}
       <div
         ref={messageDivRef}
         style={{
@@ -221,13 +311,13 @@ function Message() {
         <h3>Message</h3>
         <div style={{ marginBottom: "10px" }}>
           <div style={{ marginBottom: '5px' }}>
-            <button onClick={handlePlay} style={{ marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>
-            <button onClick={handleBold} style={{ marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
-            <button onClick={handleItalic} style={{ marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
-            <button onClick={handleUnderline} style={{ marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
-            <button onClick={handleMidline} style={{ marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
-            <button onClick={handleInsertLink} style={{ marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaLink /></button>
-            <button onClick={handleInsertLink} style={{ marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
+            <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>
+            <button onClick={handleBold} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
+            <button onClick={handleItalic} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
+            <button onClick={handleUnderline} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
+            <button onClick={handleMidline} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
+            <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaLink /></button>
+            <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
           </div>
           <textarea
             value={newMessage}
@@ -238,45 +328,57 @@ function Message() {
         </div>
         <hr></hr>
         <strong>Variants</strong>
-        <button onClick={handlePlay} style={{  marginRight: "5px", border:'none', backgroundColor: "#f9f9f9", float: 'right' }}>+</button>
-        <br></br>
-        <br></br>
-        <div style={{ marginBottom: "10px" }}>
-          <div style={{ marginBottom: '5px' }}>
-            <button onClick={handlePlay} style={{  marginRight: "5px", border:'none', backgroundColor: "#f9f9f9", float: 'right' }}>-</button>
-            <button onClick={handlePlay} style={{  marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>
-            <button onClick={handleBold} style={{  marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
-            <button onClick={handleItalic} style={{  marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
-            <button onClick={handleUnderline} style={{  marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
-            <button onClick={handleMidline} style={{  marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
-            <button onClick={handleInsertLink} style={{  marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaLink /></button>
-            <button onClick={handleInsertLink} style={{  marginRight: "5px", border:'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
-          </div>
-          <textarea
-            value={newMessage}
-            onChange={handleMessageChange}
-            rows="6"
-            style={{ width: "100%", padding: "5px", fontSize: "16px" }}
-          />
-          <button style={{ marginTop: '5px', border: '1px solid black', borderRadius: '4px' }}>Condition</button>
-        </div>
-        <hr></hr>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <button onClick={addVariant} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9", float: 'right' }}>+</button>
+        <br /><br />
+        {variants.map((variant, index) => (
+          <div key={variant.id} style={{ marginBottom: "10px" }}>
+            <div style={{ marginBottom: '5px' }}>
+              <button
+                onClick={() => removeVariant(variant.id)}
+                style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9", float: 'right' }}
+              >
+                -
+              </button>
+              <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>
+              <button onClick={handleBold} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
+              <button onClick={handleItalic} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
+              <button onClick={handleUnderline} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
+              <button onClick={handleMidline} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
+              <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaLink /></button>
+              <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
+            </div>
+            <textarea
+              value={variant.message}
+              onChange={(e) => handleMessageChange(variant.id, e.target.value)}
+              rows="6"
+              style={{ width: "100%", padding: "5px", fontSize: "16px" }}
+            />
             <button
-              onClick={handleSaveMessage}
-              style={{
-                padding: "10px",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                borderRadius: "5px",
-                border: "none",
-                cursor: "pointer",
-                marginTop: "10px"
-              }}
+              style={{ marginTop: '5px', border: '1px solid black', borderRadius: '4px' }}
+              onClick={() => handleCondition(variant.id)}
             >
-              Generate
+              Condition
             </button>
           </div>
+        ))}
+        <hr></hr>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <button
+            onClick={handleSaveMessage}
+            style={{
+              padding: "10px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              borderRadius: "5px",
+              border: "none",
+              cursor: "pointer",
+              marginTop: "10px",
+              width: '100%'
+            }}
+          >
+            Generate
+          </button>
+        </div>
       </div>
     </div>
   );

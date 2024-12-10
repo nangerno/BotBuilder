@@ -15,6 +15,7 @@ import "react-flow-renderer/dist/theme-default.css";
 const CustomNode = ({ data, onClick }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedLabel, setEditedLabel] = useState(data.label);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleLabelClick = (e) => {
     e.stopPropagation();
@@ -44,6 +45,7 @@ const CustomNode = ({ data, onClick }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
       }}
       onClick={onClick}
     >
@@ -83,7 +85,18 @@ const CustomNode = ({ data, onClick }) => {
       >
         <p style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}>{data.message}</p>
       </div>
-      <Handle type="target" position="left" style={{ background: "#007bff", marginTop: "10px" }} />
+      <Handle
+        type="target"
+        position="left"
+        style={{
+          background: isHovered ? "#007bff" : "transparent",
+          border: isHovered ? "" : "none",
+          marginTop: "10px",
+          transition: "background-color 0.3s ease"
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      />
       <Handle type="source" position="right" style={{ background: "#007bff", marginTop: "10px" }} />
     </div>
   );
@@ -397,7 +410,7 @@ function Message() {
           display: selectedNode ? "block" : "none",
         }}
       >
-        <h3>Message</h3>
+        <h3 style={{borderBottom:"1px solid #ddd", padding:'10px'}}>Message</h3>
         <div style={{ marginBottom: "10px" }}>
           <div style={{ marginBottom: '5px' }}>
             <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>

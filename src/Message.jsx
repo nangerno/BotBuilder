@@ -28,8 +28,6 @@ const CustomNode = ({ data, onClick }) => {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       setIsEditing(false);
-      // Here you would typically update the node data in your graph
-      // For example: updateNodeData(data.id, { label: editedLabel });
     }
   };
 
@@ -67,7 +65,7 @@ const CustomNode = ({ data, onClick }) => {
           }}
         />
       ) : (
-        <strong 
+        <strong
           style={{ fontSize: "1.1rem", color: "#737376", cursor: "pointer" }}
           onClick={handleLabelClick}
         >
@@ -165,11 +163,20 @@ function Message() {
     }
   }, []);
 
-  const handleMessageChange = (event) => {
-    setVariants(variants.map(variant =>
-      variant.id === id ? { ...variant, message: value } : variant
-    ));
-    setNewMessage(event.target.value); // Update the message as it is being edited
+  const handleMessageChange = (id, value) => {
+    if (id === 'main') {
+      setNewMessage(value);
+    } else {
+      setVariants(prevVariants =>
+        prevVariants.map(variant =>
+          variant.id === id ? { ...variant, message: value } : variant
+        )
+      );
+    }
+    // setVariants(variants.map(variant =>
+    //   variant.id === id ? { ...variant, message: value } : variant
+    // ));
+    // setNewMessage(event.target.value);
   };
 
   const handleSaveMessage = () => {
@@ -310,7 +317,7 @@ function Message() {
             borderLeft: "1px solid #ddd",
             display: visibleCondition !== null ? "block" : "none",
             position: "absolute",
-            top: `${450 + variants.findIndex(v => v.id === visibleCondition.variantId) * 175}px`,
+            top: `${350 + variants.findIndex(v => v.id === visibleCondition.variantId) * 100}px`,
             right: "350px",
             overflow: "hidden",
             borderRadius: '10px',
@@ -393,9 +400,25 @@ function Message() {
           </div>
           <textarea
             value={newMessage}
-            onChange={handleMessageChange}
+            placeholder="Enter agent message"
+            onChange={(e) => {
+              handleMessageChange('main', e.target.value);
+              e.target.style.height = 'auto';
+              e.target.style.height = e.target.scrollHeight + 'px';
+            }}
             rows="6"
-            style={{ width: "100%", padding: "5px", fontSize: "16px" }}
+            style={{
+              width: "100%",
+              padding: "5px",
+              fontSize: "16px",
+              border: 'none',
+              resize: 'none',
+              overflow: 'hidden',
+              boxSizing: 'border-box',
+              border: 'none',
+              outline: 'none',
+              backgroundColor: "#f9f9f9"
+            }}
           />
         </div>
         <hr></hr>
@@ -421,9 +444,26 @@ function Message() {
             </div>
             <textarea
               value={variant.message}
-              onChange={(e) => handleMessageChange(variant.id, e.target.value)}
-              rows="6"
-              style={{ width: "100%", padding: "5px", fontSize: "16px" }}
+              placeholder="Enter agent message"
+              onChange={(e) => {
+                handleMessageChange(variant.id, e.target.value);
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
+              }}
+              rows="1"
+              style={{
+                width: "100%",
+                padding: "5px",
+                fontSize: "16px",
+                border: 'none',
+                resize: 'none',
+                overflow: 'hidden',
+                boxSizing: 'border-box',
+                border: 'none',
+                outline: 'none',
+                backgroundColor: "#f9f9f9"
+
+              }}
             />
             <button
               style={{ marginTop: '5px', border: '1px solid black', borderRadius: '4px' }}

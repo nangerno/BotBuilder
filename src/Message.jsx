@@ -40,12 +40,11 @@ const CustomNode = ({ data, onClick }) => {
         borderRadius: "10px",
         fontWeight: "400",
         backgroundColor: "#dde4ea",
-        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
         width: "220px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
       }}
       onClick={onClick}
     >
@@ -63,8 +62,10 @@ const CustomNode = ({ data, onClick }) => {
             fontWeight: "bold",
             border: "none",
             background: "transparent",
-            width: "100%"
+            width: "100%",
+            pointerEvents: 'auto', // Allow interactions with the input
           }}
+          onClick={(e) => e.stopPropagation()} // Prevent click events from bubbling up
         />
       ) : (
         <strong
@@ -102,7 +103,6 @@ const CustomNode = ({ data, onClick }) => {
     </div>
   );
 };
-
 const initialNodes = [
   {
     id: "1",
@@ -128,6 +128,7 @@ function Message() {
   const [visibleCondition, setVisibleCondition] = useState(null);
   const [conditions, setConditions] = useState([{ id: 1 }]);
   const [conditionCount, setConditionCount] = useState(1);
+  const [isFocused, setIsFocused] = useState(false);
 
 
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
@@ -225,31 +226,24 @@ function Message() {
     };
   }, []);
 
+  const handleFormatText = (format) => {
+    document.execCommand(format);
+    // Update the message to reflect changes
+    handleMessageChange(newMessage);
+  };
 
   const handlePlay = () => {
-    alert("Playing the bot message! (This is a placeholder action.)");
+    alert("Play Action");
   };
-
-  const handleBold = () => {
-    setNewMessage((prevMessage) => `<b>${prevMessage}</b>`);
-  };
-
-  const handleItalic = () => {
-    setNewMessage((prevMessage) => `<i>${prevMessage}</i>`);
-  };
-
-  const handleUnderline = () => {
-    setNewMessage((prevMessage) => `<u>${prevMessage}</u>`);
-  };
-
-  const handleMidline = () => {
-    setNewMessage((prevMessage) => `<s>${prevMessage}</s>`);
+  const handleDelay = () => {
+    alert("Delay Action");
   };
 
   const handleInsertLink = () => {
-    const url = prompt("Enter the URL");
+    const url = prompt("Enter the URL"); // Prompt user for URL
     if (url) {
-      setNewMessage((prevMessage) => `<a href="${url}">${prevMessage}</a>`);
+      document.execCommand('createLink', false, url);
+      handleMessageChange(newMessage);
     }
   };
   const onNodesChange = useCallback(
@@ -411,39 +405,47 @@ function Message() {
           display: selectedNode ? "block" : "none",
         }}
       >
-        <h3 style={{borderBottom:"1px solid #ddd", padding:'10px', fontWeight:'bold'}}>Message</h3>
+        <h3 style={{ borderBottom: "1px solid #ddd", padding: '10px', fontWeight: 'bold' }}>Message</h3>
         <div style={{ marginBottom: "10px" }}>
           <div style={{ marginBottom: '5px' }}>
             <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>
-            <button onClick={handleBold} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
-            <button onClick={handleItalic} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
-            <button onClick={handleUnderline} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
-            <button onClick={handleMidline} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
+            <button onClick={() => handleFormatText('bold')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
+            <button onClick={() => handleFormatText('italic')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
+            <button onClick={() => handleFormatText('underline')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
+            <button onClick={() => handleFormatText('strikeThrough')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
             <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaLink /></button>
-            <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
+            <button onClick={handleDelay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
           </div>
-          <textarea
-            value={newMessage}
-            placeholder="Enter agent message"
-            onChange={(e) => {
-              handleMessageChange('main', e.target.value);
-              e.target.style.height = 'auto';
-              e.target.style.height = e.target.scrollHeight + 'px';
-            }}
-            rows="6"
-            style={{
-              width: "100%",
-              padding: "5px",
-              fontSize: "16px",
-              border: 'none',
-              resize: 'none',
-              overflow: 'hidden',
-              boxSizing: 'border-box',
-              border: 'none',
-              outline: 'none',
-              backgroundColor: "#f9f9f9"
-            }}
-          />
+          <div style={{ position: 'relative' }}>
+            {/* Placeholder */}
+            {!isFocused && !newMessage && (
+              <span style={{
+                position: 'absolute',
+                left: '5px',
+                top: '5px',
+                color: '#aaa',
+                pointerEvents: 'none',
+              }}>
+                Enter your message...
+              </span>
+            )}
+            <div
+              contentEditable
+              suppressContentEditableWarning
+              onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+              style={{
+                minHeight: '100px',
+                padding: '5px',
+                fontSize: '16px',
+                backgroundColor: "#f9f9f9",
+                outline: 'none',
+                border: 'none'
+              }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              dangerouslySetInnerHTML={{ __html: newMessage }}
+            />
+          </div>
         </div>
         <hr></hr>
         <strong>Variants</strong>
@@ -459,36 +461,42 @@ function Message() {
                 -
               </button>
               <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>
-              <button onClick={handleBold} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
-              <button onClick={handleItalic} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
-              <button onClick={handleUnderline} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
-              <button onClick={handleMidline} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
+              <button onClick={() => handleFormatText('bold')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaBold /></button>
+              <button onClick={() => handleFormatText('italic')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaItalic /></button>
+              <button onClick={() => handleFormatText('underline')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaUnderline /></button>
+              <button onClick={() => handleFormatText('strikeThrough')} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaStrikethrough /></button>
               <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaLink /></button>
-              <button onClick={handleInsertLink} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
+              <button onClick={handleDelay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaClock /></button>
             </div>
-            <textarea
-              value={variant.message}
-              placeholder="Enter agent message"
-              onChange={(e) => {
-                handleMessageChange(variant.id, e.target.value);
-                e.target.style.height = 'auto';
-                e.target.style.height = e.target.scrollHeight + 'px';
-              }}
-              rows="1"
-              style={{
-                width: "100%",
-                padding: "5px",
-                fontSize: "16px",
-                border: 'none',
-                resize: 'none',
-                overflow: 'hidden',
-                boxSizing: 'border-box',
-                border: 'none',
-                outline: 'none',
-                backgroundColor: "#f9f9f9"
-
-              }}
-            />
+            <div style={{ position: 'relative' }}>
+              {!isFocused && !variant.message && (
+                <span style={{
+                  position: 'absolute',
+                  left: '5px',
+                  top: '5px',
+                  color: '#aaa',
+                  pointerEvents: 'none',
+                }}>
+                  Enter your message...
+                </span>
+              )}
+              <div
+                contentEditable
+                suppressContentEditableWarning
+                onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+                style={{
+                  minHeight: '10px',
+                  padding: '5px',
+                  fontSize: '16px',
+                  backgroundColor: "#f9f9f9",
+                  border: 'none',
+                  outline: 'none'
+                }}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                dangerouslySetInnerHTML={{ __html: variant.message }}
+              />
+            </div>
             <button
               style={{ marginTop: '5px', border: '1px solid black', borderRadius: '4px' }}
               onClick={() => handleCondition(variant.id)}

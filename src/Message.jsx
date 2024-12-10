@@ -338,7 +338,7 @@ function Message() {
             height: `${50 + (conditionCount - 1) * 40}px`,
             backgroundColor: "#f9f9f9",
             padding: "20px",
-            borderLeft: "1px solid #ddd",
+            border: "1px solid #ddd",
             display: visibleCondition !== null ? "block" : "none",
             position: "absolute",
             top: `${350 + variants.findIndex(v => v.id === visibleCondition.variantId) * 100}px`,

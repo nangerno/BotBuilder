@@ -80,6 +80,7 @@ const CustomNode = ({ data, onClick }) => {
           padding: "10px",
           borderRadius: "5px",
           marginTop: "10px",
+          border: '1px solid #007bff',
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
         }}
       >
@@ -410,7 +411,7 @@ function Message() {
           display: selectedNode ? "block" : "none",
         }}
       >
-        <h3 style={{borderBottom:"1px solid #ddd", padding:'10px'}}>Message</h3>
+        <h3 style={{borderBottom:"1px solid #ddd", padding:'10px', fontWeight:'bold'}}>Message</h3>
         <div style={{ marginBottom: "10px" }}>
           <div style={{ marginBottom: '5px' }}>
             <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}><FaPlay /></button>

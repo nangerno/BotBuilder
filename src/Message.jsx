@@ -13,6 +13,26 @@ import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaPlay, FaClock
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
 const CustomNode = ({ data, onClick }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedLabel, setEditedLabel] = useState(data.label);
+
+  const handleLabelClick = (e) => {
+    e.stopPropagation();
+    setIsEditing(true);
+  };
+
+  const handleLabelChange = (e) => {
+    setEditedLabel(e.target.value);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      setIsEditing(false);
+      // Here you would typically update the node data in your graph
+      // For example: updateNodeData(data.id, { label: editedLabel });
+    }
+  };
+
   return (
     <div
       style={{
@@ -29,7 +49,31 @@ const CustomNode = ({ data, onClick }) => {
       }}
       onClick={onClick}
     >
-      <strong style={{ fontSize: "0.8rem", color: "#737376" }}>{data.label}</strong>
+      {isEditing ? (
+        <input
+          type="text"
+          value={editedLabel}
+          onChange={handleLabelChange}
+          onKeyDown={handleKeyDown}
+          onBlur={() => setIsEditing(false)}
+          autoFocus
+          style={{
+            fontSize: "1.1rem",
+            color: "#737376",
+            fontWeight: "bold",
+            border: "none",
+            background: "transparent",
+            width: "100%"
+          }}
+        />
+      ) : (
+        <strong 
+          style={{ fontSize: "1.1rem", color: "#737376", cursor: "pointer" }}
+          onClick={handleLabelClick}
+        >
+          {editedLabel}
+        </strong>
+      )}
       <div
         style={{
           backgroundColor: "#ffffff",
@@ -39,10 +83,10 @@ const CustomNode = ({ data, onClick }) => {
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <p style={{ margin: 0, fontSize: "0.8rem", color: "#555" }}>{data.message}</p>
+        <p style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}>{data.message}</p>
       </div>
-      <Handle type="target" position="left" style={{ background: "#007bff", marginTop: "10px"}} />
-      <Handle type="source" position="right" style={{ background: "#007bff", marginTop: "10px" }} />  
+      <Handle type="target" position="left" style={{ background: "#007bff", marginTop: "10px" }} />
+      <Handle type="source" position="right" style={{ background: "#007bff", marginTop: "10px" }} />
     </div>
   );
 };

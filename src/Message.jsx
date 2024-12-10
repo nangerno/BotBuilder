@@ -151,8 +151,18 @@ function Message() {
   }, []);
 
   const onNodeClick = useCallback((event, node) => {
-    setSelectedNode(node);
+    // setSelectedNode(node);
     setNewMessage(node.data.message);
+    setSelectedNode(prevNode => {
+      if (prevNode && prevNode.id === node.id) {
+        // If clicking the same node, hide the message dashboard
+        return null;
+      } else {
+        // If clicking a different node, show its message
+        setNewMessage(node.data.message);
+        return node;
+      }
+    });
   }, []);
 
   const onNodeContextMenu = useCallback((event, node) => {
@@ -207,25 +217,25 @@ function Message() {
   };
 
   const handleBold = () => {
-    setNewMessage((prevMessage) => `<b>${prevMessage}</b>`); // Apply bold
+    setNewMessage((prevMessage) => `<b>${prevMessage}</b>`);
   };
 
   const handleItalic = () => {
-    setNewMessage((prevMessage) => `<i>${prevMessage}</i>`); // Apply italic
+    setNewMessage((prevMessage) => `<i>${prevMessage}</i>`);
   };
 
   const handleUnderline = () => {
-    setNewMessage((prevMessage) => `<u>${prevMessage}</u>`); // Apply underline
+    setNewMessage((prevMessage) => `<u>${prevMessage}</u>`);
   };
 
   const handleMidline = () => {
-    setNewMessage((prevMessage) => `<s>${prevMessage}</s>`); // Apply strikethrough
+    setNewMessage((prevMessage) => `<s>${prevMessage}</s>`);
   };
 
   const handleInsertLink = () => {
     const url = prompt("Enter the URL");
     if (url) {
-      setNewMessage((prevMessage) => `<a href="${url}">${prevMessage}</a>`); // Insert link
+      setNewMessage((prevMessage) => `<a href="${url}">${prevMessage}</a>`);
     }
   };
   const onNodesChange = useCallback(
@@ -286,7 +296,7 @@ function Message() {
         >
           <Background />
           <Controls />
-          <MiniMap />
+          {/* <MiniMap /> */}
         </ReactFlow>
 
         {/* Add Node Dropdown */}

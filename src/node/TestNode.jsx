@@ -115,7 +115,7 @@ const initialEdges = [
   },
 ];
 
-function Basic() {
+const TestNode = () => {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
 
@@ -248,4 +248,4 @@ function Basic() {
   );
 }
 
-export default Basic;
+export default TestNode;

@@ -77,7 +77,7 @@ const MessageNode = ({ data, onClick }) => {
                     padding: "10px",
                     borderRadius: "5px",
                     marginTop: "10px",
-                    border: '1px solid #007bff',
+                    border: "2px solid rgb(245, 242, 242)",
                     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                 }}
             >

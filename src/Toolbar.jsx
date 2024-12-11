@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { PiCornersOut, PiContactlessPayment, PiChalkboardTeacher } from "react-icons/pi";
+import { FiMessageCircle, FiPlus, FiSmile } from "react-icons/fi";
 import { FcSms, FcList } from "react-icons/fc";
 const Toolbar = ({nodes, addNode}) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -36,7 +36,7 @@ const Toolbar = ({nodes, addNode}) => {
         >
             <div style={{ position: "relative" }} onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}>
-                <PiContactlessPayment
+                <FiMessageCircle
                     size={40}
                     color="#333"
                     style={{
@@ -97,7 +97,7 @@ const Toolbar = ({nodes, addNode}) => {
 
             </div>
             <div style={{ position: "relative" }}>
-                <PiChalkboardTeacher
+                <FiSmile
                     size={40}
                     color="#333"
                     style={{

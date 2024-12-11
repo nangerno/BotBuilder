@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaPlay, FaClock, FaRobot, FaMinus, FaCommentAlt } from "react-icons/fa";
 import { PiCornersOut} from "react-icons/pi";
+import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
 
 const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFocused, newMessage, selectedNode, setSelectedNode, handlePlay, handleInsertLink, handleDelay, addVariant, removeVariant, variants, variantConditions, visibleCondition, conditionCount, conditions, handleSaveMessage, handleMessageChange, handleFormatText, handleCondition, renderConditionLength, addCondition, removeCondition, setActiveTabForCondition, handleConditionChange }) => {
     return (
@@ -57,11 +58,11 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                 </div>
             </div>
             <strong>Variants</strong>
-            <button
-                onClick={addVariant}
+            {/* <button
+                
                 style={{
                     border: 'none',
-                    backgroundColor: "#007BFF",
+                    // backgroundColor: "#007BFF",
                     color: '#fff',
                     fontSize: '24px',
                     width: '20px',
@@ -77,34 +78,14 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                 onMouseEnter={(e) => e.target.style.backgroundColor = '#0056b3'}
                 onMouseLeave={(e) => e.target.style.backgroundColor = '#007BFF'}
             >
-                +
-            </button>
+                
+            </button> */}
+            <FiPlusCircle style={{float: 'right', cursor: 'pointer'}} size={20} onClick={addVariant} />
             <br></br>
             <br></br>
             {variants.map((variant) => (
                 <div key={variant.id} style={{ marginBottom: "10px", marginTop: '15px', paddingBotton: '10px', borderBottom: '1px solid #ddd' }}>
-                    <button
-                        style={{
-                            border: 'none',
-                            backgroundColor: "#007BFF",
-                            color: '#fff',
-                            fontSize: '20px',
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s ease',
-                            float: 'right',
-                        }}
-                        onClick={() => removeVariant(variant.id)}
-                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
-                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007BFF'}
-                    >
-                        -
-                    </button>
+                    <FiMinusCircle style={{float: 'right', cursor: 'pointer'}} size={20} onClick={() => removeVariant(variant.id)} />
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
                         <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}>
                             <FaPlay />

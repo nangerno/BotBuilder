@@ -137,6 +137,7 @@ const Message = () => {
   const [conditions, setConditions] = useState([{ id: 1 }]);
   const [conditionCount, setConditionCount] = useState(1);
   const [isFocused, setIsFocused] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   //state to manage color
   const [selectedColorValue, setSelectedColorValue] = useState(255);
 
@@ -355,11 +356,8 @@ const Message = () => {
     setSelectedColorValue(value);
     handleColorChange(`rgb(${value}, 0, 0)`);
   };
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(prevState => !prevState);
-  };
 
   const handleNodeSelection = (nodeType) => {
     addNode(nodeType);
@@ -385,6 +383,17 @@ const Message = () => {
         [conditionId]: value
       }
     }));
+  };
+
+  let timeoutId;
+
+  const handleMouseEnter = () => {
+    clearTimeout(timeoutId);
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutId = setTimeout(() => setIsDropdownOpen(false), 300);
   };
 
   return (
@@ -524,8 +533,8 @@ const Message = () => {
           }}
 
         >
-          <div style={{ position: "relative" }} onMouseEnter={toggleDropdown}
-            onMouseLeave={toggleDropdown}>
+          <div style={{ position: "relative" }}         onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}>
             <PiContactlessPayment
               size={40}
               color="#333"

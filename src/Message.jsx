@@ -31,7 +31,6 @@ const CustomNode = ({ data, onClick }) => {
       setIsEditing(false);
     }
   };
-  console.log(data.message)
   return (
     <div
       style={{
@@ -85,7 +84,10 @@ const CustomNode = ({ data, onClick }) => {
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <p style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}>{data.message}</p>
+        <p
+          style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}
+          dangerouslySetInnerHTML={{ __html: data.message }}
+        ></p>
       </div>
       <Handle
         type="target"
@@ -128,12 +130,12 @@ const Message = () => {
   const conditionDivRef = useRef(null);
   const [variants, setVariants] = useState([{ id: 0, message: "" }]);
   const [visibleCondition, setVisibleCondition] = useState(null);
+  const [conditionValues, setConditionValues] = useState(['']);
   const [conditions, setConditions] = useState([{ id: 1 }]);
   const [conditionCount, setConditionCount] = useState(1);
   const [isFocused, setIsFocused] = useState(false);
   //state to manage color
   const [selectedColorValue, setSelectedColorValue] = useState(255);
-  const [circleColors, setCircleColors] = useState(["#ff0000", "#00ff00", "#0000ff", "#ffff00"]);
 
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
 
@@ -154,7 +156,7 @@ const Message = () => {
       data: {
         label,
         message: `This is a ${label} node.`,
-        bgColor: "#e0f7fa"
+        style: { backgroundColor: '#dde4ea' }
       },
       position: { x: Math.random() * (window.innerWidth - 100), y: Math.random() * (window.innerHeight - 100) },
     };
@@ -175,17 +177,17 @@ const Message = () => {
       prevNodes.map((node) =>
         node.id === id
           ? {
-              ...node,
-              data: {
-                ...node.data,
-                style: { ...node.data.style, backgroundColor: newColor }
-              }
+            ...node,
+            data: {
+              ...node.data,
+              style: { ...node.data.style, backgroundColor: newColor }
             }
+          }
           : node
       )
     );
   }, []);
-  
+
 
   const onNodeClick = useCallback((event, node) => {
     setNewMessage(node.data.message);
@@ -193,7 +195,7 @@ const Message = () => {
       if (prevNode && prevNode.id === node.id) {
         // If clicking the same node, hide the message dashboard
         // return null;
-        setSelectedNode(node)
+        setSelectedNode(node);
       } else {
         // If clicking a different node, show its message
         setNewMessage(node.data.message);
@@ -201,21 +203,22 @@ const Message = () => {
       }
     });
     setContextMenuPosition(null);
+    setVisibleCondition(null);
   }, []);
 
   const onNodeContextMenu = useCallback((event, node) => {
+
     event.preventDefault();
     event.stopPropagation();
+    setVisibleCondition(null);
     setContextMenuPosition({ x: event.clientX, y: event.clientY });
     // if (window.confirm(`Delete node "${node.data.label}"?`)) {
     //   setNodes((nds) => nds.filter((n) => n.id !== node.id));
     //   setEdges((eds) => eds.filter((edge) => edge.source !== node.id && edge.target !== node.id));
     // }
-    console.log(event.button)
-    if(event.button==2){
-      console.log(node)
+    if (event.button == 2) {
       setSelectedColorNode(node)
-    } else {
+    } else if (event.button == 1) {
       setSelectedNode(node)
     }
   }, []);
@@ -249,6 +252,7 @@ const Message = () => {
       editNode(selectedNode.id, selectedNode.data.label, currentContent);
     }
     setSelectedNode(null);
+    setVisibleCondition(null);
   };
 
   useEffect(() => {
@@ -322,6 +326,7 @@ const Message = () => {
   const addCondition = () => {
     setConditionCount(prevCount => prevCount + 1);
     setConditions([...conditions, { id: conditions.length + 1 }]);
+    setConditionValues([...conditionValues, '']);
   };
 
   const removeCondition = (id) => {
@@ -340,7 +345,12 @@ const Message = () => {
 
   const handleNodeSelection = (nodeType) => {
     addNode(nodeType);
-    setIsDropdownOpen(false); // Close dropdown after selection
+    setIsDropdownOpen(false);
+  };
+  const handleConditionChange = (index, value) => {
+    const updatedConditions = [...conditionValues];
+    updatedConditions[index] = value;
+    setConditionValues(updatedConditions);
   };
   return (
     <div style={{ display: "flex", height: "100vh", width: "100%" }}>
@@ -438,7 +448,7 @@ const Message = () => {
             </div>
           </div>
         )}
-        <div style={{ position: "fixed", top: "20px", left: "20px", zIndex: "1000" }}>
+        {/* <div style={{ position: "fixed", top: "20px", left: "20px", zIndex: "1000" }}>
           <FaRobot
             size={40}
             color="#333"
@@ -482,14 +492,197 @@ const Message = () => {
               </div>
             </div>
           )}
+        </div> */}
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            left: "20px",
+            zIndex: "1000",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            backgroundColor:'#ffffff',
+            padding: '10px',
+            borderRadius: '15px'
+          }}
+          onMouseEnter={toggleDropdown}
+          onMouseLeave={toggleDropdown}
+        >
+          <div style={{ position: "relative" }}>
+            <FaRobot
+              size={40}
+              color="#333"
+              style={{
+                cursor: "pointer",
+              }}
+            />
+            {isDropdownOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  left: "100%",
+                  marginLeft: "10px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: "1001",
+                  width: "150px",
+                  borderRadius: '5px'
+                }}
+              >
+                <div
+                  onClick={() => handleNodeSelection("Message Node")}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    padding: "10px",
+                    cursor: "pointer",
+                    borderBottom: "1px solid #ddd",
+                    transition: "background-color 0.4s ease, transform 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#f5f5f5";
+                    e.currentTarget.style.transform = "scale(1.02)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
+                >
+                  <FaRobot size={20} color="#333" />
+                  <span style={{ fontSize: "0.95rem", fontWeight: "500", color: "#333" }}>
+                    Message Node
+                  </span>
+                </div>
+                {/* <div
+                  onClick={() => handleNodeSelection("Decision Node")}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    padding: "10px",
+                    cursor: "pointer",
+                    borderBottom: "1px solid #ddd",
+                    transition: "background-color 0.2s ease, transform 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#f5f5f5";
+                    e.currentTarget.style.transform = "scale(1.02)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
+                >
+                  <FaRobot size={20} color="#333" />
+                  <span style={{ fontSize: "0.95rem", fontWeight: "500", color: "#333" }}>
+                    Decision Node
+                  </span>
+                </div> */}
+              </div>
+            )}
+          </div>
+
+          <div style={{ position: "relative" }}>
+            <FaRobot
+              size={40}
+              color="#555"
+              style={{
+                cursor: "pointer",
+              }}
+              // onClick={toggleDropdown}
+            />
+            {/* {isDropdownOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  left: "100%",
+                  marginLeft: "10px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: "1001",
+                  width: "150px",
+                }}
+              >
+                <div
+                  onClick={() => handleNodeSelection("Start Node")}
+                  style={{
+                    padding: "10px",
+                    cursor: "pointer",
+                    borderBottom: "1px solid #ddd",
+                  }}
+                >
+                  Start Node
+                </div>
+                <div
+                  onClick={() => handleNodeSelection("End Node")}
+                  style={{
+                    padding: "10px",
+                    cursor: "pointer",
+                  }}
+                >
+                  End Node
+                </div>
+              </div>
+            )} */}
+          </div>
+          <div style={{ position: "relative" }}>
+            <FaRobot
+              size={40}
+              color="#555"
+              style={{
+                cursor: "pointer",
+              }}
+              // onClick={toggleDropdown}
+            />
+            {/* {isDropdownOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "0",
+                  left: "100%",
+                  marginLeft: "10px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  zIndex: "1001",
+                  width: "150px",
+                }}
+              >
+                <div
+                  onClick={() => handleNodeSelection("Start Node")}
+                  style={{
+                    padding: "10px",
+                    cursor: "pointer",
+                    borderBottom: "1px solid #ddd",
+                  }}
+                >
+                  Start Node
+                </div>
+                <div
+                  onClick={() => handleNodeSelection("End Node")}
+                  style={{
+                    padding: "10px",
+                    cursor: "pointer",
+                  }}
+                >
+                  End Node
+                </div>
+              </div>
+            )} */}
+          </div>
         </div>
+
       </div>
       {visibleCondition !== null && (
         <div
           ref={conditionDivRef}
           style={{
             width: "350px",
-            height: `${50 + (conditionCount - 1) * 40}px`,
+            height: `${50 + (conditionCount - 1) * 31}px`,
+            maxHeight: '50%',
             backgroundColor: "#f9f9f9",
             padding: "20px",
             border: "1px solid #ddd",
@@ -500,7 +693,8 @@ const Message = () => {
             overflow: "hidden",
             borderRadius: '10px',
             zIndex: 10001,
-            transition: "height 0.3s ease-in-out"
+            transition: "height 0.3s ease-in-out",
+            overflowY: "visible"
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
@@ -540,7 +734,7 @@ const Message = () => {
                 <option>variable</option>
               </select>
               <p style={{ margin: "0 5px" }}>is</p>
-              <input type="text" placeholder="value or {var}" style={{ backgroundColor: "#f9f9f9", marginRight: "5px", border: 'none', outline: 'none' }} />
+              <input onChange={(e) => handleConditionChange(index, e.target.value)} value={conditionValues[index]===''?'':conditionValues[index]} type="text" placeholder="value or {var}" style={{ backgroundColor: "#f9f9f9", marginRight: "5px", border: 'none', outline: 'none' }} />
               <button
                 style={{
                   cursor: conditions.length > 1 ? 'pointer' : 'not-allowed',
@@ -609,29 +803,29 @@ const Message = () => {
         </div>
         <strong>Variants</strong>
         <button
-  onClick={addVariant}
-  style={{
-    border: 'none',
-    backgroundColor: "#007BFF",
-    color: '#fff',
-    fontSize: '24px',
-    width: '20px',
-    height: '20px',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    float: 'right',
-  }}
-  onMouseEnter={(e) => e.target.style.backgroundColor = '#0056b3'}
-  onMouseLeave={(e) => e.target.style.backgroundColor = '#007BFF'}
->
-  +
-</button>
-  <br></br>
-  <br></br>
+          onClick={addVariant}
+          style={{
+            border: 'none',
+            backgroundColor: "#007BFF",
+            color: '#fff',
+            fontSize: '24px',
+            width: '20px',
+            height: '20px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            float: 'right',
+          }}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#0056b3'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#007BFF'}
+        >
+          +
+        </button>
+        <br></br>
+        <br></br>
         {variants.map((variant, index) => (
           <div key={variant.id} style={{ marginBottom: "10px", marginTop: '15px', paddingBotton: '10px', borderBottom: '1px solid #ddd' }}>
             <button
@@ -648,7 +842,7 @@ const Message = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease', 
+                transition: 'all 0.3s ease',
                 float: 'right',
               }}
             >
@@ -678,7 +872,7 @@ const Message = () => {
               </button>
             </div>
 
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative'}}>
               {!isFocused && !variant.message && (
                 <span style={{
                   position: 'absolute',
@@ -711,7 +905,9 @@ const Message = () => {
               style={{ marginTop: '5px', marginBottom: '10px', border: '1px solid black', borderRadius: '4px' }}
               onClick={() => handleCondition(variant.id)}
             >
+            <FaRobot />
               Condition
+              {/* {conditions.length == 1 && conditionValues[index] === '' || conditionValues[index] === '' ? ' Condition' : ' ' + conditions.length} */}
             </button>
           </div>
         ))}

@@ -150,28 +150,29 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                             marginBottom: '10px',
                             border: '1px solid #ccc',
                             borderRadius: '4px',
-                            backgroundColor: '#f9f9f9',
+                            // backgroundColor: '#f9f9f9',
+                            backgroundColor: variantConditions[variant.id] ?'#ddd':'#f9f9f9',
                             color: '#333',
                             fontSize: '14px',
                             cursor: 'pointer',
-                            transition: 'background-color 0.3s, border-color 0.3s',
+                            // transition: 'background-color 0.3s, border-color 0.3s',
                         }}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = '#e6e6e6';
-                            e.currentTarget.style.borderColor = '#999';
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = '#f9f9f9';
-                            e.currentTarget.style.borderColor = '#ccc';
-                        }}
-                        onMouseDown={(e) => {
-                            e.currentTarget.style.backgroundColor = '#dcdcdc';
-                            e.currentTarget.style.borderColor = '#666';
-                        }}
-                        onMouseUp={(e) => {
-                            e.currentTarget.style.backgroundColor = '#e6e6e6';
-                            e.currentTarget.style.borderColor = '#999';
-                        }}
+                        // onMouseOver={(e) => {
+                        //     e.currentTarget.style.backgroundColor = '#e6e6e6';
+                        //     e.currentTarget.style.borderColor = '#999';
+                        // }}
+                        // onMouseOut={(e) => {
+                        //     e.currentTarget.style.backgroundColor = '#f9f9f9';
+                        //     e.currentTarget.style.borderColor = '#ccc';
+                        // }}
+                        // onMouseDown={(e) => {
+                        //     e.currentTarget.style.backgroundColor = '#dcdcdc';
+                        //     e.currentTarget.style.borderColor = '#666';
+                        // }}
+                        // onMouseUp={(e) => {
+                        //     e.currentTarget.style.backgroundColor = '#e6e6e6';
+                        //     e.currentTarget.style.borderColor = '#999';
+                        // }}
                         onClick={() => handleCondition(variant.id)}
                     >
                         <span

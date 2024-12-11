@@ -9,7 +9,9 @@ import ReactFlow, {
   applyEdgeChanges,
   MarkerType
 } from "react-flow-renderer";
-import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaPlay, FaClock, FaRobot, FaMinus } from "react-icons/fa";
+import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaPlay, FaClock, FaRobot, FaMinus, FaCommentAlt } from "react-icons/fa";
+import { FcSms, FcList } from "react-icons/fc";
+import { PiBracketsSquareFill, PiCornersOut, PiContactlessPayment, PiChalkboardTeacher } from "react-icons/pi";
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
 
@@ -130,7 +132,8 @@ const Message = () => {
   const conditionDivRef = useRef(null);
   const [variants, setVariants] = useState([{ id: 0, message: "" }]);
   const [visibleCondition, setVisibleCondition] = useState(null);
-  const [conditionValues, setConditionValues] = useState(['']);
+  const [conditionValues, setConditionValues] = useState({});
+  const [variantConditions, setVariantConditions] = useState({});
   const [conditions, setConditions] = useState([{ id: 1 }]);
   const [conditionCount, setConditionCount] = useState(1);
   const [isFocused, setIsFocused] = useState(false);
@@ -303,6 +306,7 @@ const Message = () => {
   );
   const addVariant = () => {
     setVariants([...variants, { id: variants.length, message: "" }]);
+
   };
 
   const removeVariant = (variantId) => {
@@ -314,10 +318,20 @@ const Message = () => {
     );
   };
   const handleCondition = (variantId) => {
-    console.log("ddd---", variantId)
+    console.log("ddd---", variantConditions[variantId]);
+    const openedConditionValue = variantConditions[variantId] || {};
+    setConditionValues(openedConditionValue);
+
     setVisibleCondition(prevCondition =>
       prevCondition && prevCondition.variantId === variantId ? null : { variantId, activeTab: "all" }
     );
+
+    if (!variantConditions[variantId] || Object.keys(variantConditions[variantId]).length === 0) {
+      setVariantConditions(prevConditions => ({
+        ...prevConditions,
+        [variantId]: {}
+      }));
+    }
   };
   const setActiveTabForCondition = (tab) => {
     setVisibleCondition(prevCondition =>
@@ -330,7 +344,7 @@ const Message = () => {
       ...prevConditions,
       { id: prevConditions.length + 1 }
     ]);
-    setConditionValues((prevValues) => [...prevValues, '']);
+    // setConditionValues((prevValues) => [...prevValues, '']);
   };
 
   const removeCondition = (id) => {
@@ -351,14 +365,28 @@ const Message = () => {
     addNode(nodeType);
     setIsDropdownOpen(false);
   };
-  const handleConditionChange = (index, value) => {
-    const updatedConditions = [...conditionValues];
-    updatedConditions[index] = value;
-    setConditionValues(updatedConditions);
-    // setConditionValues((prevValues) =>
-    //   prevValues.map((val, i) => (i === index ? value : val))
-    // );
+  // const handleConditionChange = (index, value) => {
+  //   const updatedConditions = [...conditionValues];
+  //   updatedConditions[index] = value;
+  //   setConditionValues(updatedConditions);
+  // };
+  const handleConditionChange = (variantId, conditionId, value) => {
+
+    console.log("---->>>>>", variantConditions)
+    setConditionValues(prev => ({
+      ...prev,
+      [conditionId]: value
+    }));
+
+    setVariantConditions(prev => ({
+      ...prev,
+      [variantId]: {
+        ...prev[variantId],
+        [conditionId]: value
+      }
+    }));
   };
+
   return (
     <div style={{ display: "flex", height: "100vh", width: "100%" }}>
       <div style={{ flex: 1 }}>
@@ -509,21 +537,30 @@ const Message = () => {
             display: "flex",
             flexDirection: "column",
             gap: "20px",
-            backgroundColor:'#ffffff',
+            backgroundColor: '#ffffff',
             padding: '10px',
             borderRadius: '15px'
           }}
-          onMouseEnter={toggleDropdown}
-          onMouseLeave={toggleDropdown}
+
         >
-          <div style={{ position: "relative" }}>
-            <FaRobot
+          <div style={{ position: "relative" }} onMouseEnter={toggleDropdown}
+            onMouseLeave={toggleDropdown}>
+            <PiContactlessPayment
               size={40}
               color="#333"
               style={{
                 cursor: "pointer",
               }}
             />
+            <div
+              style={{
+                fontSize: "14px",
+                fontWeight: "500",
+                textAlign: "center",
+              }}
+            >
+              Talk
+            </div>
             {isDropdownOpen && (
               <div
                 style={{
@@ -558,7 +595,7 @@ const Message = () => {
                     e.currentTarget.style.transform = "scale(1)";
                   }}
                 >
-                  <FaRobot size={20} color="#333" />
+                  <FcSms size={20} color="#333" />
                   <span style={{ fontSize: "0.95rem", fontWeight: "500", color: "#333" }}>
                     Message Node
                   </span>
@@ -590,172 +627,29 @@ const Message = () => {
                 </div> */}
               </div>
             )}
-          </div>
 
-          <div style={{ position: "relative" }}>
-            <FaRobot
-              size={40}
-              color="#555"
-              style={{
-                cursor: "pointer",
-              }}
-              // onClick={toggleDropdown}
-            />
-            {/* {isDropdownOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "0",
-                  left: "100%",
-                  marginLeft: "10px",
-                  backgroundColor: "#fff",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                  zIndex: "1001",
-                  width: "150px",
-                }}
-              >
-                <div
-                  onClick={() => handleNodeSelection("Start Node")}
-                  style={{
-                    padding: "10px",
-                    cursor: "pointer",
-                    borderBottom: "1px solid #ddd",
-                  }}
-                >
-                  Start Node
-                </div>
-                <div
-                  onClick={() => handleNodeSelection("End Node")}
-                  style={{
-                    padding: "10px",
-                    cursor: "pointer",
-                  }}
-                >
-                  End Node
-                </div>
-              </div>
-            )} */}
           </div>
           <div style={{ position: "relative" }}>
-            <FaRobot
+            <PiChalkboardTeacher
               size={40}
-              color="#555"
+              color="#333"
               style={{
                 cursor: "pointer",
               }}
-              // onClick={toggleDropdown}
             />
-            {/* {isDropdownOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "0",
-                  left: "100%",
-                  marginLeft: "10px",
-                  backgroundColor: "#fff",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                  zIndex: "1001",
-                  width: "150px",
-                }}
-              >
-                <div
-                  onClick={() => handleNodeSelection("Start Node")}
-                  style={{
-                    padding: "10px",
-                    cursor: "pointer",
-                    borderBottom: "1px solid #ddd",
-                  }}
-                >
-                  Start Node
-                </div>
-                <div
-                  onClick={() => handleNodeSelection("End Node")}
-                  style={{
-                    padding: "10px",
-                    cursor: "pointer",
-                  }}
-                >
-                  End Node
-                </div>
-              </div>
-            )} */}
+            <div
+              style={{
+                fontSize: "14px",
+                fontWeight: "500",
+                textAlign: "center",
+              }}
+            >
+              Listen
+            </div>
           </div>
         </div>
-
       </div>
-      {visibleCondition !== null && (
-        <div
-          ref={conditionDivRef}
-          style={{
-            width: "350px",
-            height: `${50 + (conditionCount - 1) * 31}px`,
-            maxHeight: '50%',
-            backgroundColor: "#f9f9f9",
-            padding: "20px",
-            border: "1px solid #ddd",
-            display: visibleCondition !== null ? "block" : "none",
-            position: "absolute",
-            top: `${350 + variants.findIndex(v => v.id === visibleCondition.variantId) * 100}px`,
-            right: "350px",
-            overflow: "hidden",
-            borderRadius: '10px',
-            zIndex: 10001,
-            transition: "height 0.3s ease-in-out",
-            overflowY: "visible"
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-            <div style={{ display: "flex", borderBottom: "1px solid #ddd", width: "70%" }}>
-              <div
-                style={{
-                  padding: "5px 10px",
-                  cursor: "pointer",
-                  backgroundColor: visibleCondition.activeTab === "all" ? "#fff" : "#f0f0f0",
-                  borderBottom: visibleCondition.activeTab === "all" ? "2px solid #007bff" : "none"
-                }}
-                onClick={() => setActiveTabForCondition("all")}
-              >
-                Match all
-              </div>
-              <div
-                style={{
-                  padding: "5px 10px",
-                  cursor: "pointer",
-                  backgroundColor: visibleCondition.activeTab === "any" ? "#fff" : "#f0f0f0",
-                  borderBottom: visibleCondition.activeTab === "any" ? "2px solid #007bff" : "none"
-                }}
-                onClick={() => setActiveTabForCondition("any")}
-              >
-                Match any
-              </div>
-            </div>
-            <div>
-              <button style={{ marginRight: "5px", cursor: 'pointer' }}>?</button>
-              <button style={{ cursor: 'pointer' }} onClick={addCondition}>+</button>
-            </div>
-          </div>
-          {conditions.map((condition, index) => (
-            <div key={condition.id} style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-              <p style={{ margin: "0 5px" }}>if</p>
-              <select style={{ marginRight: "15px", border: 'none', backgroundColor: "#f9f9f9", outline: 'none' }}>
-                <option>variable</option>
-              </select>
-              <p style={{ margin: "0 5px" }}>is</p>
-              <input onChange={(e) => handleConditionChange(index, e.target.value)} value={conditionValues[index] || ''} type="text" placeholder="value or {var}" style={{ backgroundColor: "#f9f9f9", marginRight: "5px", border: 'none', outline: 'none' }} />
-              <button
-                style={{
-                  cursor: conditions.length > 1 ? 'pointer' : 'not-allowed',
-                  opacity: conditions.length > 1 ? 1 : 0.5
-                }}
-                onClick={() => conditions.length > 1 && removeCondition(condition.id)}
-                disabled={conditions.length === 1}
-              >
-                -
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+
       <div
         ref={messageDivRef}
         style={{
@@ -833,15 +727,14 @@ const Message = () => {
         </button>
         <br></br>
         <br></br>
-        {variants.map((variant, index) => (
+        {variants.map((variant) => (
           <div key={variant.id} style={{ marginBottom: "10px", marginTop: '15px', paddingBotton: '10px', borderBottom: '1px solid #ddd' }}>
             <button
-              onClick={() => removeVariant(variant.id)}
               style={{
                 border: 'none',
                 backgroundColor: "#007BFF",
                 color: '#fff',
-                fontSize: '24px',
+                fontSize: '20px',
                 width: '20px',
                 height: '20px',
                 borderRadius: '50%',
@@ -852,6 +745,9 @@ const Message = () => {
                 transition: 'all 0.3s ease',
                 float: 'right',
               }}
+              onClick={() => removeVariant(variant.id)}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007BFF'}
             >
               -
             </button>
@@ -879,7 +775,7 @@ const Message = () => {
               </button>
             </div>
 
-            <div style={{ position: 'relative'}}>
+            <div style={{ position: 'relative' }}>
               {!isFocused && !variant.message && (
                 <span style={{
                   position: 'absolute',
@@ -909,13 +805,132 @@ const Message = () => {
               />
             </div>
             <button
-              style={{ marginTop: '5px', marginBottom: '10px', border: '1px solid black', borderRadius: '4px' }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '8px 12px',
+                marginTop: '5px',
+                marginBottom: '10px',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                backgroundColor: '#f9f9f9',
+                color: '#333',
+                fontSize: '14px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s, border-color 0.3s',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#e6e6e6';
+                e.currentTarget.style.borderColor = '#999';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#f9f9f9';
+                e.currentTarget.style.borderColor = '#ccc';
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.backgroundColor = '#dcdcdc';
+                e.currentTarget.style.borderColor = '#666';
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.backgroundColor = '#e6e6e6';
+                e.currentTarget.style.borderColor = '#999';
+              }}
               onClick={() => handleCondition(variant.id)}
             >
-            <FaRobot />
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
+              >
+                <PiCornersOut size={19} />
+              </span>
               Condition
-              {/* {conditions.length == 1 && conditionValues[index] === '' || conditionValues[index] === '' ? ' Condition' : ' ' + conditions.length} */}
+              {/* Uncomment and adjust the conditional rendering logic as needed */}
+              {/* {conditions.length === 1 && conditionValues[index] === '' ? ' Condition' : ' ' + conditions.length} */}
             </button>
+
+            {visibleCondition !== null && (
+              <div
+                ref={conditionDivRef}
+                style={{
+                  width: "350px",
+                  height: `${50 + (conditionCount - 1) * 31}px`,
+                  maxHeight: '50%',
+                  backgroundColor: "#f9f9f9",
+                  padding: "20px",
+                  border: "1px solid #ddd",
+                  display: visibleCondition !== null ? "block" : "none",
+                  position: "absolute",
+                  top: `${350 + variants.findIndex(v => v.id === visibleCondition.variantId) * 100}px`,
+                  right: "350px",
+                  overflow: "hidden",
+                  borderRadius: '10px',
+                  zIndex: 10001,
+                  transition: "height 0.3s ease-in-out",
+                  overflowY: "visible"
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+                  <div style={{ display: "flex", borderBottom: "1px solid #ddd", width: "70%" }}>
+                    <div
+                      style={{
+                        padding: "5px 10px",
+                        cursor: "pointer",
+                        backgroundColor: visibleCondition.activeTab === "all" ? "#fff" : "#f0f0f0",
+                        borderBottom: visibleCondition.activeTab === "all" ? "2px solid #007bff" : "none"
+                      }}
+                      onClick={() => setActiveTabForCondition("all")}
+                    >
+                      Match all
+                    </div>
+                    <div
+                      style={{
+                        padding: "5px 10px",
+                        cursor: "pointer",
+                        backgroundColor: visibleCondition.activeTab === "any" ? "#fff" : "#f0f0f0",
+                        borderBottom: visibleCondition.activeTab === "any" ? "2px solid #007bff" : "none"
+                      }}
+                      onClick={() => setActiveTabForCondition("any")}
+                    >
+                      Match any
+                    </div>
+                  </div>
+                  <div>
+                    <button style={{ marginRight: "5px", cursor: 'pointer' }}>?</button>
+                    <button style={{ cursor: 'pointer' }} onClick={addCondition}>+</button>
+                  </div>
+                </div>
+                {conditions.map((condition, index) => (
+                  <div key={condition.id} style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+                    <p style={{ margin: "0 5px" }}>if</p>
+                    <select style={{ marginRight: "15px", border: 'none', backgroundColor: "#f9f9f9", outline: 'none' }}>
+                      <option>variable</option>
+                    </select>
+                    <p style={{ margin: "0 5px" }}>is</p>
+                    <input
+                      onChange={(e) => handleConditionChange(visibleCondition.variantId, condition.id, e.target.value)}
+                      value={variantConditions[visibleCondition.variantId]?.[condition.id] || ''}
+                      type="text"
+                      placeholder="value or {var}"
+                      style={{ backgroundColor: "#f9f9f9", marginRight: "5px", border: 'none', outline: 'none' }}
+                    />
+                    <button
+                      style={{
+                        cursor: conditions.length > 1 ? 'pointer' : 'not-allowed',
+                        opacity: conditions.length > 1 ? 1 : 0.5
+                      }}
+                      onClick={() => conditions.length > 1 && removeCondition(condition.id)}
+                      disabled={conditions.length === 1}
+                    >
+                      -
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
 
@@ -929,8 +944,11 @@ const Message = () => {
               borderRadius: "5px",
               border: "none",
               cursor: "pointer",
-              width: '100%'
+              width: '100%',
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
             }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007BFF'}
           >
             Save
           </button>

@@ -414,74 +414,55 @@ const Message = () => {
               top: contextMenuPosition.y,
               left: contextMenuPosition.x,
               backgroundColor: 'white',
-              borderRadius: '5px',
-              boxShadow: '0px 2px 4px rgba(0,0,0,0.2)',
+              borderRadius: '8px',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
               zIndex: '100',
-              padding: '10px',
+              padding: '15px',
+              width: '200px',
             }}
           >
             {/* Range input for color selection */}
-            <input
-              type="range"
-              min="0"
-              max="255"
-              value={selectedColorValue} // Assume you have a state for this
-              onChange={(e) => handleRangeChange(e.target.value)} // Define this function to handle changes
-              style={{ marginTop: '10px', width: '100%' }}
-            />
-            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-              <button
-                onClick={() => handleColorChange("#ff0000")}
-                style={{
-                  backgroundColor: "#ff0000",
-                  color: "white",
-                  border: "none",
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  margin: '5px'
-                }}
-              />
-              <button
-                onClick={() => handleColorChange("#00ff00")}
-                style={{
-                  backgroundColor: "#00ff00",
-                  color: "white",
-                  border: "none",
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  margin: '5px'
-                }}
-              />
-              <button
-                onClick={() => handleColorChange("#0000ff")}
-                style={{
-                  backgroundColor: "#0000ff",
-                  color: "white",
-                  border: "none",
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  margin: '5px'
-                }}
-              />
-              <button
-                onClick={() => handleColorChange("#ffff00")}
-                style={{
-                  backgroundColor: "#ffff00",
-                  color: "black",
-                  border: "none",
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  margin: '5px'
-                }}
-              />
-
-
+            {/* <input
+            type="range"
+            min="0"
+            max="255"
+            value={selectedColorValue} // Assume you have a state for this
+            onChange={(e) => handleRangeChange(e.target.value)} // Define this function to handle changes
+            style={{
+              margin: '10px 0',
+              width: '100%',
+              accentColor: '#007BFF', // Modern styling for range thumb
+            }}
+          /> */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+              {[
+                { color: "#ff0000", label: "Red" },
+                { color: "#00ff00", label: "Green" },
+                { color: "#0000ff", label: "Blue" },
+                { color: "#ffff00", label: "Yellow" },
+              ].map(({ color, label }) => (
+                <button
+                  key={color}
+                  onClick={() => handleColorChange(color)}
+                  aria-label={`Select ${label}`}
+                  style={{
+                    backgroundColor: color,
+                    border: "none",
+                    borderRadius: '50%',
+                    width: '40px',
+                    height: '40px',
+                    margin: '5px',
+                    cursor: 'pointer',
+                    transition: 'transform 0.2s ease',
+                    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                  }}
+                  onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
+                  onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
+                />
+              ))}
             </div>
           </div>
+
         )}
         {/* <div style={{ position: "fixed", top: "20px", left: "20px", zIndex: "1000" }}>
           <FaRobot

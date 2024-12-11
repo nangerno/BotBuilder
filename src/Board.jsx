@@ -15,6 +15,7 @@ import "react-flow-renderer/dist/theme-default.css";
 import MessageNode from "./node/MessageNode";
 import Toolbar from './Toolbar';
 import MessageRightPanel from './MessageRightPanel';
+import VariantPanel from "./VariantPanel";
 
 
 const initialNodes = [
@@ -246,7 +247,7 @@ const Board = () => {
       }
     }));
   };
-  
+
   const renderConditionLength = (variantId) => {
     const conditionsForVariant = variantConditions[variantId] || {};
     const conditionCount = Object.keys(conditionsForVariant).length;
@@ -269,9 +270,10 @@ const Board = () => {
         onNodeContextMenu={onNodeContextMenu}
       >
         <Background />
-        {/* <Controls /> */}
+        <Controls />
         {/* <MiniMap /> */}
       </ReactFlow>
+      <VariantPanel />
       {contextMenuPosition && (
         <div
           style={{

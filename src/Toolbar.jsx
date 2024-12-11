@@ -75,6 +75,7 @@ const Toolbar = ({nodes, addNode}) => {
                                 padding: "10px",
                                 cursor: "pointer",
                                 borderBottom: "1px solid #ddd",
+                                width: '300px',
                                 transition: "background-color 0.4s ease, transform 0.2s ease",
                             }}
                             onMouseEnter={(e) => {

@@ -54,7 +54,7 @@ const MessageNode = ({ data, onClick }) => {
                     autoFocus
                     style={{
                         fontSize: "1.1rem",
-                        color: "#737376",
+                        color: '#808080',
                         fontWeight: "bold",
                         border: "none",
                         background: "transparent",
@@ -65,7 +65,7 @@ const MessageNode = ({ data, onClick }) => {
                 />
             ) : (
                 <strong
-                    style={{ fontSize: "1.1rem", color: "#737376", cursor: "pointer" }}
+                    style={{ fontSize: "1.1rem", color: "#808080", cursor: "pointer" }}
                     onClick={handleLabelClick}
                 >
                     {editedLabel}
@@ -82,7 +82,7 @@ const MessageNode = ({ data, onClick }) => {
                 }}
             >
                 <p
-                    style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}
+                    style={{ margin: 0, fontSize: "0.95rem", color: "#808080" }}
                     dangerouslySetInnerHTML={{ __html: data.message }}
                 ></p>
             </div>

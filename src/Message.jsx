@@ -314,6 +314,7 @@ const Message = () => {
     );
   };
   const handleCondition = (variantId) => {
+    console.log("ddd---", variantId)
     setVisibleCondition(prevCondition =>
       prevCondition && prevCondition.variantId === variantId ? null : { variantId, activeTab: "all" }
     );
@@ -325,8 +326,11 @@ const Message = () => {
   };
   const addCondition = () => {
     setConditionCount(prevCount => prevCount + 1);
-    setConditions([...conditions, { id: conditions.length + 1 }]);
-    setConditionValues([...conditionValues, '']);
+    setConditions((prevConditions) => [
+      ...prevConditions,
+      { id: prevConditions.length + 1 }
+    ]);
+    setConditionValues((prevValues) => [...prevValues, '']);
   };
 
   const removeCondition = (id) => {
@@ -351,6 +355,9 @@ const Message = () => {
     const updatedConditions = [...conditionValues];
     updatedConditions[index] = value;
     setConditionValues(updatedConditions);
+    // setConditionValues((prevValues) =>
+    //   prevValues.map((val, i) => (i === index ? value : val))
+    // );
   };
   return (
     <div style={{ display: "flex", height: "100vh", width: "100%" }}>
@@ -734,7 +741,7 @@ const Message = () => {
                 <option>variable</option>
               </select>
               <p style={{ margin: "0 5px" }}>is</p>
-              <input onChange={(e) => handleConditionChange(index, e.target.value)} value={conditionValues[index]===''?'':conditionValues[index]} type="text" placeholder="value or {var}" style={{ backgroundColor: "#f9f9f9", marginRight: "5px", border: 'none', outline: 'none' }} />
+              <input onChange={(e) => handleConditionChange(index, e.target.value)} value={conditionValues[index] || ''} type="text" placeholder="value or {var}" style={{ backgroundColor: "#f9f9f9", marginRight: "5px", border: 'none', outline: 'none' }} />
               <button
                 style={{
                   cursor: conditions.length > 1 ? 'pointer' : 'not-allowed',

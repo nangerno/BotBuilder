@@ -56,7 +56,7 @@ const Board = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const nodeTypes = useMemo(() => ({ custom: MessageNode }), []);
-  
+
   const [variableData, setVariableData] = useState([]);
   const [variableType, setVariableTypeData] = useState([]);
   const [appliedColor, setAppliedColor] = useState(null);
@@ -179,24 +179,6 @@ const Board = () => {
     setVisibleCondition(null);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        messageDivRef.current &&
-        !messageDivRef.current.contains(event.target)
-      ) {
-        console.log("Outside click detected");
-        // setSelectedNode(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const handleFormatText = (format) => {
     document.execCommand(format);
     handleMessageChange(newMessage);
@@ -241,7 +223,6 @@ const Board = () => {
     );
   };
   const handleCondition = (variantId) => {
-    console.log("ddd---", variantConditions[variantId]);
     setVisibleCondition((prevCondition) =>
       prevCondition && prevCondition.variantId === variantId
         ? null
@@ -277,7 +258,6 @@ const Board = () => {
   };
 
   const handleConditionChange = (variantId, conditionId, value) => {
-    console.log("---->>>>>", variantConditions);
     setVariantConditions((prev) => ({
       ...prev,
       [variantId]: {

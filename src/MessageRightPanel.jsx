@@ -42,10 +42,11 @@ const MessageRightPanel = ({
 }) => {
   
   const [newVariable, setNewVariable] = useState([]);
-  console.log(variantConditions);
+  
   useEffect(()=>{
     setNewVariable(variableData);
-  }, [variableData])
+    console.log(renderConditionLength)
+  }, [variableData. renderConditionLength])
 
   return (
     <div
@@ -241,7 +242,7 @@ const MessageRightPanel = ({
               border: "1px solid #ccc",
               borderRadius: "4px",
               // backgroundColor: '#f9f9f9',
-              backgroundColor: variantConditions[variant.id]
+              backgroundColor: conditionCount == 0
                 ? "#ddd"
                 : "#f9f9f9",
               color: "#333",
@@ -261,10 +262,10 @@ const MessageRightPanel = ({
             {/* Condition */}
             {/* Uncomment and adjust the conditional rendering logic as needed */}
             {/* {conditions.length === 1 ? ' Condition' : ' ' + conditions.length} */}
-            {variantConditions[variant.id] ? (
-              <div>{renderConditionLength(variant.id)}</div>
-            ) : (
+            {conditionCount==0 ? (
               <div>Condition</div>
+            ) : (
+              <div>{conditionCount}</div>
             )}
           </button>
 

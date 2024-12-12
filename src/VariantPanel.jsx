@@ -1,7 +1,10 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import AddVariable from "./AddVariable";
 
-const VariantPanel = () => {
-    const variableData = ['variable1', 'variable2', 'variable3', 'variable3', 'variable3', 'variable3'];
+const VariantPanel = ({ variableData }) => {
+
+    const [showVariable, setShowVariable] = useState(false);
+
     return (
         <div>
             <div
@@ -17,8 +20,7 @@ const VariantPanel = () => {
                     padding: '10px',
                     borderRadius: '15px',
                     width: '250px',
-                    height: '400px',
-                    border: '1px solid #007bff',
+                    height: '220px',
                     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
                 }}
             >
@@ -27,26 +29,32 @@ const VariantPanel = () => {
                 >
                     Variables
                 </strong>
-                {
-                    variableData.map((variable, index) => (
-                        <div
-                            key={index}
-                            style={{
-                                backgroundColor: "#ffffff",
-                                padding: "10px",
-                                borderRadius: "5px",
-                                border: '1px solid #007bff',
-                                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                            }}
-                        >
-                            <p
-                                style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}
+
+                <div style={{
+                    overflowX: 'hidden',
+                    overflowY: 'auto',
+                    maxHeight: '100px',
+                    padding: '10px',
+                    scrollBehavior: 'smooth',
+                }}>
+                    {
+                        variableData.map((variable, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    backgroundColor: "#ffffff",
+                                    borderBottom: '1px solid #ddd',
+                                }}
                             >
-                                {variable}
-                            </p>
-                        </div>
-                    ))
-                }
+                                <p
+                                    style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}
+                                >
+                                    {variable}
+                                </p>
+                            </div>
+                        ))
+                    }
+                </div>
                 <button
                     style={{
                         position: "absolute",
@@ -68,10 +76,12 @@ const VariantPanel = () => {
                     }}
                     onMouseEnter={(e) => e.target.style.backgroundColor = '#0056b3'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = '#007BFF'}
+                    onClick={() => setShowVariable(prevState => !prevState)}
                 >
                     +
                 </button>
             </div>
+            <AddVariable showVariable={showVariable} setShowVariable={setShowVariable} variableData={variableData}/>
         </div>
 
     );

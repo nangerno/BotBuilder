@@ -15,7 +15,7 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                 display: selectedNode ? "block" : "none",
                 overflowX: "hidden",
                 maxHeight: '100%',
-                overflowY: "visible"
+                overflowY: "auto",
             }}
         >
             <h3 style={{ borderBottom: "1px solid #ddd", padding: '10px' }}>Message</h3>
@@ -88,10 +88,10 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
             <br></br>
             {variants.map((variant) => (
                 <div key={variant.id} style={{
-                    marginBottom: "10px",
-                    marginTop: '15px',
-                    paddingBotton: '10px',
-                    borderBottom: '1px solid #ddd',
+                    marginBottom: "10px", 
+                    marginTop: '15px', 
+                    paddingBotton: '10px', 
+                    borderBottom: '1px solid #ddd', 
                 }}>
                     <FiMinusCircle style={{ float: 'right', cursor: 'pointer' }} size={20} onClick={() => removeVariant(variant.id)} />
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
@@ -200,12 +200,11 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                                 position: "absolute",
                                 top: `${350 + variants.findIndex(v => v.id === visibleCondition.variantId) * 100}px`,
                                 right: "350px",
-
                                 borderRadius: '10px',
                                 zIndex: 10001,
                                 transition: "height 0.3s ease-in-out",
                                 overflowX: "hidden",
-                                overflowY: "visible"
+                                overflowY: "auto"
                             }}
                         >
                             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>

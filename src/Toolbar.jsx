@@ -34,8 +34,7 @@ const Toolbar = ({nodes, addNode}) => {
                 borderRadius: '15px'
             }}
         >
-            <div style={{ position: "relative" }} onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}>
+            <div style={{ position: "relative" }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                 <FiMessageCircle
                     size={40}
                     color="#333"
@@ -62,7 +61,6 @@ const Toolbar = ({nodes, addNode}) => {
                             backgroundColor: "#fff",
                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                             zIndex: "1001",
-                            width: "150px",
                             borderRadius: '5px'
                         }}
                     >
@@ -75,7 +73,7 @@ const Toolbar = ({nodes, addNode}) => {
                                 padding: "10px",
                                 cursor: "pointer",
                                 borderBottom: "1px solid #ddd",
-                                width: '300px',
+                                width: '150px',
                                 transition: "background-color 0.4s ease, transform 0.2s ease",
                             }}
                             onMouseEnter={(e) => {

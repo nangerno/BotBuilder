@@ -1,10 +1,14 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import AddVariable from "./AddVariable";
 
-const VariantPanel = ({ variableData }) => {
+const VariantPanel = ({ variableData, setVariableData }) => {
 
     const [showVariable, setShowVariable] = useState(false);
-
+    const [seletedVariable, setSelectedVariable] = useState("");
+    const handleEditVariable = () => {
+        setShowVariable(prevState => !prevState)
+        
+    }
     return (
         <div>
             <div
@@ -19,7 +23,7 @@ const VariantPanel = ({ variableData }) => {
                     backgroundColor: '#ffffff',
                     padding: '10px',
                     borderRadius: '15px',
-                    width: '250px',
+                    width: '100px',
                     height: '220px',
                     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
                 }}
@@ -47,7 +51,8 @@ const VariantPanel = ({ variableData }) => {
                                 }}
                             >
                                 <p
-                                    style={{ margin: 0, fontSize: "0.95rem", color: "#555" }}
+                                    style={{ margin: 0, fontSize: "0.95rem", color: "#555", textAlign:'center', cursor:'pointer' }}
+                                    onClick={handleEditVariable}
                                 >
                                     {variable}
                                 </p>
@@ -65,8 +70,8 @@ const VariantPanel = ({ variableData }) => {
                         backgroundColor: "#007BFF",
                         color: '#fff',
                         fontSize: '24px',
-                        width: '40px',
-                        height: '40px',
+                        width: '30px',
+                        height: '30px',
                         borderRadius: '50%',
                         display: 'flex',
                         alignItems: 'center',
@@ -81,7 +86,7 @@ const VariantPanel = ({ variableData }) => {
                     +
                 </button>
             </div>
-            <AddVariable showVariable={showVariable} setShowVariable={setShowVariable} variableData={variableData}/>
+            <AddVariable showVariable={showVariable} setShowVariable={setShowVariable} variableData={variableData} setVariableData={setVariableData}/>
         </div>
 
     );

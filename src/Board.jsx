@@ -50,7 +50,7 @@ const Board = () => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const nodeTypes = useMemo(() => ({ custom: MessageNode }), []);
 
-  const variableData = ['variable1', 'variable2', 'variable3', 'variable1', 'variable2', 'variable3'];
+  const [variableData, setVariableData]=useState(['variable1'])
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge({
     ...params, type: 'smoothstep',
@@ -275,7 +275,7 @@ const Board = () => {
         <Controls />
         {/* <MiniMap /> */}
       </ReactFlow>
-      <VariantPanel variableData={variableData}/>
+      <VariantPanel variableData={variableData} setVariableData={setVariableData} />
       {contextMenuPosition && (
         <div
           style={{

@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
-const AddVariable = ({ showVariable, setShowVariable, variableData }) => {
+const AddVariable = ({ showVariable, setShowVariable, variableData, setVariableData }) => {
+    const [newVariable, setNewVariable] = useState("");
+    const [variableType, setVariableType] = useState("");
+
+    const handleCreateVariable = () => {
+        setVariableData((prevData) => [...prevData, newVariable]);
+        setShowVariable(false);
+    }
     return (
         <div
             style={{
@@ -53,6 +60,7 @@ const AddVariable = ({ showVariable, setShowVariable, variableData }) => {
                     <input
                         type="text"
                         id="name"
+                        value={newVariable}
                         placeholder="Enter variable name"
                         style={{
                             width: '100%',
@@ -66,6 +74,7 @@ const AddVariable = ({ showVariable, setShowVariable, variableData }) => {
                         }}
                         onFocus={(e) => e.target.style.boxShadow = '0px 0px 8px rgba(0, 123, 255, 0.3)'}
                         onBlur={(e) => e.target.style.boxShadow = 'none'}
+                        onChange={(e)=>{setNewVariable(e.target.value)}}
                     />
                 </div>
 
@@ -93,6 +102,8 @@ const AddVariable = ({ showVariable, setShowVariable, variableData }) => {
                     >
                         <select
                             id="variable-type"
+                            onChange={(e)=>{setVariableType(e.target.value)}}
+                            value={variableType}
                             style={{
                                 width: '70%',
                                 padding: '12px',
@@ -200,7 +211,7 @@ const AddVariable = ({ showVariable, setShowVariable, variableData }) => {
                         }}
                         onMouseEnter={(e) => e.target.style.backgroundColor = '#0056b3'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = '#007BFF'}
-                        onClick={() => setShowVariable(false)}
+                        onClick={() => handleCreateVariable()}
                     >
                         Create Variable
                     </button>

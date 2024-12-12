@@ -56,7 +56,7 @@ const Board = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const nodeTypes = useMemo(() => ({ custom: MessageNode }), []);
-
+  
   const [variableData, setVariableData] = useState([]);
   const [variableType, setVariableTypeData] = useState([]);
   const [appliedColor, setAppliedColor] = useState(null);

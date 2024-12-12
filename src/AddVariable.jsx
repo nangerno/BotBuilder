@@ -299,25 +299,25 @@ const AddVariable = ({
               alignItems: "center",
               justifyContent: "space-between",
               borderBottom: '3px solid #ddd',
-              paddingBottom: "4px"
+              paddingBottom: "10px"
             }}
           >
             <div>
               <input
                 type="text"
-                style={{ border: "none", outline: "none" }}
+                style={{ border: "none", outline: "none", paddingTop:'10px', fontSize:'15px'}}
                 placeholder="Enter entity value"
               />
 
               <br></br>
               <input
                 type="text"
-                style={{ border: "none", outline: "none", fontSize: "10px" }}
+                style={{ border: "none", outline: "none", fontSize: "13px", fontStyle:'italic', width: '200%' }}
                 placeholder="Add synonyms, comma separated"
               />
             </div>
             <FiMinusCircle
-              style={{ float: "right", cursor: "pointer", marginTop: "5px" }}
+              style={{ float: "right", cursor: "pointer", marginTop: "13px" }}
               size={30}
               onClick={deleteValue}
             />
@@ -349,20 +349,22 @@ const AddVariable = ({
           </button>
           <button
             style={{
-              backgroundColor: "#007BFF",
-              color: "#fff",
+              backgroundColor: newVariable === '' ? "#ddd" : "#007BFF",
+              color:  newVariable === '' ?  "#000":"#fff",
               border: "none",
               padding: "12px 30px",
               fontSize: "1.1rem",
               borderRadius: "5px",
-              cursor: "pointer",
+              cursor: newVariable === '' ? "not-allowed" : "pointer",
               transition: "background-color 0.3s ease, transform 0.2s ease",
               boxSizing: "border-box",
               textAlign: "center",
+              
             }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#0056b3")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#007BFF")}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = newVariable === '' ?  "#ddd":"#0056b3")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = newVariable === '' ?  "#ddd":"#007BFF")}
             onClick={() => handleCreateVariable()}
+            disabled={newVariable === ''}
           >
             {selectedVariable ? "Save" : "Create Variable"}
           </button>

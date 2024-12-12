@@ -40,11 +40,11 @@ const MessageRightPanel = ({
   handleConditionChange,
   variableData
 }) => {
-
+  
   const [newVariable, setNewVariable] = useState([]);
   useEffect(()=>{
     setNewVariable(variableData);
-  }, [newVariable])
+  }, [variableData])
   return (
     <div
       ref={messageDivRef}
@@ -401,9 +401,8 @@ const MessageRightPanel = ({
                       outline: "none",
                     }}
                   >
-                    <option>values</option>
+                    <option>variables</option>
                     {newVariable.map((data, index)=>(
-      
                       <option key={index} value={index}>{data}</option>
                     ))}
                   </select>

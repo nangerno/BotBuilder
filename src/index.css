@@ -1,17 +1,37 @@
 body {
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
-    color: #808080;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  color: #808080;
 }
 ::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: #cfcfcf;
-    border-radius: 4px;
+  background-color: #cfcfcf;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
+}
+
+.message-toolbaar-icon {
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border: none;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.icon-style {
+  fill: #ffffff;
+  stroke: #000000;
+  stroke-width: 10px;
+  font-size: 12px;
+  filter: drop-shadow(0 0 2px #000000);
 }

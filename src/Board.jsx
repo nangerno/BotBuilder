@@ -1,4 +1,10 @@
-import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  useEffect,
+} from "react";
 import ReactFlow, {
   addEdge,
   Background,
@@ -7,16 +13,15 @@ import ReactFlow, {
   Handle,
   applyNodeChanges,
   applyEdgeChanges,
-  MarkerType
+  MarkerType,
 } from "react-flow-renderer";
 
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
 import MessageNode from "./node/MessageNode";
-import Toolbar from './Toolbar';
-import MessageRightPanel from './MessageRightPanel';
+import Toolbar from "./Toolbar";
+import MessageRightPanel from "./MessageRightPanel";
 import VariantPanel from "./VariantPanel";
-
 
 const initialNodes = [
   {
@@ -24,8 +29,9 @@ const initialNodes = [
     type: "custom",
     data: {
       label: "Rename",
-      message: "Hi, I'm Wobi's bot, here to help you with your accident. What's your name, is it an accident or theft, and in what city did it happen?",
-      style: { backgroundColor: '#dde4ea' }
+      message:
+        "Hi, I'm Wobi's bot, here to help you with your accident. What's your name, is it an accident or theft, and in what city did it happen?",
+      style: { backgroundColor: "#dde4ea" },
     },
     position: { x: 100, y: 100 },
   },
@@ -50,35 +56,55 @@ const Board = () => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const nodeTypes = useMemo(() => ({ custom: MessageNode }), []);
 
-  const [variableData, setVariableData]=useState(['variable1'])
+  const [variableData, setVariableData] = useState(["variable1"]);
+  const [variableType, setVariableTypeData] = useState([1]);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge({
-    ...params, type: 'smoothstep',
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: '#888888',
-    }
-  }, eds)), []);
+  const onConnect = useCallback(
+    (params) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: "smoothstep",
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: "#888888",
+            },
+          },
+          eds
+        )
+      ),
+    []
+  );
 
-  const addNode = useCallback((label) => {
-    const newNode = {
-      id: (nodes.length + 1).toString(),
-      type: "custom",
-      data: {
-        label,
-        message: `This is a ${label} node.`,
-        style: { backgroundColor: '#dde4ea' }
-      },
-      position: { x: Math.random() * (window.innerWidth - 100), y: Math.random() * (window.innerHeight - 100) },
-    };
-    setNodes((nds) => [...nds, newNode]);
-  }, [nodes.length]);
+  const addNode = useCallback(
+    (label) => {
+      const newNode = {
+        id: (nodes.length + 1).toString(),
+        type: "custom",
+        data: {
+          label,
+          message: `This is a ${label} node.`,
+          style: { backgroundColor: "#dde4ea" },
+        },
+        position: {
+          x: Math.random() * (window.innerWidth - 100),
+          y: Math.random() * (window.innerHeight - 100),
+        },
+      };
+      setNodes((nds) => [...nds, newNode]);
+    },
+    [nodes.length]
+  );
 
   const editNode = useCallback((id, newLabel, newMessage) => {
     setNodes((nds) =>
       nds.map((node) =>
         node.id === id
-          ? { ...node, data: { ...node.data, label: newLabel, message: newMessage } }
+          ? {
+              ...node,
+              data: { ...node.data, label: newLabel, message: newMessage },
+            }
           : node
       )
     );
@@ -88,21 +114,20 @@ const Board = () => {
       prevNodes.map((node) =>
         node.id === id
           ? {
-            ...node,
-            data: {
-              ...node.data,
-              style: { ...node.data.style, backgroundColor: newColor }
+              ...node,
+              data: {
+                ...node.data,
+                style: { ...node.data.style, backgroundColor: newColor },
+              },
             }
-          }
           : node
       )
     );
   }, []);
 
-
   const onNodeClick = useCallback((event, node) => {
     setNewMessage(node.data.message);
-    setSelectedNode(prevNode => {
+    setSelectedNode((prevNode) => {
       if (prevNode && prevNode.id === node.id) {
         setSelectedNode(node);
       } else {
@@ -115,15 +140,14 @@ const Board = () => {
   }, []);
 
   const onNodeContextMenu = useCallback((event, node) => {
-
     event.preventDefault();
     event.stopPropagation();
     setVisibleCondition(null);
     setContextMenuPosition({ x: event.clientX, y: event.clientY });
     if (event.button == 2) {
-      setSelectedColorNode(node)
+      setSelectedColorNode(node);
     } else if (event.button == 1) {
-      setSelectedNode(node)
+      setSelectedNode(node);
     }
   }, []);
   const handleColorChange = (color) => {
@@ -132,11 +156,11 @@ const Board = () => {
   };
 
   const handleMessageChange = (id, value) => {
-    if (id === 'main') {
+    if (id === "main") {
       setNewMessage(value);
     } else {
-      setVariants(prevVariants =>
-        prevVariants.map(variant =>
+      setVariants((prevVariants) =>
+        prevVariants.map((variant) =>
           variant.id === id ? { ...variant, message: value } : variant
         )
       );
@@ -145,7 +169,7 @@ const Board = () => {
 
   const handleSaveMessage = () => {
     if (selectedNode) {
-      const currentContent = document.getElementById('messageInput').innerHTML;
+      const currentContent = document.getElementById("messageInput").innerHTML;
       editNode(selectedNode.id, selectedNode.data.label, currentContent);
     }
     setSelectedNode(null);
@@ -154,8 +178,10 @@ const Board = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-
-      if (messageDivRef.current && !messageDivRef.current.contains(event.target)) {
+      if (
+        messageDivRef.current &&
+        !messageDivRef.current.contains(event.target)
+      ) {
         console.log("Outside click detected");
         // setSelectedNode(null);
       }
@@ -174,18 +200,18 @@ const Board = () => {
   };
 
   const handlePlay = () => {
-    const currentContent = document.getElementById('messageInput').innerHTML;
+    const currentContent = document.getElementById("messageInput").innerHTML;
     setNewMessage(currentContent);
     editNode(selectedNode.id, selectedNode.data.label, currentContent);
   };
   const handleDelay = () => {
-    console.log("handleDelay func is comming soon!")
+    console.log("handleDelay func is comming soon!");
   };
 
   const handleInsertLink = () => {
     const url = prompt("Enter the URL");
     if (url) {
-      document.execCommand('createLink', false, url);
+      document.execCommand("createLink", false, url);
       handleMessageChange(newMessage);
     }
   };
@@ -199,61 +225,69 @@ const Board = () => {
   );
   const addVariant = () => {
     setVariants([...variants, { id: variants.length, message: "" }]);
-
   };
 
   const removeVariant = (variantId) => {
-    setVariants(prevVariants => prevVariants.filter(v => v.id !== variantId));
-    setVisibleCondition(prevCondition =>
-      prevCondition && prevCondition.variantId === variantId ? null : prevCondition
+    setVariants((prevVariants) =>
+      prevVariants.filter((v) => v.id !== variantId)
+    );
+    setVisibleCondition((prevCondition) =>
+      prevCondition && prevCondition.variantId === variantId
+        ? null
+        : prevCondition
     );
   };
   const handleCondition = (variantId) => {
     console.log("ddd---", variantConditions[variantId]);
-    setVisibleCondition(prevCondition =>
-      prevCondition && prevCondition.variantId === variantId ? null : { variantId, activeTab: "all" }
+    setVisibleCondition((prevCondition) =>
+      prevCondition && prevCondition.variantId === variantId
+        ? null
+        : { variantId, activeTab: "all" }
     );
 
-    if (!variantConditions[variantId] || Object.keys(variantConditions[variantId]).length === 0) {
-      setVariantConditions(prevConditions => ({
+    if (
+      !variantConditions[variantId] ||
+      Object.keys(variantConditions[variantId]).length === 0
+    ) {
+      setVariantConditions((prevConditions) => ({
         ...prevConditions,
-        [variantId]: {}
+        [variantId]: {},
       }));
     }
   };
   const setActiveTabForCondition = (tab) => {
-    setVisibleCondition(prevCondition =>
+    setVisibleCondition((prevCondition) =>
       prevCondition ? { ...prevCondition, activeTab: tab } : null
     );
   };
   const addCondition = () => {
-    setConditionCount(prevCount => prevCount + 1);
+    setConditionCount((prevCount) => prevCount + 1);
     setConditions((prevConditions) => [
       ...prevConditions,
-      { id: prevConditions.length + 1 }
+      { id: prevConditions.length + 1 },
     ]);
   };
 
   const removeCondition = (id) => {
-    setConditions(conditions.filter(condition => condition.id !== id));
-    setConditionCount(prevCount => Math.max(1, prevCount - 1));
+    setConditions(conditions.filter((condition) => condition.id !== id));
+    setConditionCount((prevCount) => Math.max(1, prevCount - 1));
   };
 
   const handleConditionChange = (variantId, conditionId, value) => {
-    console.log("---->>>>>", variantConditions)
-    setVariantConditions(prev => ({
+    console.log("---->>>>>", variantConditions);
+    setVariantConditions((prev) => ({
       ...prev,
       [variantId]: {
         ...prev[variantId],
-        [conditionId]: value
-      }
+        [conditionId]: value,
+      },
     }));
   };
 
   const renderConditionLength = (variantId) => {
     const conditionsForVariant = variantConditions[variantId] || {};
     const conditionCount = Object.keys(conditionsForVariant).length;
-    return conditionCount === 1 ? ' Condition' : ' ' + conditionCount;
+    return conditionCount === 1 ? " Condition" : " " + conditionCount;
   };
 
   return (
@@ -275,22 +309,33 @@ const Board = () => {
         <Controls />
         {/* <MiniMap /> */}
       </ReactFlow>
-      <VariantPanel variableData={variableData} setVariableData={setVariableData} />
+      <VariantPanel
+        variableData={variableData}
+        setVariableData={setVariableData}
+        variableType={variableType}
+        setVariableTypeData={setVariableTypeData}
+      />
       {contextMenuPosition && (
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: contextMenuPosition.y,
             left: contextMenuPosition.x,
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-            zIndex: '100',
-            padding: '15px',
-            width: '200px',
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            zIndex: "100",
+            padding: "15px",
+            width: "200px",
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: "10px",
+            }}
+          >
             {[
               { color: "#ff0000", label: "Red" },
               { color: "#00ff00", label: "Green" },
@@ -304,16 +349,16 @@ const Board = () => {
                 style={{
                   backgroundColor: color,
                   border: "none",
-                  borderRadius: '50%',
-                  width: '40px',
-                  height: '40px',
-                  margin: '5px',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s ease',
-                  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                  borderRadius: "50%",
+                  width: "40px",
+                  height: "40px",
+                  margin: "5px",
+                  cursor: "pointer",
+                  transition: "transform 0.2s ease",
+                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                 }}
-                onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
-                onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
+                onMouseEnter={(e) => (e.target.style.transform = "scale(1.1)")}
+                onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
               />
             ))}
           </div>
@@ -350,6 +395,6 @@ const Board = () => {
       />
     </div>
   );
-}
+};
 
 export default Board;

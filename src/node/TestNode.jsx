@@ -7,7 +7,7 @@ import ReactFlow, {
   Handle,
   applyNodeChanges,
   applyEdgeChanges,
-  MarkerType
+  MarkerType,
 } from "react-flow-renderer";
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
@@ -17,7 +17,6 @@ const CustomNode = ({ data }) => {
   const handleOffset = 10;
 
   return (
-      
     <div
       style={{
         padding: "15px",
@@ -26,43 +25,54 @@ const CustomNode = ({ data }) => {
         backgroundColor: "rgba(163, 181, 192)",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         width: "200px",
-        cursor: 'move',
+        cursor: "move",
       }}
     >
       <strong>{data.label}</strong>
-      <div style={{backgroundColor:'rgba(255, 255, 255)'}}>
-      {data.options && (
-        <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
-          {data.options.map((option, index) => (
-            <li key={index} style={{ padding: '2px', fontSize: "14px", position: 'relative' }}>
-              <button
+      <div style={{ backgroundColor: "rgba(255, 255, 255)" }}>
+        {data.options && (
+          <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+            {data.options.map((option, index) => (
+              <li
+                key={index}
                 style={{
-                  padding: '5px',
-                  backgroundColor: '#007bff',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer'
+                  padding: "2px",
+                  fontSize: "14px",
+                  position: "relative",
                 }}
-                onClick={() => alert(`Option selected: ${option}`)}
               >
-                {option}
-              </button>
-              <Handle
-                type="source"
-                position="right"
-                id={`${option}-handle`}
-                style={{
-                  position: 'absolute',
-                  top: `${(index + 1) * itemHeight + handleOffset}px`,
-                  background: "#007bff"
-                }}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
-      <Handle type="target" position="left" style={{ background: "#007bff" }} />
+                <button
+                  style={{
+                    padding: "5px",
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => alert(`Option selected: ${option}`)}
+                >
+                  {option}
+                </button>
+                <Handle
+                  type="source"
+                  position="right"
+                  id={`${option}-handle`}
+                  style={{
+                    position: "absolute",
+                    top: `${(index + 1) * itemHeight + handleOffset}px`,
+                    background: "#007bff",
+                  }}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+        <Handle
+          type="target"
+          position="left"
+          style={{ background: "#007bff" }}
+        />
       </div>
     </div>
   );
@@ -96,10 +106,10 @@ const initialEdges = [
     source: "1",
     target: "2",
     sourceHandle: "Option A-handle",
-    type: 'smoothstep',
+    type: "smoothstep",
     markerEnd: {
       type: MarkerType.ArrowClosed,
-      color: '#888888',
+      color: "#888888",
     },
   },
   {
@@ -107,10 +117,10 @@ const initialEdges = [
     source: "1",
     target: "3",
     sourceHandle: "Option B-handle",
-    type: 'smoothstep',
+    type: "smoothstep",
     markerEnd: {
       type: MarkerType.ArrowClosed,
-      color: '#888888',
+      color: "#888888",
     },
   },
 ];
@@ -121,48 +131,75 @@ const TestNode = () => {
 
   const nodeTypes = useMemo(() => ({ custom: CustomNode }), []);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge({
-    ...params, type: 'smoothstep',
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: '#888888',
-    }
-  }, eds)), []);
+  const onConnect = useCallback(
+    (params) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: "smoothstep",
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: "#888888",
+            },
+          },
+          eds
+        )
+      ),
+    []
+  );
 
-  const addNode = useCallback((label, options) => {
-    const newNode = {
-      id: (nodes.length + 1).toString(),
-      type: "custom",
-      data: { label, options },
-      position: { x: Math.random() * (window.innerWidth - 100), y: Math.random() * (window.innerHeight - 100) },
-    };
-    setNodes((nds) => [...nds, newNode]);
-  }, [nodes.length]);
+  const addNode = useCallback(
+    (label, options) => {
+      const newNode = {
+        id: (nodes.length + 1).toString(),
+        type: "custom",
+        data: { label, options },
+        position: {
+          x: Math.random() * (window.innerWidth - 100),
+          y: Math.random() * (window.innerHeight - 100),
+        },
+      };
+      setNodes((nds) => [...nds, newNode]);
+    },
+    [nodes.length]
+  );
 
   const editNode = useCallback((id, newLabel, newOptions) => {
     setNodes((nds) =>
       nds.map((node) =>
         node.id === id
-          ? { ...node, data: { ...node.data, label: newLabel, options: newOptions } }
+          ? {
+              ...node,
+              data: { ...node.data, label: newLabel, options: newOptions },
+            }
           : node
       )
     );
   }, []);
 
-  const onNodeDoubleClick = useCallback((event, node) => {
-    const newLabel = prompt("Enter new label:", node.data.label);
-    const newOptionsString = prompt("Enter new options (comma-separated):", node.data.options.join(", "));
-    if (newLabel && newOptionsString) {
-      const newOptions = newOptionsString.split(",").map(opt => opt.trim());
-      editNode(node.id, newLabel, newOptions);
-    }
-  }, [editNode]);
+  const onNodeDoubleClick = useCallback(
+    (event, node) => {
+      const newLabel = prompt("Enter new label:", node.data.label);
+      const newOptionsString = prompt(
+        "Enter new options (comma-separated):",
+        node.data.options.join(", ")
+      );
+      if (newLabel && newOptionsString) {
+        const newOptions = newOptionsString.split(",").map((opt) => opt.trim());
+        editNode(node.id, newLabel, newOptions);
+      }
+    },
+    [editNode]
+  );
 
   const onNodeContextMenu = useCallback((event, node) => {
     event.preventDefault();
     if (window.confirm(`Delete node "${node.data.label}"?`)) {
       setNodes((nds) => nds.filter((n) => n.id !== node.id));
-      setEdges((eds) => eds.filter((edge) => edge.source !== node.id && edge.target !== node.id));
+      setEdges((eds) =>
+        eds.filter((edge) => edge.source !== node.id && edge.target !== node.id)
+      );
     }
   }, []);
 
@@ -200,7 +237,14 @@ const TestNode = () => {
         <MiniMap />
       </ReactFlow>
 
-      <div style={{ position: "absolute", top: "20px", left: "20px", zIndex: "1000" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          zIndex: "1000",
+        }}
+      >
         <select
           onChange={(e) => {
             if (e.target.value) {
@@ -216,7 +260,14 @@ const TestNode = () => {
         </select>
       </div>
 
-      <div style={{ position: "absolute", top: "60px", left: "20px", zIndex: "1000" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "60px",
+          left: "20px",
+          zIndex: "1000",
+        }}
+      >
         <button
           onClick={handleDeploy}
           style={{
@@ -225,7 +276,7 @@ const TestNode = () => {
             color: "#fff",
             borderRadius: "5px",
             border: "none",
-            cursor: "pointer"
+            cursor: "pointer",
           }}
         >
           Deploy Bot
@@ -233,19 +284,28 @@ const TestNode = () => {
       </div>
 
       {/* Color Picker Section */}
-      <div style={{ position: "absolute", top: "100px", left: "20px", zIndex: "1000" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "100px",
+          left: "20px",
+          zIndex: "1000",
+        }}
+      >
         <input
           type="color"
           onChange={(e) => {
-            document.documentElement.style.setProperty('--main-color', e.target.value);
+            document.documentElement.style.setProperty(
+              "--main-color",
+              e.target.value
+            );
           }}
           defaultValue="#007bff"
           title="Pick a color for nodes and edges"
         />
       </div>
-
     </div>
   );
-}
+};
 
 export default TestNode;

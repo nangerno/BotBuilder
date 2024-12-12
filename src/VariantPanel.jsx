@@ -7,14 +7,19 @@ import React, {
 } from "react";
 import AddVariable from "./AddVariable";
 
-const VariantPanel = ({ variableData, setVariableData, variableType, setVariableType }) => {
+const VariantPanel = ({
+  variableData,
+  setVariableData,
+  variableType,
+  setVariableType,
+  appliedColor,
+}) => {
   const [selectedVariable, setSelectedVariable] = useState("");
-  const [selectedVariableType, setSelectedVariableType] = useState(1);
+  const [selectedVariableType, setSelectedVariableType] = useState(0);
   const [showVariableModal, setShowVariableModal] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
   const handleEditVariable = (index) => {
-    console.log("????????", index)
     setEditIndex(index);
     setSelectedVariable(variableData[index]);
     setSelectedVariableType(variableType[index]);
@@ -60,7 +65,7 @@ const VariantPanel = ({ variableData, setVariableData, variableType, setVariable
         style={{
           overflowX: "hidden",
           overflowY: "auto",
-          maxHeight: "100px",
+          maxHeight: "130px",
           paddingBottom: "10px",
           scrollBehavior: "smooth",
         }}
@@ -125,6 +130,7 @@ const VariantPanel = ({ variableData, setVariableData, variableType, setVariable
         selectedVariableType={selectedVariableType}
         editIndex={editIndex}
         setEditIndex={setEditIndex}
+        appliedColor={appliedColor}
       />
     </div>
   );

@@ -6,6 +6,8 @@ import React, {
   useEffect,
 } from "react";
 
+import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
+
 const AddVariable = ({
   showVariableModal,
   setShowVariableModal,
@@ -14,19 +16,19 @@ const AddVariable = ({
   selectedVariable,
   selectedVariableType,
   editIndex,
-  setEditIndex
+  setEditIndex,
+  appliedColor,
 }) => {
-  console.log(editIndex)
   const [newVariable, setNewVariable] = useState("");
   const [variableType, setVariableType] = useState("");
-  
-  useEffect(()=>{
+  const [valueData, setValueData] = useState([]);
+  useEffect(() => {
     setNewVariable(selectedVariable);
     setVariableType(selectedVariableType);
   }, [selectedVariable, selectedVariableType]);
 
   const handleCreateVariable = () => {
-    if(newVariable!==''){
+    if (newVariable !== "") {
       if (editIndex === null) {
         setVariableData((prevData) => [...prevData, newVariable]);
       } else {
@@ -37,20 +39,29 @@ const AddVariable = ({
         });
       }
       setNewVariable("");
-    }
-    else {
+    } else {
       setVariableData((prevData) => {
         const updatedData = [...prevData];
         updatedData.splice(editIndex, 1);
         return updatedData;
       });
     }
-    
+
     setShowVariableModal(false);
   };
   const handleVariableChange = (event) => {
     setNewVariable(event.target.value);
   };
+  const addValue = () => {
+    setValueData((prevData) => [...prevData, ""]);
+  }
+  const deleteValue = () => {
+    setValueData((prevData) => {
+      const updatedData = [...prevData];
+      updatedData.splice(editIndex, 1);
+      return updatedData;
+    });
+  }
   return (
     <div
       style={{
@@ -97,7 +108,6 @@ const AddVariable = ({
           <h2
             style={{
               textAlign: "center",
-              color: "#333",
               fontSize: "1.4rem",
               margin: "0",
             }}
@@ -112,7 +122,6 @@ const AddVariable = ({
               display: "block",
               fontWeight: "bold",
               marginBottom: "8px",
-              color: "#333",
               fontSize: "1rem",
             }}
           >
@@ -148,7 +157,6 @@ const AddVariable = ({
               display: "block",
               fontWeight: "bold",
               marginBottom: "8px",
-              color: "#333",
               fontSize: "1rem",
             }}
           >
@@ -185,6 +193,7 @@ const AddVariable = ({
               }
               onBlur={(e) => (e.target.style.boxShadow = "none")}
             >
+              <option value="0">Select type</option>
               <option value="1">Date</option>
               <option value="2">Number</option>
               <option value="3">String</option>
@@ -203,11 +212,13 @@ const AddVariable = ({
                   width: "20px",
                   height: "20px",
                   borderRadius: "50%",
-                  backgroundColor: "#f0fff0",
-                  border: "2px solid #ddd",
+                  backgroundColor: "#a1c972",
+                  border: `2px solid ${
+                    appliedColor == "#a1c972" ? "#ff0000" : "#ddd"
+                  }`,
+                  padding: "4px",
+                  boxSizing: "content-box",
                 }}
-                onMouseEnter={(e) => (e.target.style.borderColor = "#ff0000")}
-                onMouseLeave={(e) => (e.target.style.borderColor = "#ddd")}
               ></div>
               <div
                 style={{
@@ -215,35 +226,104 @@ const AddVariable = ({
                   height: "20px",
                   borderRadius: "50%",
                   backgroundColor: "#00ff00",
-                  border: "2px solid #ddd",
+                  border: `2px solid ${
+                    appliedColor == "#00ff00" ? "#ff0000" : "#ddd"
+                  }`,
+                  padding: "4px",
+                  boxSizing: "content-box",
                 }}
-                onMouseEnter={(e) => (e.target.style.borderColor = "#ff0000")}
-                onMouseLeave={(e) => (e.target.style.borderColor = "#ddd")}
               ></div>
               <div
                 style={{
                   width: "20px",
                   height: "20px",
                   borderRadius: "50%",
-                  backgroundColor: "#0f0f00",
-                  border: "2px solid #ddd",
+                  backgroundColor: "#0000ff",
+                  border: `2px solid ${
+                    appliedColor == "#0000ff" ? "#ff0000" : "#ddd"
+                  }`,
+                  padding: "4px",
+                  boxSizing: "content-box",
                 }}
-                onMouseEnter={(e) => (e.target.style.borderColor = "#ff0000")}
-                onMouseLeave={(e) => (e.target.style.borderColor = "#ddd")}
               ></div>
               <div
                 style={{
                   width: "20px",
                   height: "20px",
                   borderRadius: "50%",
-                  backgroundColor: "#0edf0f",
-                  border: "2px solid #ddd",
+                  backgroundColor: "#ffff00",
+                  border: `2px solid ${
+                    appliedColor == "#ffff00" ? "#ff0000" : "#ddd"
+                  }`,
+                  padding: "4px",
+                  boxSizing: "content-box",
                 }}
-                onMouseEnter={(e) => (e.target.style.borderColor = "#ff0000")}
-                onMouseLeave={(e) => (e.target.style.borderColor = "#ddd")}
               ></div>
             </div>
           </div>
+        </div>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "10px",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <label
+              htmlFor="variable-type"
+              style={{
+                display: "block",
+                fontWeight: "bold",
+                marginBottom: "8px",
+                fontSize: "1rem",
+              }}
+            >
+              Values:
+            </label>
+            <FiPlusCircle
+              style={{ float: "right", cursor: "pointer" }}
+              size={30}
+              onClick={addValue}
+            />
+          </div>
+          {valueData.map((data, index)=>(
+            <div
+            key={index}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "10px",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderBottom: '3px solid #ddd',
+              paddingBottom: "4px"
+            }}
+          >
+            <div>
+              <input
+                type="text"
+                style={{ border: "none", outline: "none" }}
+                placeholder="Enter entity value"
+              />
+
+              <br></br>
+              <input
+                type="text"
+                style={{ border: "none", outline: "none", fontSize: "10px" }}
+                placeholder="Add synonyms, comma separated"
+              />
+            </div>
+            <FiMinusCircle
+              style={{ float: "right", cursor: "pointer", marginTop: "5px" }}
+              size={30}
+              onClick={deleteValue}
+            />
+            </div>
+          ))}
+          
         </div>
         <div style={{ textAlign: "right" }}>
           <button

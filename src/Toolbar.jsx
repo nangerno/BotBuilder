@@ -5,8 +5,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { FiMessageCircle, FiPlus, FiSmile } from "react-icons/fi";
-import { FcSms, FcList } from "react-icons/fc";
+import { FiMessageCircle, FiPlus, FiSmile, FiMessageSquare } from "react-icons/fi";
 const Toolbar = ({ nodes, addNode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   let timeoutId;
@@ -94,7 +93,7 @@ const Toolbar = ({ nodes, addNode }) => {
                 e.currentTarget.style.transform = "scale(1)";
               }}
             >
-              <FcSms size={20} color="#333" />
+              <FiMessageSquare size={20} />
               <span
                 style={{
                   fontSize: "0.95rem",

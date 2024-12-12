@@ -1,5 +1,4 @@
-import React, {
-} from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaBold,
   FaItalic,
@@ -39,7 +38,13 @@ const MessageRightPanel = ({
   removeCondition,
   setActiveTabForCondition,
   handleConditionChange,
+  variableData
 }) => {
+
+  const [newVariable, setNewVariable] = useState([]);
+  useEffect(()=>{
+    setNewVariable(variableData);
+  }, [newVariable])
   return (
     <div
       ref={messageDivRef}
@@ -143,21 +148,15 @@ const MessageRightPanel = ({
             marginTop: "15px",
             paddingBotton: "10px",
             borderBottom: "1px solid #ddd",
-            justifyContent: 'center'
+            // justifyContent: 'center'
           }}
         >
           <FiMinusCircle
-            style={{ float: "right", cursor: "pointer", marginTop: '5px' }}
+            style={{ float: "right", cursor: "pointer", marginTop: "5px" }}
             size={20}
             onClick={() => removeVariant(variant.id)}
           />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "5px",
-            }}
-          >
+          <div>
             <button onClick={handlePlay} className="message-toolbaar-icon">
               <FaPlay className="icon-style" />
             </button>
@@ -402,7 +401,11 @@ const MessageRightPanel = ({
                       outline: "none",
                     }}
                   >
-                    <option>variable</option>
+                    <option>values</option>
+                    {newVariable.map((data, index)=>(
+      
+                      <option key={index} value={index}>{data}</option>
+                    ))}
                   </select>
                   <p style={{ margin: "0 5px" }}>is</p>
                   <input

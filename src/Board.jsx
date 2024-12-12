@@ -43,6 +43,7 @@ const Board = () => {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
   const [selectedNode, setSelectedNode] = useState(null);
+
   const [selectedColorNode, setSelectedColorNode] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const messageDivRef = useRef(null);
@@ -58,6 +59,7 @@ const Board = () => {
 
   const [variableData, setVariableData] = useState([]);
   const [variableType, setVariableTypeData] = useState([]);
+  const [appliedColor, setAppliedColor] = useState(null);
 
   const onConnect = useCallback(
     (params) =>
@@ -151,6 +153,7 @@ const Board = () => {
     }
   }, []);
   const handleColorChange = (color) => {
+    setAppliedColor(color);
     editNodeColor(selectedColorNode.id, color);
     setContextMenuPosition(null);
   };
@@ -314,6 +317,7 @@ const Board = () => {
         setVariableData={setVariableData}
         variableType={variableType}
         setVariableTypeData={setVariableTypeData}
+        appliedColor={appliedColor}
       />
       {contextMenuPosition && (
         <div
@@ -337,7 +341,7 @@ const Board = () => {
             }}
           >
             {[
-              { color: "#ff0000", label: "Red" },
+              { color: "#a1c972", label: "Red" },
               { color: "#00ff00", label: "Green" },
               { color: "#0000ff", label: "Blue" },
               { color: "#ffff00", label: "Yellow" },
@@ -392,6 +396,7 @@ const Board = () => {
         removeCondition={removeCondition}
         setActiveTabForCondition={setActiveTabForCondition}
         handleConditionChange={handleConditionChange}
+        variableData={variableData}
       />
     </div>
   );

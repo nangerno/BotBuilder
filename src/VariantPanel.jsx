@@ -11,13 +11,17 @@ const VariantPanel = ({ variableData, setVariableData, variableType, setVariable
   const [selectedVariable, setSelectedVariable] = useState("");
   const [selectedVariableType, setSelectedVariableType] = useState(1);
   const [showVariableModal, setShowVariableModal] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
 
   const handleEditVariable = (index) => {
+    console.log("????????", index)
+    setEditIndex(index);
     setSelectedVariable(variableData[index]);
     setSelectedVariableType(variableType[index]);
     setShowVariableModal((prevState) => !prevState);
   };
   const handleNewVariable = () => {
+    setEditIndex(null);
     setSelectedVariable("");
     setShowVariableModal((prevState) => !prevState);
   };
@@ -119,6 +123,8 @@ const VariantPanel = ({ variableData, setVariableData, variableType, setVariable
         setVariableData={setVariableData}
         selectedVariable={selectedVariable}
         selectedVariableType={selectedVariableType}
+        editIndex={editIndex}
+        setEditIndex={setEditIndex}
       />
     </div>
   );

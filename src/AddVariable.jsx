@@ -13,17 +13,39 @@ const AddVariable = ({
   setVariableData,
   selectedVariable,
   selectedVariableType,
+  editIndex,
+  setEditIndex
 }) => {
+  console.log(editIndex)
   const [newVariable, setNewVariable] = useState("");
   const [variableType, setVariableType] = useState("");
+  
   useEffect(()=>{
     setNewVariable(selectedVariable);
     setVariableType(selectedVariableType);
   }, [selectedVariable, selectedVariableType]);
 
   const handleCreateVariable = () => {
-    console.log(newVariable);
-    setVariableData((prevData) => [...prevData, newVariable]);
+    if(newVariable!==''){
+      if (editIndex === null) {
+        setVariableData((prevData) => [...prevData, newVariable]);
+      } else {
+        setVariableData((prevData) => {
+          const updatedData = [...prevData];
+          updatedData[editIndex] = newVariable;
+          return updatedData;
+        });
+      }
+      setNewVariable("");
+    }
+    else {
+      setVariableData((prevData) => {
+        const updatedData = [...prevData];
+        updatedData.splice(editIndex, 1);
+        return updatedData;
+      });
+    }
+    
     setShowVariableModal(false);
   };
   const handleVariableChange = (event) => {

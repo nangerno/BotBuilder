@@ -56,8 +56,8 @@ const Board = () => {
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const nodeTypes = useMemo(() => ({ custom: MessageNode }), []);
 
-  const [variableData, setVariableData] = useState(["variable1"]);
-  const [variableType, setVariableTypeData] = useState([1]);
+  const [variableData, setVariableData] = useState([]);
+  const [variableType, setVariableTypeData] = useState([]);
 
   const onConnect = useCallback(
     (params) =>

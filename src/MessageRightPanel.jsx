@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { FaBold, FaItalic, FaUnderline, FaStrikethrough, FaLink, FaPlay, FaClock, FaRobot, FaMinus, FaCommentAlt } from "react-icons/fa";
-import { PiCornersOut} from "react-icons/pi";
+import { PiCornersOut } from "react-icons/pi";
 import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
 
 const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFocused, newMessage, selectedNode, setSelectedNode, handlePlay, handleInsertLink, handleDelay, addVariant, removeVariant, variants, variantConditions, visibleCondition, conditionCount, conditions, handleSaveMessage, handleMessageChange, handleFormatText, handleCondition, renderConditionLength, addCondition, removeCondition, setActiveTabForCondition, handleConditionChange }) => {
@@ -13,6 +13,9 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                 padding: "20px",
                 borderLeft: "1px solid #ddd",
                 display: selectedNode ? "block" : "none",
+                overflowX: "hidden",
+                maxHeight: '100%',
+                overflowY: "visible"
             }}
         >
             <h3 style={{ borderBottom: "1px solid #ddd", padding: '10px' }}>Message</h3>
@@ -80,12 +83,17 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
             >
                 
             </button> */}
-            <FiPlusCircle style={{float: 'right', cursor: 'pointer'}} size={20} onClick={addVariant} />
+            <FiPlusCircle style={{ float: 'right', cursor: 'pointer' }} size={20} onClick={addVariant} />
             <br></br>
             <br></br>
             {variants.map((variant) => (
-                <div key={variant.id} style={{ marginBottom: "10px", marginTop: '15px', paddingBotton: '10px', borderBottom: '1px solid #ddd' }}>
-                    <FiMinusCircle style={{float: 'right', cursor: 'pointer'}} size={20} onClick={() => removeVariant(variant.id)} />
+                <div key={variant.id} style={{
+                    marginBottom: "10px",
+                    marginTop: '15px',
+                    paddingBotton: '10px',
+                    borderBottom: '1px solid #ddd',
+                }}>
+                    <FiMinusCircle style={{ float: 'right', cursor: 'pointer' }} size={20} onClick={() => removeVariant(variant.id)} />
                     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
                         <button onClick={handlePlay} style={{ marginRight: "5px", border: 'none', backgroundColor: "#f9f9f9" }}>
                             <FaPlay />
@@ -151,28 +159,11 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                             border: '1px solid #ccc',
                             borderRadius: '4px',
                             // backgroundColor: '#f9f9f9',
-                            backgroundColor: variantConditions[variant.id] ?'#ddd':'#f9f9f9',
+                            backgroundColor: variantConditions[variant.id] ? '#ddd' : '#f9f9f9',
                             color: '#333',
                             fontSize: '14px',
-                            cursor: 'pointer',
-                            // transition: 'background-color 0.3s, border-color 0.3s',
+                            cursor: 'pointer'
                         }}
-                        // onMouseOver={(e) => {
-                        //     e.currentTarget.style.backgroundColor = '#e6e6e6';
-                        //     e.currentTarget.style.borderColor = '#999';
-                        // }}
-                        // onMouseOut={(e) => {
-                        //     e.currentTarget.style.backgroundColor = '#f9f9f9';
-                        //     e.currentTarget.style.borderColor = '#ccc';
-                        // }}
-                        // onMouseDown={(e) => {
-                        //     e.currentTarget.style.backgroundColor = '#dcdcdc';
-                        //     e.currentTarget.style.borderColor = '#666';
-                        // }}
-                        // onMouseUp={(e) => {
-                        //     e.currentTarget.style.backgroundColor = '#e6e6e6';
-                        //     e.currentTarget.style.borderColor = '#999';
-                        // }}
                         onClick={() => handleCondition(variant.id)}
                     >
                         <span
@@ -200,30 +191,33 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                             ref={conditionDivRef}
                             style={{
                                 width: "350px",
-                                height: `${50 + (conditionCount - 1) * 31}px`,
-                                maxHeight: '50%',
+                                height: `${80 + (conditionCount - 1) * 31}px`,
+                                maxHeight: '40%',
                                 backgroundColor: "#f9f9f9",
-                                padding: "20px",
+                                padding: "10px",
                                 border: "1px solid #ddd",
                                 display: visibleCondition !== null ? "block" : "none",
                                 position: "absolute",
                                 top: `${350 + variants.findIndex(v => v.id === visibleCondition.variantId) * 100}px`,
                                 right: "350px",
-                                overflow: "hidden",
+
                                 borderRadius: '10px',
                                 zIndex: 10001,
                                 transition: "height 0.3s ease-in-out",
+                                overflowX: "hidden",
                                 overflowY: "visible"
                             }}
                         >
                             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
-                                <div style={{ display: "flex", borderBottom: "1px solid #ddd", width: "70%" }}>
+                                <div style={{ display: "flex", backgroundColor: '#f0f0f0', padding: '3px', borderRadius: "5px", width: '70%', marginTop: '7px' }}>
                                     <div
                                         style={{
                                             padding: "5px 10px",
                                             cursor: "pointer",
+                                            borderRadius: "5px",
+                                            width: "50%",
                                             backgroundColor: visibleCondition.activeTab === "all" ? "#fff" : "#f0f0f0",
-                                            borderBottom: visibleCondition.activeTab === "all" ? "2px solid #007bff" : "none"
+                                            textAlign: "center"
                                         }}
                                         onClick={() => setActiveTabForCondition("all")}
                                     >
@@ -233,21 +227,23 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                                         style={{
                                             padding: "5px 10px",
                                             cursor: "pointer",
+                                            borderRadius: "5px",
+                                            width: "50%",
                                             backgroundColor: visibleCondition.activeTab === "any" ? "#fff" : "#f0f0f0",
-                                            borderBottom: visibleCondition.activeTab === "any" ? "2px solid #007bff" : "none"
+                                            textAlign: "center"
                                         }}
                                         onClick={() => setActiveTabForCondition("any")}
                                     >
                                         Match any
                                     </div>
                                 </div>
-                                <div>
-                                    <button style={{ marginRight: "5px", cursor: 'pointer' }}>?</button>
-                                    <button style={{ cursor: 'pointer' }} onClick={addCondition}>+</button>
-                                </div>
+                                <button style={{ marginTop: '7px', cursor: 'pointer', border: 'none', outline: 'none', backgroundColor: '#f9f9f9', fontSize: '20px', width: '30px' }} onMouseEnter={(e) => e.target.style.backgroundColor = '#ddd'}
+                                    onMouseLeave={(e) => e.target.style.backgroundColor = '#f9f9f9'}>?</button>
+                                <button style={{ marginTop: '7px', cursor: 'pointer', border: 'none', outline: 'none', backgroundColor: '#f9f9f9', fontSize: '30px', width: '30px' }} onMouseEnter={(e) => e.target.style.backgroundColor = '#ddd'}
+                                    onMouseLeave={(e) => e.target.style.backgroundColor = '#f9f9f9'} onClick={addCondition}>+</button>
                             </div>
                             {conditions.map((condition, index) => (
-                                <div key={condition.id} style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+                                <div key={condition.id} style={{ display: "flex", alignItems: "center", marginBottom: "1px" }}>
                                     <p style={{ margin: "0 5px" }}>if</p>
                                     <select style={{ marginRight: "15px", border: 'none', backgroundColor: "#f9f9f9", outline: 'none' }}>
                                         <option>variable</option>
@@ -258,15 +254,24 @@ const MessageRightPanel = ({ messageDivRef, conditionDivRef, isFocused, setIsFoc
                                         value={variantConditions[visibleCondition.variantId]?.[condition.id] || ''}
                                         type="text"
                                         placeholder="value or {var}"
-                                        style={{ backgroundColor: "#f9f9f9", marginRight: "5px", border: 'none', outline: 'none' }}
+                                        style={{ backgroundColor: "#f9f9f9", marginRight: '5px', border: 'none', outline: 'none' }}
                                     />
                                     <button
                                         style={{
-                                            cursor: conditions.length > 1 ? 'pointer' : 'not-allowed',
-                                            opacity: conditions.length > 1 ? 1 : 0.5
+                                            cursor: conditions.length > 1 && condition != '' ? 'pointer' : 'not-allowed',
+                                            opacity: conditions.length > 1 ? 1 : 0.5,
+                                            border: 'none',
+                                            outline: 'none',
+                                            backgroundColor: '#f9f9f9',
+                                            fontSize: '30px',
+                                            paddingRight: '10px',
+                                            paddingLeft: '10px',
+                                            marginRight: '30px'
                                         }}
                                         onClick={() => conditions.length > 1 && removeCondition(condition.id)}
                                         disabled={conditions.length === 1}
+                                        onMouseEnter={(e) => e.target.style.backgroundColor = '#ddd'}
+                                        onMouseLeave={(e) => e.target.style.backgroundColor = '#f9f9f9'}
                                     >
                                         -
                                     </button>

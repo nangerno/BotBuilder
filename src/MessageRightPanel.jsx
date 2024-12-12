@@ -42,9 +42,11 @@ const MessageRightPanel = ({
 }) => {
   
   const [newVariable, setNewVariable] = useState([]);
+  console.log(variantConditions);
   useEffect(()=>{
     setNewVariable(variableData);
   }, [variableData])
+
   return (
     <div
       ref={messageDivRef}

@@ -38,6 +38,7 @@ const initialNodes = [
     },
     position: { x: 100, y: 100 },
   },
+  
 ];
 
 const initialEdges = [];
@@ -61,15 +62,21 @@ const Board = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [title, setTitle] = useState("") // prompt node title
+  const [editedLabel, setEditedLabel] = useState('');
   const nodeTypes = useMemo(
     () => ({ "Message node": MessageNode, "Prompt node": PromptNode }),
     []
   );
 
+  
   const [variableData, setVariableData] = useState([]);
   const [variableType, setVariableTypeData] = useState([]);
   const [appliedColor, setAppliedColor] = useState(null);
 
+  // useEffect(()=>{
+
+  // }, [title])
   const onConnect = useCallback(
     (params) =>
       setEdges((eds) =>
@@ -90,6 +97,7 @@ const Board = () => {
 
   const addNode = useCallback(
     (label) => {
+      
       const count = nodes.reduce((acc, node) => {
         if (node.data.label.includes(label)) {
           return acc + 1;
@@ -111,6 +119,7 @@ const Board = () => {
         },
       };
       setNodes((nds) => [...nds, newNode]);
+      setTitle(`${label} ${count}`);
     },
     [nodes.length]
   );
@@ -191,7 +200,6 @@ const Board = () => {
       const currentContent = document.getElementById("messageInput").innerHTML;
       editNode(selectedNode.id, selectedNode.data.label, currentContent);
     }
-    console.log("dddd")
     setSelectedNode(null);
     setVisibleCondition(null);
   };
@@ -421,6 +429,8 @@ const Board = () => {
             handleConditionChange={handleConditionChange}
             variableData={variableData}
             handleExtendWindow={handleExtendWindow}
+            title={title}
+            setTitle={setTitle}
           />
         ) : (
           <PromptNodeWindow
@@ -454,6 +464,8 @@ const Board = () => {
             handleExtendWindow={handleExtendWindow}
             isOpenModal={isOpenModal}
             setIsOpenModal={setIsOpenModal}
+            title={title}
+            setTitle={setTitle}
           />
         )
       ) : (

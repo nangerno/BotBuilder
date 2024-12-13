@@ -41,6 +41,8 @@ const PromptNodeWindow = ({
   handleExtendWindow,
   isOpenModal,
   setIsModalOpen,
+  title,
+  setTitle
 }) => {
   //   const [isModalOpen, setIsModalOpen] = useState(false);
   //   const openModal = () => {
@@ -110,7 +112,7 @@ const PromptNodeWindow = ({
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
             <h3 style={{ borderBottom: "1px solid #ddd", padding: "10px" }}>
-              Message
+              {title}
             </h3>
 
             <div
@@ -191,8 +193,7 @@ const PromptNodeWindow = ({
               </div>
             </div>
             <br />
-            <strong>Variants</strong>
-            <br />
+            <strong>System Prompt</strong>
             <div>
               {variants.map((variant) => (
                 <div

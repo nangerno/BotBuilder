@@ -38,13 +38,14 @@ const PromptRightPanel = ({
   setActiveTabForCondition,
   handleConditionChange,
   variableData,
-  handleExtendWindow
+  handleExtendWindow,
+  title,
+  setTitle
 }) => {
   const [newVariable, setNewVariable] = useState([]);
   const [count, setCount] = useState([]);
   useEffect(() => {
     setNewVariable(variableData);
-    console.log(conditions);
     const len = Object.values(variantConditions).map((innerObj) => {
       if (Object.keys(innerObj).length === 0) {
         return "Condition";
@@ -77,8 +78,8 @@ const PromptRightPanel = ({
       }}
     >
       <FiChevronsLeft style={{ float: "right", cursor: "pointer" }} onClick={handleExtendWindow}/>
-      <h3 style={{ borderBottom: "1px solid #ddd", padding: "10px" }}>
-        Message
+      <h3 style={{ borderBottom: "1px solid #ddd", padding: "10px" }} onInput={(e) => setTitle(e.currentTarget.textContent)} >
+        {title}
       </h3>
 
       <div style={{ marginBottom: "10px", borderBottom: "1px solid #ddd" }}>
@@ -153,7 +154,7 @@ const PromptRightPanel = ({
         </div>
       </div>
       <br></br>
-      <strong>Variants</strong>
+      <strong>System Prompt</strong>
       <br></br>
       <div>
         <button onClick={handlePlay} className="message-toolbaar-icon">

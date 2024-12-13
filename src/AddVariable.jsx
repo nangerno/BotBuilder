@@ -28,7 +28,53 @@ const AddVariable = ({
   }, [selectedVariable, selectedVariableType]);
 
   const handleCreateVariable = () => {
+    // if (newVariable !== "") {
+    //   if (editIndex === null) {
+    //     setVariableData((prevData) => [...prevData, newVariable]);
+    //   } else {
+    //     setVariableData((prevData) => {
+    //       const updatedData = [...prevData];
+    //       updatedData[editIndex] = newVariable;
+    //       return updatedData;
+    //     });
+    //   }
+    //   setNewVariable("");
+    // } else {
+    //   setVariableData((prevData) => {
+    //     const updatedData = [...prevData];
+    //     updatedData.splice(editIndex, 1);
+    //     return updatedData;
+    //   });
+    // }
     if (newVariable !== "") {
+      const input = newVariable.trim();
+    
+      // Validation checks
+      const isUnique = !variableData.includes(input);
+      const startsWithLetter = /^[a-zA-Z]/.test(input);
+      const noSpaces = !/\s/.test(input);
+      const isSnakeCase = /^[a-zA-Z][a-zA-Z0-9_]*$/.test(input);
+    
+      if (!startsWithLetter) {
+        alert("Variable names must start with a letter.");
+        return;
+      }
+    
+      if (!noSpaces) {
+        alert("Variable names must not contain spaces.");
+        return;
+      }
+    
+      if (!isSnakeCase) {
+        alert("Variable names must use underscores and alphanumeric characters only.");
+        return;
+      }
+    
+      if (!isUnique) {
+        alert("Variable name must be unique.");
+        return;
+      }
+    
       if (editIndex === null) {
         setVariableData((prevData) => [...prevData, newVariable]);
       } else {
@@ -38,14 +84,15 @@ const AddVariable = ({
           return updatedData;
         });
       }
-      setNewVariable("");
-    } else {
+    } else if (editIndex !== null) {
       setVariableData((prevData) => {
         const updatedData = [...prevData];
         updatedData.splice(editIndex, 1);
         return updatedData;
       });
     }
+    
+    setNewVariable("");
 
     setShowVariableModal(false);
   };

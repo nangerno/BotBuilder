@@ -87,7 +87,7 @@ import React, {
             marginTop: "10px",
             border: "2px solid rgb(245, 242, 242)",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-            position: "relative",
+            position: "relative", // Make this div relative as well
           }}
         >
           <p
@@ -100,20 +100,21 @@ import React, {
             }}
             dangerouslySetInnerHTML={{ __html: data.message }}
           ></p>
+
           <Handle
             type="target"
             position="left"
             style={{
-              background: isHovered ? "#007bff" : "transparent",
-              border: isHovered ? "" : "none",
+              background: "#007bff",
+              // border: isHovered ? "" : "none",
               position: "absolute",
               top: "50%",
               left: "-5px",
               transform: "translateY(-50%)",
               transition: "background-color 0.3s ease",
             }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            // onMouseEnter={() => setIsHovered(true)}
+            // onMouseLeave={() => setIsHovered(false)}
           />
           <Handle
             type="source"

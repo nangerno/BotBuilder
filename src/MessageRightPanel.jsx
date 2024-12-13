@@ -33,7 +33,6 @@ const MessageRightPanel = ({
   handleMessageChange,
   handleFormatText,
   handleCondition,
-  renderConditionLength,
   addCondition,
   removeCondition,
   setActiveTabForCondition,
@@ -42,11 +41,10 @@ const MessageRightPanel = ({
 }) => {
   
   const [newVariable, setNewVariable] = useState([]);
-  
+  const [isCondition, setIsCondition] = useState("");
   useEffect(()=>{
     setNewVariable(variableData);
-    console.log(renderConditionLength)
-  }, [variableData. renderConditionLength])
+  }, [variableData])
 
   return (
     <div
@@ -259,13 +257,10 @@ const MessageRightPanel = ({
             >
               <PiCornersOut size={19} />
             </span>
-            {/* Condition */}
-            {/* Uncomment and adjust the conditional rendering logic as needed */}
-            {/* {conditions.length === 1 ? ' Condition' : ' ' + conditions.length} */}
-            {conditionCount==0 ? (
-              <div>Condition</div>
+            {conditionCount==1 ? (
+              <div>{variantConditions[variant.id]?.[1]}</div>
             ) : (
-              <div>{conditionCount}</div>
+              <div style={{color:'#00ff00'}}>{conditionCount}</div>
             )}
           </button>
 

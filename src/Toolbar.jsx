@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { FiMessageCircle, FiPlus, FiSmile, FiMessageSquare } from "react-icons/fi";
+import { RiColorFilterAiLine } from "react-icons/ri";
 const Toolbar = ({ nodes, addNode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   let timeoutId;
@@ -73,7 +74,7 @@ const Toolbar = ({ nodes, addNode }) => {
             }}
           >
             <div
-              onClick={() => handleNodeSelection("Message Node")}
+              onClick={() => handleNodeSelection("Message node")}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -101,7 +102,39 @@ const Toolbar = ({ nodes, addNode }) => {
                   color: "#333",
                 }}
               >
-                Message Node
+                Message node
+              </span>
+            </div>
+            <div
+              onClick={() => handleNodeSelection("Prompt node")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                padding: "10px",
+                cursor: "pointer",
+                borderBottom: "1px solid #ddd",
+                width: "150px",
+                transition: "background-color 0.4s ease, transform 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#f5f5f5";
+                e.currentTarget.style.transform = "scale(1.02)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.transform = "scale(1)";
+              }}
+            >
+              <RiColorFilterAiLine size={20} />
+              <span
+                style={{
+                  fontSize: "0.95rem",
+                  fontWeight: "500",
+                  color: "#333",
+                }}
+              >
+                Prompt node
               </span>
             </div>
           </div>

@@ -28,7 +28,7 @@ const initialNodes = [
     id: "1",
     type: "custom",
     data: {
-      label: "Rename",
+      label: "Message node 1",
       message:
         "Hi, I'm Wobi's bot, here to help you with your accident. What's your name, is it an accident or theft, and in what city did it happen?",
       style: { backgroundColor: "#dde4ea" },
@@ -81,12 +81,18 @@ const Board = () => {
 
   const addNode = useCallback(
     (label) => {
+      const count = nodes.reduce((acc, node) => {
+        if (node.data.label.includes(label)) {
+          return acc + 1;
+        }
+        return acc;
+      }, 1);
       const newNode = {
         id: (nodes.length + 1).toString(),
         type: "custom",
         data: {
-          label,
-          message: `This is a ${label} node.`,
+          label: `${label} ${count}`,
+          message: `${label} ${count}`,
           style: { backgroundColor: "#dde4ea" },
         },
         position: {

@@ -47,6 +47,7 @@ const MessageNode = ({ data, onClick }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        position: "relative",
       }}
       onClick={onClick}
     >
@@ -77,6 +78,7 @@ const MessageNode = ({ data, onClick }) => {
           {editedLabel}
         </strong>
       )}
+
       <div
         style={{
           backgroundColor: "#ffffff",
@@ -85,30 +87,47 @@ const MessageNode = ({ data, onClick }) => {
           marginTop: "10px",
           border: "2px solid rgb(245, 242, 242)",
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+          position: "relative",
         }}
       >
         <p
-          style={{ margin: 0, fontSize: "0.95rem", color: "#808080" }}
+          style={{
+            margin: 0,
+            fontSize: "0.95rem",
+            color: "#808080",
+            position: "relative",
+            paddingRight: "30px",
+          }}
           dangerouslySetInnerHTML={{ __html: data.message }}
         ></p>
+
+        <Handle
+          type="target"
+          position="left"
+          style={{
+            background: isHovered ? "#007bff" : "transparent",
+            border: isHovered ? "" : "none",
+            position: "absolute",
+            top: "50%",
+            left: "-5px",
+            transform: "translateY(-50%)",
+            transition: "background-color 0.3s ease",
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        />
+        <Handle
+          type="source"
+          position="right"
+          style={{
+            background: "#007bff",
+            position: "absolute",
+            top: "50%",
+            right: "-5px",
+            transform: "translateY(-50%)",
+          }}
+        />
       </div>
-      <Handle
-        type="target"
-        position="left"
-        style={{
-          background: isHovered ? "#007bff" : "transparent",
-          border: isHovered ? "" : "none",
-          marginTop: "10px",
-          transition: "background-color 0.3s ease",
-        }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      />
-      <Handle
-        type="source"
-        position="right"
-        style={{ background: "#007bff", marginTop: "10px" }}
-      />
     </div>
   );
 };

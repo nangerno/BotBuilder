@@ -19,17 +19,12 @@ import ReactFlow, {
 import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
 import MessageNode from "./node/MessageNode";
-import PromptNode from "./node/PromptNode";
-import Toolbar from "./Toolbar";
-import MessageRightPanel from "./MessageRightPanel";
-import PromptRightPanel from "./PromptRightPanel";
-import PromptNodeWindow from "./PromptNodeWindow";
-import VariantPanel from "./VariantPanel";
+import MsgPanel from "./MsgPanel";
 
 const initialNodes = [
   {
     id: "1",
-    type: "Message node",
+    type: "custom",
     data: {
       label: "Message node 1",
       message:
@@ -41,8 +36,7 @@ const initialNodes = [
 ];
 
 const initialEdges = [];
-
-const Board = () => {
+const TestBoard = () => {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -51,24 +45,22 @@ const Board = () => {
   const [newMessage, setNewMessage] = useState("");
   const messageDivRef = useRef(null);
   const conditionDivRef = useRef(null);
-  const promptDivRef = useRef(null);
-  const promptWindowRef = useRef(null);
   const [variants, setVariants] = useState([{ id: 0, message: "" }]);
-  const [visibleCondition, setVisibleCondition] = useState(null);
-  const [variantConditions, setVariantConditions] = useState({});
-  const [conditions, setConditions] = useState([{ id: 1 }]);
+  
+  const [variantConditions, setVariantConditions] = useState({"0":{"0":""}});
+  
   const [conditionCount, setConditionCount] = useState(1);
   const [isFocused, setIsFocused] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const nodeTypes = useMemo(
-    () => ({ "Message node": MessageNode, "Prompt node": PromptNode }),
-    []
-  );
+  const nodeTypes = useMemo(() => ({ custom: MessageNode }), []);
 
   const [variableData, setVariableData] = useState([]);
   const [variableType, setVariableTypeData] = useState([]);
   const [appliedColor, setAppliedColor] = useState(null);
+
+  //valid
+  const [visibleCondition, setVisibleCondition] = useState(null);
+  const [conditions, setConditions] = useState([{ id: 0 }]);
 
   const onConnect = useCallback(
     (params) =>
@@ -96,10 +88,9 @@ const Board = () => {
         }
         return acc;
       }, 1);
-      console.log(count);
       const newNode = {
         id: (nodes.length + 1).toString(),
-        type: label,
+        type: "custom",
         data: {
           label: `${label} ${count}`,
           message: `${label} ${count}`,
@@ -191,24 +182,9 @@ const Board = () => {
       const currentContent = document.getElementById("messageInput").innerHTML;
       editNode(selectedNode.id, selectedNode.data.label, currentContent);
     }
-    console.log("dddd")
     setSelectedNode(null);
     setVisibleCondition(null);
   };
-
-  const handleExtendWindow = () => {
-    // if (selectedNode) {
-    //   const currentContent = document.getElementById("messageInput").innerHTML;
-    //   editNode(selectedNode.id, selectedNode.data.label, currentContent);
-    // }
-    // setSelectedNode(null);
-    setIsOpenModal((prevState) => !prevState);
-    // setVisibleCondition(null);
-    
-  };
-  useEffect(()=> {
-    console.log(isOpenModal)
-  }, [isOpenModal])
 
   const handleFormatText = (format) => {
     document.execCommand(format);
@@ -239,6 +215,17 @@ const Board = () => {
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
   );
+
+
+
+
+  const setActiveTabForCondition = (tab) => {
+    setVisibleCondition((prevCondition) =>
+      prevCondition ? { ...prevCondition, activeTab: tab } : null
+    );
+  };
+
+  ////Valid function
   const addVariant = () => {
     setVariants([...variants, { id: variants.length, message: "" }]);
   };
@@ -247,54 +234,53 @@ const Board = () => {
     setVariants((prevVariants) =>
       prevVariants.filter((v) => v.id !== variantId)
     );
+    // remove variant and rearrange id
+    const filteredVariants = variants.filter((variant)=> variant.id!== variantId);
+    setVariants(
+        filteredVariants.map((variant, index) => ({
+            ...variant,
+            id: index
+        }))
+    )
     setVisibleCondition((prevCondition) =>
       prevCondition && prevCondition.variantId === variantId
         ? null
         : prevCondition
     );
   };
+
   const handleCondition = (variantId) => {
     setVisibleCondition((prevCondition) =>
       prevCondition && prevCondition.variantId === variantId
         ? null
         : { variantId, activeTab: "all" }
     );
+    
+  };
 
-    if (
-      !variantConditions[variantId] ||
-      Object.keys(variantConditions[variantId]).length === 0
-    ) {
-      setVariantConditions((prevConditions) => ({
-        ...prevConditions,
-        [variantId]: {},
-      }));
-    }
-  };
-  const setActiveTabForCondition = (tab) => {
-    setVisibleCondition((prevCondition) =>
-      prevCondition ? { ...prevCondition, activeTab: tab } : null
-    );
-  };
-  const addCondition = () => {
-    setConditionCount((prevCount) => prevCount + 1);
-    setConditions((prevConditions) => [
-      ...prevConditions,
-      { id: prevConditions.length + 1 },
-    ]);
+  const addCondition = (variantId, conditionId, value) => {
+
+    // setVariantConditions(prevState => ({
+    //     ...prevState,
+    //     [variantId]: {
+    //       ...prevState[variantId],
+    //       [conditionId]: "",
+    //     }
+    //   }));
+    console.log({variantId, conditionId, value})
   };
 
   const removeCondition = (variantId, conditionId) => {
-    setVariantConditions((prev) => ({
-      ...prev,
-      [variantId]: {
-        ...prev[variantId],
-        [conditionId]: "",
-      },
-    }));
+    // remove condtion and rearrange id
+    const filteredConditions = conditions.filter((condition) => condition.id !== conditionId);
     setConditions(
-      conditions.filter((condition) => condition.id !== conditionId)
-    );
-    setConditionCount((prevCount) => Math.max(1, prevCount - 1));
+        filteredConditions.map((condition, index) => ({
+            ...condition,
+            id: index
+        }))
+    )
+
+    
   };
 
   const handleConditionChange = (variantId, conditionId, value) => {
@@ -305,12 +291,6 @@ const Board = () => {
         [conditionId]: value,
       },
     }));
-  };
-
-  const renderConditionLength = (variantId) => {
-    const conditionsForVariant = variantConditions[variantId] || {};
-    const conditionCount = Object.keys(conditionsForVariant).length;
-    return conditionCount === 1 ? " Condition" : " " + conditionCount;
   };
 
   return (
@@ -332,13 +312,6 @@ const Board = () => {
         <Controls />
         {/* <MiniMap /> */}
       </ReactFlow>
-      <VariantPanel
-        variableData={variableData}
-        setVariableData={setVariableData}
-        variableType={variableType}
-        setVariableTypeData={setVariableTypeData}
-        appliedColor={appliedColor}
-      />
       {contextMenuPosition && (
         <div
           style={{
@@ -388,108 +361,36 @@ const Board = () => {
           </div>
         </div>
       )}
-      <Toolbar nodes={nodes} addNode={addNode} />
-
-      {selectedNode?.type === "Prompt node" ? (
-        !isOpenModal ? (
-          <PromptRightPanel
-            promptDivRef={promptDivRef}
-            conditionDivRef={conditionDivRef}
-            isFocused={isFocused}
-            setIsFocused={setIsFocused}
-            newMessage={newMessage}
-            variants={variants}
-            variantConditions={variantConditions}
-            visibleCondition={visibleCondition}
-            conditionCount={conditionCount}
-            conditions={conditions}
-            selectedNode={selectedNode}
-            setSelectedNode={setSelectedNode}
-            handlePlay={handlePlay}
-            handleInsertLink={handleInsertLink}
-            handleDelay={handleDelay}
-            addVariant={addVariant}
-            removeVariant={removeVariant}
-            handleMessageChange={handleMessageChange}
-            handleSaveMessage={handleSaveMessage}
-            handleFormatText={handleFormatText}
-            handleCondition={handleCondition}
-            renderConditionLength={renderConditionLength}
-            addCondition={addCondition}
-            removeCondition={removeCondition}
-            setActiveTabForCondition={setActiveTabForCondition}
-            handleConditionChange={handleConditionChange}
-            variableData={variableData}
-            handleExtendWindow={handleExtendWindow}
-          />
-        ) : (
-          <PromptNodeWindow
-            promptWindowRef={promptWindowRef}
-            conditionDivRef={conditionDivRef}
-            isFocused={isFocused}
-            setIsFocused={setIsFocused}
-            newMessage={newMessage}
-            variants={variants}
-            variantConditions={variantConditions}
-            visibleCondition={visibleCondition}
-            conditionCount={conditionCount}
-            conditions={conditions}
-            selectedNode={selectedNode}
-            setSelectedNode={setSelectedNode}
-            handlePlay={handlePlay}
-            handleInsertLink={handleInsertLink}
-            handleDelay={handleDelay}
-            addVariant={addVariant}
-            removeVariant={removeVariant}
-            handleMessageChange={handleMessageChange}
-            handleSaveMessage={handleSaveMessage}
-            handleFormatText={handleFormatText}
-            handleCondition={handleCondition}
-            renderConditionLength={renderConditionLength}
-            addCondition={addCondition}
-            removeCondition={removeCondition}
-            setActiveTabForCondition={setActiveTabForCondition}
-            handleConditionChange={handleConditionChange}
-            variableData={variableData}
-            handleExtendWindow={handleExtendWindow}
-            isOpenModal={isOpenModal}
-            setIsOpenModal={setIsOpenModal}
-          />
-        )
-      ) : (
-        <MessageRightPanel
-          messageDivRef={messageDivRef}
-          conditionDivRef={conditionDivRef}
-          isFocused={isFocused}
-          setIsFocused={setIsFocused}
-          newMessage={newMessage}
-          variants={variants}
-          variantConditions={variantConditions}
-          visibleCondition={visibleCondition}
-          conditionCount={conditionCount}
-          conditions={conditions}
-          selectedNode={selectedNode}
-          setSelectedNode={setSelectedNode}
-          handlePlay={handlePlay}
-          handleInsertLink={handleInsertLink}
-          handleDelay={handleDelay}
-          addVariant={addVariant}
-          removeVariant={removeVariant}
-          handleMessageChange={handleMessageChange}
-          handleSaveMessage={handleSaveMessage}
-          handleFormatText={handleFormatText}
-          handleCondition={handleCondition}
-          renderConditionLength={renderConditionLength}
-          addCondition={addCondition}
-          removeCondition={removeCondition}
-          setActiveTabForCondition={setActiveTabForCondition}
-          handleConditionChange={handleConditionChange}
-          variableData={variableData}
-          handleExtendWindow={handleExtendWindow}
-        />
-      )}
+      <MsgPanel
+        messageDivRef={messageDivRef}
+        conditionDivRef={conditionDivRef}
+        isFocused={isFocused}
+        setIsFocused={setIsFocused}
+        newMessage={newMessage}
+        variants={variants}
+        variantConditions={variantConditions}
+        visibleCondition={visibleCondition}
+        conditionCount={conditionCount}
+        conditions={conditions}
+        selectedNode={selectedNode}
+        setSelectedNode={setSelectedNode}
+        handlePlay={handlePlay}
+        handleInsertLink={handleInsertLink}
+        handleDelay={handleDelay}
+        addVariant={addVariant}
+        removeVariant={removeVariant}
+        handleMessageChange={handleMessageChange}
+        handleSaveMessage={handleSaveMessage}
+        handleFormatText={handleFormatText}
+        handleCondition={handleCondition}
+        addCondition={addCondition}
+        removeCondition={removeCondition}
+        setActiveTabForCondition={setActiveTabForCondition}
+        handleConditionChange={handleConditionChange}
+        variableData={variableData}
+      />
     </div>
   );
 };
 
-export default Board;
+export default TestBoard;

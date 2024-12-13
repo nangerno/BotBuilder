@@ -37,15 +37,29 @@ const MessageRightPanel = ({
   removeCondition,
   setActiveTabForCondition,
   handleConditionChange,
-  variableData
+  variableData,
 }) => {
-  
   const [newVariable, setNewVariable] = useState([]);
-  const [isCondition, setIsCondition] = useState("");
-  useEffect(()=>{
+  const [count, setCount] = useState([]);
+  useEffect(() => {
     setNewVariable(variableData);
-  }, [variableData])
-
+    console.log(conditions)
+    const len = Object.values(variantConditions).map((innerObj) => {
+      if (Object.keys(innerObj).length === 0) {
+        return "Condition";
+      }
+      if (Object.values(innerObj).every(value => value.trim() === "")) {
+        return "Condition";
+      }
+      const nonEmptyCount = Object.values(innerObj).filter(value => value.trim() !== "").length;
+      return nonEmptyCount > 0 ? nonEmptyCount : "Condition";
+    });
+    
+    setCount(len.length > 0 ? len : ['Condition']);
+  }, [variableData, variantConditions, conditions]);
+  const handleAddVariant = () => {
+    addVariant()
+  }
   return (
     <div
       ref={messageDivRef}
@@ -137,7 +151,7 @@ const MessageRightPanel = ({
       <FiPlusCircle
         style={{ float: "right", cursor: "pointer" }}
         size={20}
-        onClick={addVariant}
+        onClick={handleAddVariant}
       />
       <br></br>
       <br></br>
@@ -240,9 +254,7 @@ const MessageRightPanel = ({
               border: "1px solid #ccc",
               borderRadius: "4px",
               // backgroundColor: '#f9f9f9',
-              backgroundColor: conditionCount == 0
-                ? "#ddd"
-                : "#f9f9f9",
+              backgroundColor: conditionCount == 0 ? "#ddd" : "#f9f9f9",
               color: "#333",
               fontSize: "14px",
               cursor: "pointer",
@@ -257,11 +269,8 @@ const MessageRightPanel = ({
             >
               <PiCornersOut size={19} />
             </span>
-            {conditionCount==1 ? (
-              <div>{variantConditions[variant.id]?.[1]}</div>
-            ) : (
-              <div style={{color:'#00ff00'}}>{conditionCount}</div>
-            )}
+            
+            <div key={variant.id}>{count[variant.id]}</div>
           </button>
 
           {visibleCondition !== null && (
@@ -400,8 +409,10 @@ const MessageRightPanel = ({
                     }}
                   >
                     <option>variables</option>
-                    {newVariable.map((data, index)=>(
-                      <option key={index} value={index}>{data}</option>
+                    {newVariable.map((data, index) => (
+                      <option key={index} value={index}>
+                        {data}
+                      </option>
                     ))}
                   </select>
                   <p style={{ margin: "0 5px" }}>is</p>
@@ -443,7 +454,7 @@ const MessageRightPanel = ({
                       marginRight: "30px",
                     }}
                     onClick={() =>
-                      conditions.length > 1 && removeCondition(condition.id)
+                      conditions.length > 1 && removeCondition(visibleCondition.variantId, condition.id)
                     }
                     disabled={conditions.length === 1}
                     onMouseEnter={(e) =>
@@ -461,7 +472,6 @@ const MessageRightPanel = ({
           )}
         </div>
       ))}
-
       <div
         style={{
           display: "flex",

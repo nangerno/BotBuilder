@@ -379,10 +379,10 @@ const Board = () => {
             }}
           >
             {[
-              { color: "#a1c972", label: "Red" },
-              { color: "#00ff00", label: "Green" },
-              { color: "#0000ff", label: "Blue" },
-              { color: "#ffff00", label: "Yellow" },
+              { color: "#a1c972", label: "1" },
+              { color: "#f3dcf0", label: "2" },
+              { color: "#ffd4de", label: "3" },
+              { color: "#caead5", label: "4" },
             ].map(({ color, label }) => (
               <button
                 key={color}

@@ -5,7 +5,12 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { FiMessageCircle, FiPlus, FiSmile, FiMessageSquare } from "react-icons/fi";
+import {
+  FiMessageCircle,
+  FiPlus,
+  FiSmile,
+  FiMessageSquare,
+} from "react-icons/fi";
 import { RiColorFilterAiLine } from "react-icons/ri";
 const Toolbar = ({ nodes, addNode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -37,6 +42,7 @@ const Toolbar = ({ nodes, addNode }) => {
         backgroundColor: "#ffffff",
         padding: "10px",
         borderRadius: "15px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
       }}
     >
       <div
@@ -46,7 +52,6 @@ const Toolbar = ({ nodes, addNode }) => {
       >
         <FiMessageCircle
           size={40}
-          color="#333"
           style={{
             cursor: "pointer",
           }}
@@ -143,7 +148,6 @@ const Toolbar = ({ nodes, addNode }) => {
       <div style={{ position: "relative" }}>
         <FiSmile
           size={40}
-          color="#333"
           style={{
             cursor: "pointer",
           }}

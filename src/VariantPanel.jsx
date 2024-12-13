@@ -51,14 +51,12 @@ const VariantPanel = ({
         width: "100px",
         height: "220px",
         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
-        border: "0.5px solid #007BFF",
+        border: "0.1px solid rgb(148, 197, 248)",
       }}
     >
       <strong
         style={{
-          fontSize: "1.1rem",
-          color: "#737376",
-          cursor: "pointer",
+          fontSize: "1rem",
           textAlign: "center",
         }}
       >
@@ -79,7 +77,7 @@ const VariantPanel = ({
             key={index}
             style={{
               backgroundColor: "#ffffff",
-              border: "0.5px solid #007BFF",
+              border: "0.1px solid rgb(148, 197, 248)",
               borderRadius: "5px",
               padding: "2px",
               marginBottom: "2px",

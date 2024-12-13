@@ -154,7 +154,7 @@ const PromptRightPanel = ({
         </div>
       </div>
       <br></br>
-      <strong>System Prompt</strong>
+      <strong>{isFocused?"Description":"System Prompt"}</strong>
       <br></br>
       <div>
         <button onClick={handlePlay} className="message-toolbaar-icon">

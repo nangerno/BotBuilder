@@ -13,6 +13,10 @@ const VariantPanel = ({
   variableType,
   setVariableType,
   appliedColor,
+  handleColorChange,
+  colorVariable,
+  setColorVariable,
+  handleClickColor
 }) => {
   const [selectedVariable, setSelectedVariable] = useState("");
   const [selectedVariableType, setSelectedVariableType] = useState(0);
@@ -131,6 +135,10 @@ const VariantPanel = ({
         editIndex={editIndex}
         setEditIndex={setEditIndex}
         appliedColor={appliedColor}
+        handleColorChange={handleColorChange}
+        colorVariable={colorVariable}
+        setColorVariable={setColorVariable}
+        handleClickColor={handleClickColor}
       />
     </div>
   );

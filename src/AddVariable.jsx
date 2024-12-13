@@ -18,6 +18,10 @@ const AddVariable = ({
   editIndex,
   setEditIndex,
   appliedColor,
+  handleColorChange,
+  colorVariable,
+  setColorVariable,
+  handleClickColor,
 }) => {
   const [newVariable, setNewVariable] = useState("");
   const [variableType, setVariableType] = useState("");
@@ -27,54 +31,46 @@ const AddVariable = ({
     setVariableType(selectedVariableType);
   }, [selectedVariable, selectedVariableType]);
 
+  const rgbToHex = (rgb) => {
+    const result = rgb.match(/\d+/g);
+    if (!result || result.length !== 3) return null;
+    const r = parseInt(result[0]).toString(16).padStart(2, "0");
+    const g = parseInt(result[1]).toString(16).padStart(2, "0");
+    const b = parseInt(result[2]).toString(16).padStart(2, "0");
+    return `#${r}${g}${b}`;
+  };
   const handleCreateVariable = () => {
-    // if (newVariable !== "") {
-    //   if (editIndex === null) {
-    //     setVariableData((prevData) => [...prevData, newVariable]);
-    //   } else {
-    //     setVariableData((prevData) => {
-    //       const updatedData = [...prevData];
-    //       updatedData[editIndex] = newVariable;
-    //       return updatedData;
-    //     });
-    //   }
-    //   setNewVariable("");
-    // } else {
-    //   setVariableData((prevData) => {
-    //     const updatedData = [...prevData];
-    //     updatedData.splice(editIndex, 1);
-    //     return updatedData;
-    //   });
-    // }
     if (newVariable !== "") {
       const input = newVariable.trim();
-    
+
       // Validation checks
       const isUnique = !variableData.includes(input);
       const startsWithLetter = /^[a-zA-Z]/.test(input);
       const noSpaces = !/\s/.test(input);
       const isSnakeCase = /^[a-zA-Z][a-zA-Z0-9_]*$/.test(input);
-    
+
       if (!startsWithLetter) {
         alert("Variable names must start with a letter.");
         return;
       }
-    
+
       if (!noSpaces) {
         alert("Variable names must not contain spaces.");
         return;
       }
-    
+
       if (!isSnakeCase) {
-        alert("Variable names must use underscores and alphanumeric characters only.");
+        alert(
+          "Variable names must use underscores and alphanumeric characters only."
+        );
         return;
       }
-    
+
       if (!isUnique) {
         alert("Variable name must be unique.");
         return;
       }
-    
+
       if (editIndex === null) {
         setVariableData((prevData) => [...prevData, newVariable]);
       } else {
@@ -91,7 +87,7 @@ const AddVariable = ({
         return updatedData;
       });
     }
-    
+
     setNewVariable("");
 
     setShowVariableModal(false);
@@ -101,14 +97,14 @@ const AddVariable = ({
   };
   const addValue = () => {
     setValueData((prevData) => [...prevData, ""]);
-  }
+  };
   const deleteValue = () => {
     setValueData((prevData) => {
       const updatedData = [...prevData];
       updatedData.splice(editIndex, 1);
       return updatedData;
     });
-  }
+  };
   return (
     <div
       style={{
@@ -261,11 +257,14 @@ const AddVariable = ({
                   borderRadius: "50%",
                   backgroundColor: "#a1c972",
                   border: `2px solid ${
-                    appliedColor == "#a1c972" ? "#ff0000" : "#ddd"
+                    colorVariable == "#a1c972" ? "#ff0000" : "#ddd"
                   }`,
                   padding: "4px",
                   boxSizing: "content-box",
                 }}
+                onClick={(e) =>
+                  handleClickColor(rgbToHex(e.target.style.backgroundColor))
+                }
               ></div>
               <div
                 style={{
@@ -274,11 +273,14 @@ const AddVariable = ({
                   borderRadius: "50%",
                   backgroundColor: "#00ff00",
                   border: `2px solid ${
-                    appliedColor == "#00ff00" ? "#ff0000" : "#ddd"
+                    colorVariable == "#00ff00" ? "#ff0000" : "#ddd"
                   }`,
                   padding: "4px",
                   boxSizing: "content-box",
                 }}
+                onClick={(e) =>
+                  handleClickColor(rgbToHex(e.target.style.backgroundColor))
+                }
               ></div>
               <div
                 style={{
@@ -287,11 +289,14 @@ const AddVariable = ({
                   borderRadius: "50%",
                   backgroundColor: "#0000ff",
                   border: `2px solid ${
-                    appliedColor == "#0000ff" ? "#ff0000" : "#ddd"
+                    colorVariable == "#0000ff" ? "#ff0000" : "#ddd"
                   }`,
                   padding: "4px",
                   boxSizing: "content-box",
                 }}
+                onClick={(e) =>
+                  handleClickColor(rgbToHex(e.target.style.backgroundColor))
+                }
               ></div>
               <div
                 style={{
@@ -300,11 +305,14 @@ const AddVariable = ({
                   borderRadius: "50%",
                   backgroundColor: "#ffff00",
                   border: `2px solid ${
-                    appliedColor == "#ffff00" ? "#ff0000" : "#ddd"
+                    colorVariable == "#ffff00" ? "#ff0000" : "#ddd"
                   }`,
                   padding: "4px",
                   boxSizing: "content-box",
                 }}
+                onClick={(e) =>
+                  handleClickColor(rgbToHex(e.target.style.backgroundColor))
+                }
               ></div>
             </div>
           </div>
@@ -336,41 +344,51 @@ const AddVariable = ({
               onClick={addValue}
             />
           </div>
-          {valueData.map((data, index)=>(
+          {valueData.map((data, index) => (
             <div
-            key={index}
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "10px",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderBottom: '3px solid #ddd',
-              paddingBottom: "10px"
-            }}
-          >
-            <div>
-              <input
-                type="text"
-                style={{ border: "none", outline: "none", paddingTop:'10px', fontSize:'15px'}}
-                placeholder="Enter entity value"
-              />
+              key={index}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "10px",
+                alignItems: "center",
+                justifyContent: "space-between",
+                borderBottom: "3px solid #ddd",
+                paddingBottom: "10px",
+              }}
+            >
+              <div>
+                <input
+                  type="text"
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    paddingTop: "10px",
+                    fontSize: "15px",
+                  }}
+                  placeholder="Enter entity value"
+                />
 
-              <br></br>
-              <input
-                type="text"
-                style={{ border: "none", outline: "none", fontSize: "13px", fontStyle:'italic', width: '200%' }}
-                placeholder="Add synonyms, comma separated"
+                <br></br>
+                <input
+                  type="text"
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    fontSize: "13px",
+                    fontStyle: "italic",
+                    width: "200%",
+                  }}
+                  placeholder="Add synonyms, comma separated"
+                />
+              </div>
+              <FiMinusCircle
+                style={{ float: "right", cursor: "pointer", marginTop: "13px" }}
+                size={30}
+                onClick={deleteValue}
               />
-            </div>
-            <FiMinusCircle
-              style={{ float: "right", cursor: "pointer", marginTop: "13px" }}
-              size={30}
-              onClick={deleteValue}
-            />
             </div>
           ))}
-          
         </div>
         <div style={{ textAlign: "right" }}>
           <button
@@ -396,22 +414,27 @@ const AddVariable = ({
           </button>
           <button
             style={{
-              backgroundColor: newVariable === '' ? "#ddd" : "#007BFF",
-              color:  newVariable === '' ?  "#000":"#fff",
+              backgroundColor: newVariable === "" ? "#ddd" : "#007BFF",
+              color: newVariable === "" ? "#000" : "#fff",
               border: "none",
               padding: "12px 30px",
               fontSize: "1.1rem",
               borderRadius: "5px",
-              cursor: newVariable === '' ? "not-allowed" : "pointer",
+              cursor: newVariable === "" ? "not-allowed" : "pointer",
               transition: "background-color 0.3s ease, transform 0.2s ease",
               boxSizing: "border-box",
               textAlign: "center",
-              
             }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = newVariable === '' ?  "#ddd":"#0056b3")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = newVariable === '' ?  "#ddd":"#007BFF")}
+            onMouseEnter={(e) =>
+              (e.target.style.backgroundColor =
+                newVariable === "" ? "#ddd" : "#0056b3")
+            }
+            onMouseLeave={(e) =>
+              (e.target.style.backgroundColor =
+                newVariable === "" ? "#ddd" : "#007BFF")
+            }
             onClick={() => handleCreateVariable()}
-            disabled={newVariable === ''}
+            disabled={newVariable === ""}
           >
             {selectedVariable ? "Save" : "Create Variable"}
           </button>

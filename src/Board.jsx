@@ -64,6 +64,7 @@ const Board = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [title, setTitle] = useState("") // prompt node title
   const [editedLabel, setEditedLabel] = useState('');
+  const [colorVariable, setColorVariable] = useState('');
   const nodeTypes = useMemo(
     () => ({ "Message node": MessageNode, "Prompt node": PromptNode }),
     []
@@ -184,6 +185,7 @@ const Board = () => {
   };
 
   const handleMessageChange = (id, value) => {
+
     if (id === "main") {
       setNewMessage(value);
     } else {
@@ -314,7 +316,10 @@ const Board = () => {
       },
     }));
   };
-
+  const handleClickColor = (color) => {
+    console.log(color)
+    setColorVariable(color)
+  }
   const renderConditionLength = (variantId) => {
     const conditionsForVariant = variantConditions[variantId] || {};
     const conditionCount = Object.keys(conditionsForVariant).length;
@@ -335,6 +340,7 @@ const Board = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeContextMenu={onNodeContextMenu}
+
       >
         <Background />
         <Controls />
@@ -346,6 +352,10 @@ const Board = () => {
         variableType={variableType}
         setVariableTypeData={setVariableTypeData}
         appliedColor={appliedColor}
+        handleColorChange={handleColorChange}
+        colorVariable={colorVariable}
+        setColorVariable={setColorVariable}
+        handleClickColor={handleClickColor}
       />
       {contextMenuPosition && (
         <div

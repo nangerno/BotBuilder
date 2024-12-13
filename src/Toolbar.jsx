@@ -10,6 +10,7 @@ import {
   FiPlus,
   FiSmile,
   FiMessageSquare,
+  FiCrosshair,
 } from "react-icons/fi";
 import { RiColorFilterAiLine } from "react-icons/ri";
 const Toolbar = ({ nodes, addNode }) => {
@@ -104,7 +105,6 @@ const Toolbar = ({ nodes, addNode }) => {
                 style={{
                   fontSize: "0.95rem",
                   fontWeight: "500",
-                  color: "#333",
                 }}
               >
                 Message node
@@ -136,10 +136,40 @@ const Toolbar = ({ nodes, addNode }) => {
                 style={{
                   fontSize: "0.95rem",
                   fontWeight: "500",
-                  color: "#333",
                 }}
               >
                 Prompt node
+              </span>
+            </div>
+            <div
+              onClick={() => handleNodeSelection("Capture node")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                padding: "10px",
+                cursor: "pointer",
+                borderBottom: "1px solid #ddd",
+                width: "150px",
+                transition: "background-color 0.4s ease, transform 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#f5f5f5";
+                e.currentTarget.style.transform = "scale(1.02)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.transform = "scale(1)";
+              }}
+            >
+              <FiCrosshair size={20} />
+              <span
+                style={{
+                  fontSize: "0.95rem",
+                  fontWeight: "500",
+                }}
+              >
+                Capture node
               </span>
             </div>
           </div>

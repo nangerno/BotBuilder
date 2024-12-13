@@ -43,7 +43,7 @@ const MessageNode = ({ data, onClick }) => {
         fontWeight: "400",
         backgroundColor: `${data.style.backgroundColor}`,
         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
-        width: "220px",
+        width: "240px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
@@ -72,7 +72,7 @@ const MessageNode = ({ data, onClick }) => {
         />
       ) : (
         <strong
-          style={{ fontSize: "1.1rem", color: "#808080", cursor: "pointer" }}
+          style={{ cursor: "pointer" }}
           onClick={handleLabelClick}
         >
           {editedLabel}
@@ -93,10 +93,7 @@ const MessageNode = ({ data, onClick }) => {
         <p
           style={{
             margin: 0,
-            fontSize: "0.95rem",
-            color: "#808080",
             position: "relative",
-            paddingRight: "30px",
           }}
           dangerouslySetInnerHTML={{ __html: data.message }}
         ></p>

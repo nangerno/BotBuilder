@@ -16,7 +16,7 @@ import ReactFlow, {
   MarkerType,
 } from "react-flow-renderer";
 
-const PromptNode = ({ data, onClick }) => {
+const CaptureNode = ({ data, onClick }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedLabel, setEditedLabel] = useState(data.label);
   const [isHovered, setIsHovered] = useState(false);
@@ -131,4 +131,4 @@ const PromptNode = ({ data, onClick }) => {
     </div>
   );
 };
-export default PromptNode;
+export default CaptureNode;

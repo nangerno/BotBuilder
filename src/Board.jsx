@@ -20,6 +20,7 @@ import "react-flow-renderer/dist/style.css";
 import "react-flow-renderer/dist/theme-default.css";
 import MessageNode from "./node/MessageNode";
 import PromptNode from "./node/PromptNode";
+import CaptureNode from "./node/CaptureNode";
 import Toolbar from "./Toolbar";
 import MessageRightPanel from "./MessageRightPanel";
 import PromptRightPanel from "./PromptRightPanel";
@@ -38,7 +39,6 @@ const initialNodes = [
     },
     position: { x: 100, y: 100 },
   },
-  
 ];
 
 const initialEdges = [];
@@ -47,7 +47,6 @@ const Board = () => {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
   const [selectedNode, setSelectedNode] = useState(null);
-
   const [selectedColorNode, setSelectedColorNode] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const messageDivRef = useRef(null);
@@ -62,22 +61,22 @@ const Board = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [title, setTitle] = useState("") // prompt node title
-  const [editedLabel, setEditedLabel] = useState('');
-  const [colorVariable, setColorVariable] = useState('');
+  const [title, setTitle] = useState(""); // prompt node title
+  const [editedLabel, setEditedLabel] = useState("");
+  const [colorVariable, setColorVariable] = useState("");
   const nodeTypes = useMemo(
-    () => ({ "Message node": MessageNode, "Prompt node": PromptNode }),
+    () => ({
+      "Message node": MessageNode,
+      "Prompt node": PromptNode,
+      "Capture node": CaptureNode,
+    }),
     []
   );
 
-  
   const [variableData, setVariableData] = useState([]);
   const [variableType, setVariableTypeData] = useState([]);
   const [appliedColor, setAppliedColor] = useState(null);
-
-  // useEffect(()=>{
-
-  // }, [title])
+  
   const onConnect = useCallback(
     (params) =>
       setEdges((eds) =>
@@ -98,14 +97,12 @@ const Board = () => {
 
   const addNode = useCallback(
     (label) => {
-      
       const count = nodes.reduce((acc, node) => {
         if (node.data.label.includes(label)) {
           return acc + 1;
         }
         return acc;
       }, 1);
-      console.log(count);
       const newNode = {
         id: (nodes.length + 1).toString(),
         type: label,
@@ -137,6 +134,7 @@ const Board = () => {
       )
     );
   }, []);
+
   const editNodeColor = useCallback((id, newColor) => {
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
@@ -178,6 +176,7 @@ const Board = () => {
       setSelectedNode(node);
     }
   }, []);
+
   const handleColorChange = (color) => {
     setAppliedColor(color);
     editNodeColor(selectedColorNode.id, color);
@@ -185,7 +184,6 @@ const Board = () => {
   };
 
   const handleMessageChange = (id, value) => {
-
     if (id === "main") {
       setNewMessage(value);
     } else {
@@ -214,11 +212,11 @@ const Board = () => {
     // setSelectedNode(null);
     setIsOpenModal((prevState) => !prevState);
     // setVisibleCondition(null);
-    
   };
-  useEffect(()=> {
-    console.log(isOpenModal)
-  }, [isOpenModal])
+
+  useEffect(() => {
+    console.log(isOpenModal);
+  }, [isOpenModal]);
 
   const handleFormatText = (format) => {
     document.execCommand(format);
@@ -231,7 +229,7 @@ const Board = () => {
     editNode(selectedNode.id, selectedNode.data.label, currentContent);
   };
   const handleDelay = () => {
-    console.log("handleDelay func is comming soon!");
+    alert("😊Comming soon!");
   };
 
   const handleInsertLink = () => {
@@ -317,132 +315,21 @@ const Board = () => {
     }));
   };
   const handleClickColor = (color) => {
-    console.log(color)
-    setColorVariable(color)
-  }
+    console.log(color);
+    setColorVariable(color);
+  };
   const renderConditionLength = (variantId) => {
     const conditionsForVariant = variantConditions[variantId] || {};
     const conditionCount = Object.keys(conditionsForVariant).length;
     return conditionCount === 1 ? " Condition" : " " + conditionCount;
   };
 
-  return (
-    <div style={{ display: "flex", height: "100vh", width: "100%" }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onConnect={onConnect}
-        fitView
-        nodeTypes={nodeTypes}
-        style={{ backgroundColor: "#f0f0f0" }}
-        nodesDraggable={true}
-        onNodeClick={onNodeClick}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeContextMenu={onNodeContextMenu}
+  const renderNodeComponent = () => {
+    if (!selectedNode) return null;
 
-      >
-        <Background />
-        <Controls />
-        {/* <MiniMap /> */}
-      </ReactFlow>
-      <VariantPanel
-        variableData={variableData}
-        setVariableData={setVariableData}
-        variableType={variableType}
-        setVariableTypeData={setVariableTypeData}
-        appliedColor={appliedColor}
-        handleColorChange={handleColorChange}
-        colorVariable={colorVariable}
-        setColorVariable={setColorVariable}
-        handleClickColor={handleClickColor}
-      />
-      {contextMenuPosition && (
-        <div
-          style={{
-            position: "absolute",
-            top: contextMenuPosition.y,
-            left: contextMenuPosition.x,
-            backgroundColor: "white",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            zIndex: "100",
-            padding: "15px",
-            width: "200px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: "10px",
-            }}
-          >
-            {[
-              { color: "#a1c972", label: "1" },
-              { color: "#f3dcf0", label: "2" },
-              { color: "#ffd4de", label: "3" },
-              { color: "#caead5", label: "4" },
-            ].map(({ color, label }) => (
-              <button
-                key={color}
-                onClick={() => handleColorChange(color)}
-                aria-label={`Select ${label}`}
-                style={{
-                  backgroundColor: color,
-                  border: "none",
-                  borderRadius: "50%",
-                  width: "40px",
-                  height: "40px",
-                  margin: "5px",
-                  cursor: "pointer",
-                  transition: "transform 0.2s ease",
-                  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                }}
-                onMouseEnter={(e) => (e.target.style.transform = "scale(1.1)")}
-                onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-      <Toolbar nodes={nodes} addNode={addNode} />
-
-      {selectedNode?.type === "Prompt node" ? (
-        !isOpenModal ? (
-          <PromptRightPanel
-            promptDivRef={promptDivRef}
-            conditionDivRef={conditionDivRef}
-            isFocused={isFocused}
-            setIsFocused={setIsFocused}
-            newMessage={newMessage}
-            variants={variants}
-            variantConditions={variantConditions}
-            visibleCondition={visibleCondition}
-            conditionCount={conditionCount}
-            conditions={conditions}
-            selectedNode={selectedNode}
-            setSelectedNode={setSelectedNode}
-            handlePlay={handlePlay}
-            handleInsertLink={handleInsertLink}
-            handleDelay={handleDelay}
-            addVariant={addVariant}
-            removeVariant={removeVariant}
-            handleMessageChange={handleMessageChange}
-            handleSaveMessage={handleSaveMessage}
-            handleFormatText={handleFormatText}
-            handleCondition={handleCondition}
-            renderConditionLength={renderConditionLength}
-            addCondition={addCondition}
-            removeCondition={removeCondition}
-            setActiveTabForCondition={setActiveTabForCondition}
-            handleConditionChange={handleConditionChange}
-            variableData={variableData}
-            handleExtendWindow={handleExtendWindow}
-            title={title}
-            setTitle={setTitle}
-          />
-        ) : (
+    switch (selectedNode.type) {
+      case "Prompt node":
+        return isOpenModal ? (
           <PromptNodeWindow
             promptWindowRef={promptWindowRef}
             conditionDivRef={conditionDivRef}
@@ -477,39 +364,210 @@ const Board = () => {
             title={title}
             setTitle={setTitle}
           />
-        )
-      ) : (
-        <MessageRightPanel
-          messageDivRef={messageDivRef}
-          conditionDivRef={conditionDivRef}
-          isFocused={isFocused}
-          setIsFocused={setIsFocused}
-          newMessage={newMessage}
-          variants={variants}
-          variantConditions={variantConditions}
-          visibleCondition={visibleCondition}
-          conditionCount={conditionCount}
-          conditions={conditions}
-          selectedNode={selectedNode}
-          setSelectedNode={setSelectedNode}
-          handlePlay={handlePlay}
-          handleInsertLink={handleInsertLink}
-          handleDelay={handleDelay}
-          addVariant={addVariant}
-          removeVariant={removeVariant}
-          handleMessageChange={handleMessageChange}
-          handleSaveMessage={handleSaveMessage}
-          handleFormatText={handleFormatText}
-          handleCondition={handleCondition}
-          renderConditionLength={renderConditionLength}
-          addCondition={addCondition}
-          removeCondition={removeCondition}
-          setActiveTabForCondition={setActiveTabForCondition}
-          handleConditionChange={handleConditionChange}
-          variableData={variableData}
-          handleExtendWindow={handleExtendWindow}
-        />
+        ) : (
+          <PromptRightPanel
+            promptDivRef={promptDivRef}
+            conditionDivRef={conditionDivRef}
+            isFocused={isFocused}
+            setIsFocused={setIsFocused}
+            newMessage={newMessage}
+            variants={variants}
+            variantConditions={variantConditions}
+            visibleCondition={visibleCondition}
+            conditionCount={conditionCount}
+            conditions={conditions}
+            selectedNode={selectedNode}
+            setSelectedNode={setSelectedNode}
+            handlePlay={handlePlay}
+            handleInsertLink={handleInsertLink}
+            handleDelay={handleDelay}
+            addVariant={addVariant}
+            removeVariant={removeVariant}
+            handleMessageChange={handleMessageChange}
+            handleSaveMessage={handleSaveMessage}
+            handleFormatText={handleFormatText}
+            handleCondition={handleCondition}
+            renderConditionLength={renderConditionLength}
+            addCondition={addCondition}
+            removeCondition={removeCondition}
+            setActiveTabForCondition={setActiveTabForCondition}
+            handleConditionChange={handleConditionChange}
+            variableData={variableData}
+            handleExtendWindow={handleExtendWindow}
+            title={title}
+            setTitle={setTitle}
+          />
+        );
+
+      case "Message node":
+        return (
+          <MessageRightPanel
+            messageDivRef={messageDivRef}
+            conditionDivRef={conditionDivRef}
+            isFocused={isFocused}
+            setIsFocused={setIsFocused}
+            newMessage={newMessage}
+            variants={variants}
+            variantConditions={variantConditions}
+            visibleCondition={visibleCondition}
+            conditionCount={conditionCount}
+            conditions={conditions}
+            selectedNode={selectedNode}
+            setSelectedNode={setSelectedNode}
+            handlePlay={handlePlay}
+            handleInsertLink={handleInsertLink}
+            handleDelay={handleDelay}
+            addVariant={addVariant}
+            removeVariant={removeVariant}
+            handleMessageChange={handleMessageChange}
+            handleSaveMessage={handleSaveMessage}
+            handleFormatText={handleFormatText}
+            handleCondition={handleCondition}
+            renderConditionLength={renderConditionLength}
+            addCondition={addCondition}
+            removeCondition={removeCondition}
+            setActiveTabForCondition={setActiveTabForCondition}
+            handleConditionChange={handleConditionChange}
+            variableData={variableData}
+            handleExtendWindow={handleExtendWindow}
+          />
+        );
+
+      case "Capture node":
+        return <CaptureNode
+        promptWindowRef={promptWindowRef}
+        conditionDivRef={conditionDivRef}
+        isFocused={isFocused}
+        setIsFocused={setIsFocused}
+        newMessage={newMessage}
+        variants={variants}
+        variantConditions={variantConditions}
+        visibleCondition={visibleCondition}
+        conditionCount={conditionCount}
+        conditions={conditions}
+        selectedNode={selectedNode}
+        setSelectedNode={setSelectedNode}
+        handlePlay={handlePlay}
+        handleInsertLink={handleInsertLink}
+        handleDelay={handleDelay}
+        addVariant={addVariant}
+        removeVariant={removeVariant}
+        handleMessageChange={handleMessageChange}
+        handleSaveMessage={handleSaveMessage}
+        handleFormatText={handleFormatText}
+        handleCondition={handleCondition}
+        renderConditionLength={renderConditionLength}
+        addCondition={addCondition}
+        removeCondition={removeCondition}
+        setActiveTabForCondition={setActiveTabForCondition}
+        handleConditionChange={handleConditionChange}
+        variableData={variableData}
+        handleExtendWindow={handleExtendWindow}
+        isOpenModal={isOpenModal}
+        setIsOpenModal={setIsOpenModal}
+        title={title}
+        setTitle={setTitle}
+        />;
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div style={{ display: "flex", height: "100vh", width: "100%" }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onConnect={onConnect}
+        fitView
+        nodeTypes={nodeTypes}
+        style={{ backgroundColor: "#f0f0f0" }}
+        nodesDraggable={true}
+        onNodeClick={onNodeClick}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onNodeContextMenu={onNodeContextMenu}
+      >
+        <Background />
+        <Controls />
+        {/* <MiniMap /> */}
+      </ReactFlow>
+      <VariantPanel
+        variableData={variableData}
+        setVariableData={setVariableData}
+        variableType={variableType}
+        setVariableTypeData={setVariableTypeData}
+        appliedColor={appliedColor}
+        handleColorChange={handleColorChange}
+        colorVariable={colorVariable}
+        setColorVariable={setColorVariable}
+        handleClickColor={handleClickColor}
+      />
+      {contextMenuPosition && (
+        <div
+          style={{
+            position: "absolute",
+            top: contextMenuPosition.y,
+            left: contextMenuPosition.x,
+            backgroundColor: "#ffffff",
+            borderRadius: "6px",
+            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+            zIndex: 1000,
+            padding: "20px",
+            width: "180px",
+            border: "1px solid #e0e0e0",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            {[
+              { color: "#a1c972", label: "1" },
+              { color: "#f3dcf0", label: "2" },
+              { color: "#ffd4de", label: "3" },
+              { color: "#caead5", label: "4" },
+            ].map(({ color, label }) => (
+              <button
+                key={color}
+                onClick={() => handleColorChange(color)}
+                aria-label={`Select ${label}`}
+                style={{
+                  backgroundColor: color,
+                  border: "2px solid #ffffff",
+                  borderRadius: "50%",
+                  width: "36px",
+                  height: "36px",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12)",
+                  outline: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "scale(1.1)";
+                  e.target.style.boxShadow = "0 2px 5px rgba(0, 0, 0, 0.2)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "scale(1)";
+                  e.target.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.12)";
+                }}
+                onFocus={(e) => {
+                  e.target.style.boxShadow = "0 0 0 3px rgba(0, 0, 0, 0.1)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.12)";
+                }}
+              />
+            ))}
+          </div>
+        </div>
       )}
+      <Toolbar nodes={nodes} addNode={addNode} />
+      {renderNodeComponent()}
     </div>
   );
 };

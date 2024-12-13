@@ -271,9 +271,9 @@ const AddVariable = ({
                   width: "20px",
                   height: "20px",
                   borderRadius: "50%",
-                  backgroundColor: "#00ff00",
+                  backgroundColor: "#f3dcf0",
                   border: `2px solid ${
-                    colorVariable == "#00ff00" ? "#ff0000" : "#ddd"
+                    colorVariable == "#f3dcf0" ? "#ff0000" : "#ddd"
                   }`,
                   padding: "4px",
                   boxSizing: "content-box",
@@ -287,9 +287,9 @@ const AddVariable = ({
                   width: "20px",
                   height: "20px",
                   borderRadius: "50%",
-                  backgroundColor: "#0000ff",
+                  backgroundColor: "#ffd4de",
                   border: `2px solid ${
-                    colorVariable == "#0000ff" ? "#ff0000" : "#ddd"
+                    colorVariable == "#ffd4de" ? "#ff0000" : "#ddd"
                   }`,
                   padding: "4px",
                   boxSizing: "content-box",
@@ -303,9 +303,9 @@ const AddVariable = ({
                   width: "20px",
                   height: "20px",
                   borderRadius: "50%",
-                  backgroundColor: "#ffff00",
+                  backgroundColor: "#caead5",
                   border: `2px solid ${
-                    colorVariable == "#ffff00" ? "#ff0000" : "#ddd"
+                    colorVariable == "#caead5" ? "#ff0000" : "#ddd"
                   }`,
                   padding: "4px",
                   boxSizing: "content-box",

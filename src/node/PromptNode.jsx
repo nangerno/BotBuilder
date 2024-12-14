@@ -105,26 +105,64 @@ const PromptNode = ({ data, onClick }) => {
           type="target"
           position="left"
           style={{
-            background: "#ddd",
+            background: "#007bff",
+            position: "absolute",
+            top: "50%",
+            left: "-14px",
+            transform: "translateY(-50%)",
+            transition: "background-color 0.3s ease",
+            width: "23px",
+            height: "23px",
+            borderRadius: "50%",
+            opacity: 0,
+          }}
+        />
+        <Handle
+          type="target"
+          position="left"
+          style={{
+            background: "#007bff",
             position: "absolute",
             top: "50%",
             left: "-5px",
             transform: "translateY(-50%)",
             transition: "background-color 0.3s ease",
-            border: "1px solid rgb(110, 110, 110)",
+            width: "5px",
+            height: "5px",
+            borderRadius: "50%",
+            zIndex: 1,
           }}
         />
         <Handle
           type="source"
           position="right"
           style={{
-            background: "#ddd",
+            background: "#007bff",
+            position: "absolute",
+            top: "50%",
+            right: "-14px",
+            transform: "translateY(-50%)",
+            transition: "background-color 0.3s ease",
+            width: "23px",
+            height: "23px",
+            borderRadius: "50%",
+            opacity: 0,
+          }}
+        />
+        <Handle
+          type="source"
+          position="right"
+          style={{
+            background: "#007bff",
             position: "absolute",
             top: "50%",
             right: "-5px",
             transform: "translateY(-50%)",
-            border: "1px solid rgb(110, 110, 110)",
             transition: "background-color 0.3s ease",
+            width: "5px",
+            height: "5px",
+            borderRadius: "50%",
+            zIndex: 1,
           }}
         />
       </div>

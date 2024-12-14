@@ -87,8 +87,9 @@ const Board = () => {
             ...params,
             type: "smoothstep",
             markerEnd: {
-              type: MarkerType.ArrowClosed,
+              type: MarkerType.Arrow,
               color: "#888888",
+              markerUnits: 'userSpaceOnUse',
             },
           },
           eds
@@ -217,7 +218,6 @@ const Board = () => {
   };
 
   useEffect(() => {
-    console.log(isOpenModal);
   }, [isOpenModal]);
 
   const handleFormatText = (format) => {
@@ -317,7 +317,6 @@ const Board = () => {
     }));
   };
   const handleClickColor = (color) => {
-    console.log(color);
     setColorVariable(color);
   };
   const renderConditionLength = (variantId) => {

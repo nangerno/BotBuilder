@@ -97,19 +97,20 @@ const MessageNode = ({ data, onClick }) => {
         {data.label == "Message node 1" ? (
           <>
             <Handle
-              type="target"
-              position="left"
+              type="source"
+              position="right"
               style={{
-                background: isHovered ? "#007bff" : "transparent",
-                border: isHovered ? "" : "none",
+                background: "#007bff",
                 position: "absolute",
                 top: "50%",
-                left: "-5px",
+                right: "-14px",
                 transform: "translateY(-50%)",
                 transition: "background-color 0.3s ease",
+                width: "23px",
+                height: "23px",
+                borderRadius: "50%",
+                opacity: 0,
               }}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
             />
             <Handle
               type="source"
@@ -120,6 +121,11 @@ const MessageNode = ({ data, onClick }) => {
                 top: "50%",
                 right: "-5px",
                 transform: "translateY(-50%)",
+                transition: "background-color 0.3s ease",
+                width: "5px",
+                height: "5px",
+                borderRadius: "50%",
+                zIndex: 1,
               }}
             />
           </>
@@ -130,15 +136,48 @@ const MessageNode = ({ data, onClick }) => {
               position="left"
               style={{
                 background: "#007bff",
-                // border: isHovered ? "" : "none",
+                position: "absolute",
+                top: "50%",
+                left: "-14px",
+                transform: "translateY(-50%)",
+                transition: "background-color 0.3s ease",
+                width: "23px",
+                height: "23px",
+                borderRadius: "50%",
+                opacity: 0,
+              }}
+            />
+            <Handle
+              type="target"
+              position="left"
+              style={{
+                background: "#007bff",
                 position: "absolute",
                 top: "50%",
                 left: "-5px",
                 transform: "translateY(-50%)",
                 transition: "background-color 0.3s ease",
+                width: "5px",
+                height: "5px",
+                borderRadius: "50%",
+                zIndex: 1,
               }}
-              // onMouseEnter={() => setIsHovered(true)}
-              // onMouseLeave={() => setIsHovered(false)}
+            />
+            <Handle
+              type="source"
+              position="right"
+              style={{
+                background: "#007bff",
+                position: "absolute",
+                top: "50%",
+                right: "-14px",
+                transform: "translateY(-50%)",
+                transition: "background-color 0.3s ease",
+                width: "23px",
+                height: "23px",
+                borderRadius: "50%",
+                opacity: 0,
+              }}
             />
             <Handle
               type="source"
@@ -149,6 +188,11 @@ const MessageNode = ({ data, onClick }) => {
                 top: "50%",
                 right: "-5px",
                 transform: "translateY(-50%)",
+                transition: "background-color 0.3s ease",
+                width: "5px",
+                height: "5px",
+                borderRadius: "50%",
+                zIndex: 1,
               }}
             />
           </>

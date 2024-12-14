@@ -77,16 +77,18 @@ const PromptRightPanel = ({
         flexDirection: "column",
       }}
     >
-      <FiChevronsLeft
-        size={50}
-        style={{ float: "left", cursor: "pointer" }}
-        onClick={handleExtendWindow}
-      />
+      <div>
+        <FiChevronsLeft
+          size={20}
+          style={{ float: "right", cursor: "pointer" }}
+          onClick={handleExtendWindow}
+        />
+      </div>
       <h3
         style={{
           borderBottom: "1px solid #ddd",
-          padding: "10px",
           paddingLeft: "0px",
+          paddingBottom: "10px",
         }}
         onInput={(e) => setTitle(e.currentTarget.textContent)}
       >
@@ -206,8 +208,8 @@ const PromptRightPanel = ({
               suppressContentEditableWarning
               onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
               style={{
-                minHeight: "50vh",
-                maxHeight: "55vh",
+                minHeight: "10vh",
+                maxHeight: "15vh",
                 padding: "10px",
                 fontSize: "16px",
                 backgroundColor: "#f9f9f9",

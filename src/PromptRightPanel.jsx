@@ -42,25 +42,11 @@ const PromptRightPanel = ({
   title,
   setTitle,
 }) => {
-  const [newVariable, setNewVariable] = useState([]);
-  const [count, setCount] = useState([]);
-  useEffect(() => {
-    setNewVariable(variableData);
-    const len = Object.values(variantConditions).map((innerObj) => {
-      if (Object.keys(innerObj).length === 0) {
-        return "Condition";
-      }
-      if (Object.values(innerObj).every((value) => value.trim() === "")) {
-        return "Condition";
-      }
-      const nonEmptyCount = Object.values(innerObj).filter(
-        (value) => value.trim() !== ""
-      ).length;
-      return nonEmptyCount > 0 ? nonEmptyCount : "Condition";
-    });
+  const [content, setContent] = useState("");
+  const handleChange = (e) => {
+    setContent(e.target.innerHTML);
+  };
 
-    setCount(len.length > 0 ? len : ["Condition"]);
-  }, [variableData, variantConditions, conditions]);
   return (
     <div
       ref={promptDivRef}
@@ -90,7 +76,6 @@ const PromptRightPanel = ({
           paddingLeft: "0px",
           paddingBottom: "10px",
         }}
-        onInput={(e) => setTitle(e.currentTarget.textContent)}
       >
         {title}
       </h3>
@@ -137,20 +122,33 @@ const PromptRightPanel = ({
             id="messageInput"
             contentEditable
             suppressContentEditableWarning
-            onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+            onInput={(e) => {
+              handleMessageChange(e.currentTarget.innerHTML), handleChange(e);
+            }}
             style={{
               minHeight: "100px",
               paddingTop: "10px",
-              fontSize: "16px",
               backgroundColor: "#f9f9f9",
               outline: "none",
               padding: "10px",
               border: "1px solid #ddd",
+              position: "relative",
             }}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: "Description" }}
+            dangerouslySetInnerHTML={{ __html: "" }}
           />
+          {content.trim() === "" && (
+            <div
+              style={{
+                position: "absolute",
+                top: "20px",
+                left: "10px",
+                transform: "translateY(-50%)",
+                pointerEvents: "none",
+              }}
+            >
+              Description...
+            </div>
+          )}
         </div>
       </div>
       <br></br>
@@ -192,37 +190,35 @@ const PromptRightPanel = ({
           <FaClock className="icon-style" />
         </button>
       </div>
-      {variants.map((variant) => (
-        <div
-          key={variant.id}
-          style={{
-            marginBottom: "10px",
-            marginTop: "15px",
-            paddingBotton: "10px",
-            borderBottom: "1px solid #ddd",
-          }}
-        >
-          <div style={{ position: "relative" }}>
-            <div
-              contentEditable
-              suppressContentEditableWarning
-              onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
-              style={{
-                minHeight: "10vh",
-                maxHeight: "15vh",
-                padding: "10px",
-                fontSize: "16px",
-                backgroundColor: "#f9f9f9",
-                border: "1px solid #ddd",
-                outline: "none",
-              }}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              dangerouslySetInnerHTML={{ __html: variant.message }}
-            />
-          </div>
+      <div
+        style={{
+          marginBottom: "10px",
+          marginTop: "15px",
+          paddingBotton: "10px",
+          borderBottom: "1px solid #ddd",
+        }}
+      >
+        <div style={{ position: "relative" }}>
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+            style={{
+              minHeight: "10vh",
+              maxHeight: "15vh",
+              padding: "10px",
+              fontSize: "16px",
+              backgroundColor: "#f9f9f9",
+              border: "1px solid #ddd",
+              outline: "none",
+            }}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            dangerouslySetInnerHTML={{ __html: "" }}
+          />
         </div>
-      ))}
+      </div>
+
       <button
         onClick={handleSaveMessage}
         style={{

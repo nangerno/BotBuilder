@@ -61,8 +61,10 @@ const CaptureRightPanel = ({
 
   const handleSelect = (item) => {
     setDropdownVisible(!isDropdownVisible);
-    setSelectedItem((prevSelected) => [...prevSelected, item]);
-    setDropItem((prelist) => prelist.filter((selected) => selected !== item));
+    if (item !== "---No variable---") {
+      setSelectedItem((prevSelected) => [...prevSelected, item]);
+      setDropItem((prelist) => prelist.filter((selected) => selected !== item));
+    }
   };
 
   const addItemToList = (item) => {

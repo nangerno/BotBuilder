@@ -90,6 +90,8 @@ const Board = () => {
               type: MarkerType.Arrow,
               color: "#888888",
               markerUnits: 'userSpaceOnUse',
+              width: 20,
+              height: 20,
             },
           },
           eds

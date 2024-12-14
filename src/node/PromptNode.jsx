@@ -87,7 +87,7 @@ const PromptNode = ({ data, onClick }) => {
           marginTop: "10px",
           border: "2px solid rgb(245, 242, 242)",
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-          position: "relative", // Make this div relative as well
+          position: "relative",
         }}
       >
         <p
@@ -105,26 +105,26 @@ const PromptNode = ({ data, onClick }) => {
           type="target"
           position="left"
           style={{
-            background: "#007bff",
-            // border: isHovered ? "" : "none",
+            background: "#ddd",
             position: "absolute",
             top: "50%",
             left: "-5px",
             transform: "translateY(-50%)",
             transition: "background-color 0.3s ease",
+            border: "1px solid rgb(110, 110, 110)",
           }}
-          // onMouseEnter={() => setIsHovered(true)}
-          // onMouseLeave={() => setIsHovered(false)}
         />
         <Handle
           type="source"
           position="right"
           style={{
-            background: "#007bff",
+            background: "#ddd",
             position: "absolute",
             top: "50%",
             right: "-5px",
             transform: "translateY(-50%)",
+            border: "1px solid rgb(110, 110, 110)",
+            transition: "background-color 0.3s ease",
           }}
         />
       </div>

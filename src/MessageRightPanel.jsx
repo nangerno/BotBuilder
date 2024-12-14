@@ -43,23 +43,25 @@ const MessageRightPanel = ({
   const [count, setCount] = useState([]);
   useEffect(() => {
     setNewVariable(variableData);
-    console.log(conditions)
+    console.log(conditions);
     const len = Object.values(variantConditions).map((innerObj) => {
       if (Object.keys(innerObj).length === 0) {
         return "Condition";
       }
-      if (Object.values(innerObj).every(value => value.trim() === "")) {
+      if (Object.values(innerObj).every((value) => value.trim() === "")) {
         return "Condition";
       }
-      const nonEmptyCount = Object.values(innerObj).filter(value => value.trim() !== "").length;
+      const nonEmptyCount = Object.values(innerObj).filter(
+        (value) => value.trim() !== ""
+      ).length;
       return nonEmptyCount > 0 ? nonEmptyCount : "Condition";
     });
-    
-    setCount(len.length > 0 ? len : ['Condition']);
+
+    setCount(len.length > 0 ? len : ["Condition"]);
   }, [variableData, variantConditions, conditions]);
   const handleAddVariant = () => {
-    addVariant()
-  }
+    addVariant();
+  };
   return (
     <div
       ref={messageDivRef}
@@ -74,7 +76,13 @@ const MessageRightPanel = ({
         overflowY: "auto",
       }}
     >
-      <h3 style={{ borderBottom: "1px solid #ddd", padding: "10px" }}>
+      <h3
+        style={{
+          borderBottom: "1px solid #ddd",
+          padding: "10px",
+          paddingLeft: "0px",
+        }}
+      >
         Message
       </h3>
       <div style={{ marginBottom: "10px", borderBottom: "1px solid #ddd" }}>
@@ -269,7 +277,7 @@ const MessageRightPanel = ({
             >
               <PiCornersOut size={19} />
             </span>
-            
+
             <div key={variant.id}>{count[variant.id]}</div>
           </button>
 
@@ -454,7 +462,8 @@ const MessageRightPanel = ({
                       marginRight: "30px",
                     }}
                     onClick={() =>
-                      conditions.length > 1 && removeCondition(visibleCondition.variantId, condition.id)
+                      conditions.length > 1 &&
+                      removeCondition(visibleCondition.variantId, condition.id)
                     }
                     disabled={conditions.length === 1}
                     onMouseEnter={(e) =>

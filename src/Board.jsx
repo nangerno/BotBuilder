@@ -26,6 +26,7 @@ import MessageRightPanel from "./MessageRightPanel";
 import PromptRightPanel from "./PromptRightPanel";
 import PromptNodeWindow from "./PromptNodeWindow";
 import VariantPanel from "./VariantPanel";
+import CaptureRightPanel from "./CaptureRightPanel";
 
 const initialNodes = [
   {
@@ -53,6 +54,7 @@ const Board = () => {
   const conditionDivRef = useRef(null);
   const promptDivRef = useRef(null);
   const promptWindowRef = useRef(null);
+  const captureRef = useRef(null);
   const [variants, setVariants] = useState([{ id: 0, message: "" }]);
   const [visibleCondition, setVisibleCondition] = useState(null);
   const [variantConditions, setVariantConditions] = useState({});
@@ -76,7 +78,7 @@ const Board = () => {
   const [variableData, setVariableData] = useState([]);
   const [variableType, setVariableTypeData] = useState([]);
   const [appliedColor, setAppliedColor] = useState(null);
-  
+
   const onConnect = useCallback(
     (params) =>
       setEdges((eds) =>
@@ -434,40 +436,38 @@ const Board = () => {
         );
 
       case "Capture node":
-        return <CaptureNode
-        promptWindowRef={promptWindowRef}
-        conditionDivRef={conditionDivRef}
-        isFocused={isFocused}
-        setIsFocused={setIsFocused}
-        newMessage={newMessage}
-        variants={variants}
-        variantConditions={variantConditions}
-        visibleCondition={visibleCondition}
-        conditionCount={conditionCount}
-        conditions={conditions}
-        selectedNode={selectedNode}
-        setSelectedNode={setSelectedNode}
-        handlePlay={handlePlay}
-        handleInsertLink={handleInsertLink}
-        handleDelay={handleDelay}
-        addVariant={addVariant}
-        removeVariant={removeVariant}
-        handleMessageChange={handleMessageChange}
-        handleSaveMessage={handleSaveMessage}
-        handleFormatText={handleFormatText}
-        handleCondition={handleCondition}
-        renderConditionLength={renderConditionLength}
-        addCondition={addCondition}
-        removeCondition={removeCondition}
-        setActiveTabForCondition={setActiveTabForCondition}
-        handleConditionChange={handleConditionChange}
-        variableData={variableData}
-        handleExtendWindow={handleExtendWindow}
-        isOpenModal={isOpenModal}
-        setIsOpenModal={setIsOpenModal}
-        title={title}
-        setTitle={setTitle}
-        />;
+        return (
+          <CaptureRightPanel
+            captureRef={captureRef}
+            conditionDivRef={conditionDivRef}
+            isFocused={isFocused}
+            setIsFocused={setIsFocused}
+            newMessage={newMessage}
+            variants={variants}
+            variantConditions={variantConditions}
+            visibleCondition={visibleCondition}
+            conditionCount={conditionCount}
+            conditions={conditions}
+            selectedNode={selectedNode}
+            setSelectedNode={setSelectedNode}
+            handlePlay={handlePlay}
+            handleInsertLink={handleInsertLink}
+            handleDelay={handleDelay}
+            addVariant={addVariant}
+            removeVariant={removeVariant}
+            handleMessageChange={handleMessageChange}
+            handleSaveMessage={handleSaveMessage}
+            handleFormatText={handleFormatText}
+            handleCondition={handleCondition}
+            renderConditionLength={renderConditionLength}
+            addCondition={addCondition}
+            removeCondition={removeCondition}
+            setActiveTabForCondition={setActiveTabForCondition}
+            handleConditionChange={handleConditionChange}
+            variableData={variableData}
+            handleExtendWindow={handleExtendWindow}
+          />
+        );
 
       default:
         return null;

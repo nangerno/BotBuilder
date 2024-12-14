@@ -44,34 +44,6 @@ const PromptNodeWindow = ({
   title,
   setTitle
 }) => {
-  //   const [isModalOpen, setIsModalOpen] = useState(false);
-  //   const openModal = () => {
-  //     setIsModalOpen(true);
-  //   };
-
-  // Function to close the modal
-  //   const closeModal = () => {
-  //     setIsModalOpen(false);
-  //   };
-  const [newVariable, setNewVariable] = useState([]);
-  const [count, setCount] = useState([]);
-  useEffect(() => {
-    setNewVariable(variableData);
-    const len = Object.values(variantConditions).map((innerObj) => {
-      if (Object.keys(innerObj).length === 0) {
-        return "Condition";
-      }
-      if (Object.values(innerObj).every((value) => value.trim() === "")) {
-        return "Condition";
-      }
-      const nonEmptyCount = Object.values(innerObj).filter(
-        (value) => value.trim() !== ""
-      ).length;
-      return nonEmptyCount > 0 ? nonEmptyCount : "Condition";
-    });
-    console.log(isOpenModal);
-    setCount(len.length > 0 ? len : ["Condition"]);
-  }, [variableData, variantConditions, conditions, isOpenModal]);
 
   return (
     <>
@@ -157,19 +129,6 @@ const PromptNodeWindow = ({
                 </button>
               </div>
               <div style={{ position: "relative" }}>
-                {!isFocused && !newMessage && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: "5px",
-                      top: "5px",
-                      color: "#aaa",
-                      pointerEvents: "none",
-                    }}
-                  >
-                    {/* Enter your message... */}
-                  </span>
-                )}
                 <div
                   id="messageInput"
                   contentEditable
@@ -188,7 +147,7 @@ const PromptNodeWindow = ({
                   }}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
-                  dangerouslySetInnerHTML={{ __html: newMessage }}
+                  dangerouslySetInnerHTML={{ __html: "Description" }}
                 />
               </div>
             </div>

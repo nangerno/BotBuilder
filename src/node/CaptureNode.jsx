@@ -87,7 +87,7 @@ const CaptureNode = ({ data, onClick }) => {
           marginTop: "10px",
           border: "2px solid rgb(245, 242, 242)",
           boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-          position: "relative", // Make this div relative as well
+          position: "relative",
         }}
       >
         <p

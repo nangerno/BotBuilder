@@ -40,7 +40,7 @@ const PromptRightPanel = ({
   variableData,
   handleExtendWindow,
   title,
-  setTitle
+  setTitle,
 }) => {
   const [newVariable, setNewVariable] = useState([]);
   const [count, setCount] = useState([]);
@@ -77,8 +77,19 @@ const PromptRightPanel = ({
         flexDirection: "column",
       }}
     >
-      <FiChevronsLeft style={{ float: "right", cursor: "pointer" }} onClick={handleExtendWindow}/>
-      <h3 style={{ borderBottom: "1px solid #ddd", padding: "10px" }} onInput={(e) => setTitle(e.currentTarget.textContent)} >
+      <FiChevronsLeft
+        size={50}
+        style={{ float: "left", cursor: "pointer" }}
+        onClick={handleExtendWindow}
+      />
+      <h3
+        style={{
+          borderBottom: "1px solid #ddd",
+          padding: "10px",
+          paddingLeft: "0px",
+        }}
+        onInput={(e) => setTitle(e.currentTarget.textContent)}
+      >
         {title}
       </h3>
 
@@ -120,19 +131,6 @@ const PromptRightPanel = ({
           </button>
         </div>
         <div style={{ position: "relative" }}>
-          {!isFocused && !newMessage && (
-            <span
-              style={{
-                position: "absolute",
-                left: "5px",
-                top: "5px",
-                color: "#aaa",
-                pointerEvents: "none",
-              }}
-            >
-              {/* Enter your message... */}
-            </span>
-          )}
           <div
             id="messageInput"
             contentEditable
@@ -149,12 +147,12 @@ const PromptRightPanel = ({
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: newMessage }}
+            dangerouslySetInnerHTML={{ __html: "Description" }}
           />
         </div>
       </div>
       <br></br>
-      <strong>{isFocused?"Description":"System Prompt"}</strong>
+      <strong>System prompt</strong>
       <br></br>
       <div>
         <button onClick={handlePlay} className="message-toolbaar-icon">
@@ -200,40 +198,26 @@ const PromptRightPanel = ({
             marginTop: "15px",
             paddingBotton: "10px",
             borderBottom: "1px solid #ddd",
-            // justifyContent: 'center'
           }}
         >
           <div style={{ position: "relative" }}>
-            {!isFocused && !variant.message && (
-              <span
-                style={{
-                  position: "absolute",
-                  left: "5px",
-                  top: "5px",
-                  color: "#aaa",
-                  pointerEvents: "none",
-                }}
-              >
-                {/* Enter your message... */}
-              </span>
-            )}
             <div
-                contentEditable
-                suppressContentEditableWarning
-                onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
-                style={{
-                  minHeight: "50vh",
-                  maxHeight: "55vh",
-                  padding: "10px",
-                  fontSize: "16px",
-                  backgroundColor: "#f9f9f9",
-                  border: "1px solid #ddd",
-                  outline: "none",
-                }}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                dangerouslySetInnerHTML={{ __html: variant.message }}
-              />
+              contentEditable
+              suppressContentEditableWarning
+              onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+              style={{
+                minHeight: "50vh",
+                maxHeight: "55vh",
+                padding: "10px",
+                fontSize: "16px",
+                backgroundColor: "#f9f9f9",
+                border: "1px solid #ddd",
+                outline: "none",
+              }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              dangerouslySetInnerHTML={{ __html: variant.message }}
+            />
           </div>
         </div>
       ))}

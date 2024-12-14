@@ -71,10 +71,7 @@ const MessageNode = ({ data, onClick }) => {
           onClick={(e) => e.stopPropagation()}
         />
       ) : (
-        <strong
-          style={{ cursor: "pointer" }}
-          onClick={handleLabelClick}
-        >
+        <strong style={{ cursor: "pointer" }} onClick={handleLabelClick}>
           {editedLabel}
         </strong>
       )}
@@ -97,33 +94,65 @@ const MessageNode = ({ data, onClick }) => {
           }}
           dangerouslySetInnerHTML={{ __html: data.message }}
         ></p>
-
-        <Handle
-          type="target"
-          position="left"
-          style={{
-            background: isHovered ? "#007bff" : "transparent",
-            border: isHovered ? "" : "none",
-            position: "absolute",
-            top: "50%",
-            left: "-5px",
-            transform: "translateY(-50%)",
-            transition: "background-color 0.3s ease",
-          }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        />
-        <Handle
-          type="source"
-          position="right"
-          style={{
-            background: "#007bff",
-            position: "absolute",
-            top: "50%",
-            right: "-5px",
-            transform: "translateY(-50%)",
-          }}
-        />
+        {data.label == "Message node 1" ? (
+          <>
+            <Handle
+              type="target"
+              position="left"
+              style={{
+                background: isHovered ? "#007bff" : "transparent",
+                border: isHovered ? "" : "none",
+                position: "absolute",
+                top: "50%",
+                left: "-5px",
+                transform: "translateY(-50%)",
+                transition: "background-color 0.3s ease",
+              }}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            />
+            <Handle
+              type="source"
+              position="right"
+              style={{
+                background: "#007bff",
+                position: "absolute",
+                top: "50%",
+                right: "-5px",
+                transform: "translateY(-50%)",
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <Handle
+              type="target"
+              position="left"
+              style={{
+                background: "#007bff",
+                // border: isHovered ? "" : "none",
+                position: "absolute",
+                top: "50%",
+                left: "-5px",
+                transform: "translateY(-50%)",
+                transition: "background-color 0.3s ease",
+              }}
+              // onMouseEnter={() => setIsHovered(true)}
+              // onMouseLeave={() => setIsHovered(false)}
+            />
+            <Handle
+              type="source"
+              position="right"
+              style={{
+                background: "#007bff",
+                position: "absolute",
+                top: "50%",
+                right: "-5px",
+                transform: "translateY(-50%)",
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   );

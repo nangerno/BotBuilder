@@ -176,7 +176,7 @@ const CaptureRightPanel = ({
           </p>
         </div>
       ))}
-
+      <div style={{ borderTop: "1px solid #ddd", padding: "10px" }}></div>
       <strong>Rules</strong>
       <FiPlusCircle
         style={{ float: "right", cursor: "pointer" }}
@@ -184,9 +184,9 @@ const CaptureRightPanel = ({
         // onClick={}
       />
       {ruleItem.map((item, index) => (
-        <div key={index}>
+        <div key={index} style={{paddingTop: "10px"}}>
           <FiMinusCircle
-            style={{ float: "right", cursor: "pointer", paddingTop: "10px" }}
+            style={{ float: "right", cursor: "pointer"}}
             size={20}
           />
           <div
@@ -194,16 +194,14 @@ const CaptureRightPanel = ({
             suppressContentEditableWarning
             onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
             style={{
-              paddingTop: "10px",
               fontSize: "16px",
               backgroundColor: "#f9f9f9",
               border: "none",
               outline: "none",
-              width: "90%",
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: item + ' ' + (index + 1) }}
+            dangerouslySetInnerHTML={{ __html: item + " " + (index + 1) }}
           />
         </div>
       ))}

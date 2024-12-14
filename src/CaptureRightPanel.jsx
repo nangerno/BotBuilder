@@ -42,13 +42,12 @@ const CaptureRightPanel = ({
   title,
   setTitle,
 }) => {
-  console.log(variableData);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [dropItem, setDropItem] = useState(variableData);
   const [selectedItem, setSelectedItem] = useState([]);
-  const [toggleState, setToggleState] = useState([false, false]);
+  const [toggleState, setToggleState] = useState([false, false, false]);
   const [ruleItem, setRuleItem] = useState(["Enter rule"]);
-  const [ruleText, setRuleText] = useState("");
+  const [scenariosItem, setScenarios] = useState(["Exit if..."]);
 
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
@@ -72,9 +71,28 @@ const CaptureRightPanel = ({
       preitem.filter((selected) => selected !== item)
     );
   };
+
+  const addRule = () => {
+    setRuleItem((prelist) => [...prelist, "Enter rule"]);
+  };
+  const removeRule = (indexToRemove) => {
+    setRuleItem((prevItems) =>
+      prevItems.filter((_, index) => index !== indexToRemove)
+    );
+  };
+  const addScenarios = () => {
+    setScenarios((prelist) => [...prelist, "Exit if..."]);
+  };
+  const removeScenarios = (indexToRemove) => {
+    setScenarios((prevItems) =>
+      prevItems.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
   useEffect(() => {
     setDropItem(variableData.length > 0 ? variableData : ["---No variable---"]);
   }, [variableData]);
+
   return (
     <div
       ref={captureRef}
@@ -181,13 +199,14 @@ const CaptureRightPanel = ({
       <FiPlusCircle
         style={{ float: "right", cursor: "pointer" }}
         size={20}
-        // onClick={}
+        onClick={addRule}
       />
       {ruleItem.map((item, index) => (
-        <div key={index} style={{paddingTop: "10px"}}>
+        <div key={index} style={{ paddingTop: "10px" }}>
           <FiMinusCircle
-            style={{ float: "right", cursor: "pointer"}}
+            style={{ float: "right", cursor: "pointer" }}
             size={20}
+            onClick={() => removeRule(index)}
           />
           <div
             contentEditable
@@ -205,6 +224,59 @@ const CaptureRightPanel = ({
           />
         </div>
       ))}
+      <div style={{ borderBottom: "1px solid #ddd", padding: "10px" }}></div>
+      <br></br>
+      <strong>Exit scenarios</strong>
+      <FiPlusCircle
+        style={{ float: "right", cursor: "pointer" }}
+        size={20}
+        onClick={addScenarios}
+      />
+      {scenariosItem.map((item, index) => (
+        <div key={index} style={{ paddingTop: "10px" }}>
+          <FiMinusCircle
+            style={{ float: "right", cursor: "pointer" }}
+            size={20}
+            onClick={() => removeScenarios(index)}
+          />
+          <div
+            contentEditable
+            suppressContentEditableWarning
+            onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+            style={{
+              fontSize: "16px",
+              backgroundColor: "#f9f9f9",
+              border: "none",
+              outline: "none",
+            }}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            dangerouslySetInnerHTML={{ __html: item + " " + (index + 1) }}
+          />
+        </div>
+      ))}
+      {scenariosItem.length > 0 &&
+        [2].map((index) => (
+          <div key={index}>
+            <p>
+              Exit scenario path
+              <button
+                onClick={() => handleToggle(index)}
+                style={{
+                  float: "right",
+                  cursor: "pointer",
+                  backgroundColor: toggleState[index] ? "#007bff" : "#ddd",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                  color: "#fff",
+                }}
+              >
+                {toggleState[index] ? "On" : "Off"}
+              </button>
+            </p>
+          </div>
+        ))}
     </div>
   );
 };

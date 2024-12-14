@@ -41,8 +41,7 @@ const PromptNodeWindow = ({
   handleExtendWindow,
   isOpenModal,
   setIsModalOpen,
-  title,
-  setTitle
+  promptNodeTitle
 }) => {
 
   return (
@@ -84,7 +83,7 @@ const PromptNodeWindow = ({
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
             <h3 style={{ borderBottom: "1px solid #ddd", padding: "10px" }}>
-              {title}
+              {promptNodeTitle}
             </h3>
 
             <div

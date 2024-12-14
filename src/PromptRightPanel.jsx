@@ -39,14 +39,17 @@ const PromptRightPanel = ({
   handleConditionChange,
   variableData,
   handleExtendWindow,
-  title,
-  setTitle,
+  promptNodeTitle
 }) => {
-  const [content, setContent] = useState("");
-  const handleChange = (e) => {
-    setContent(e.target.innerHTML);
-  };
 
+  const [firstClick, setFirstClick] = useState(false);
+  const [firstDesClick, setFirstDesClick] = useState(false);
+  const handleFirstClick = () => {
+    setFirstClick(true);
+  }
+  const handleFirstDesClick = () => {
+    setFirstDesClick(true);
+  }
   return (
     <div
       ref={promptDivRef}
@@ -77,7 +80,7 @@ const PromptRightPanel = ({
           paddingBottom: "10px",
         }}
       >
-        {title}
+        {promptNodeTitle}
       </h3>
 
       <div style={{ marginBottom: "10px", borderBottom: "1px solid #ddd" }}>
@@ -123,8 +126,7 @@ const PromptRightPanel = ({
             contentEditable
             suppressContentEditableWarning
             onInput={(e) => {
-              handleMessageChange(e.currentTarget.innerHTML), handleChange(e);
-            }}
+              handleMessageChange(e.currentTarget.innerHTML)}}
             style={{
               minHeight: "100px",
               paddingTop: "10px",
@@ -134,21 +136,10 @@ const PromptRightPanel = ({
               border: "1px solid #ddd",
               position: "relative",
             }}
-            dangerouslySetInnerHTML={{ __html: "" }}
+            onFocus={() => {setIsFocused(true), handleFirstDesClick()}}
+            onBlur={() => setIsFocused(false)}
+            dangerouslySetInnerHTML={{ __html: `${!firstDesClick?"Description...":""}` }}
           />
-          {content.trim() === "" && (
-            <div
-              style={{
-                position: "absolute",
-                top: "20px",
-                left: "10px",
-                transform: "translateY(-50%)",
-                pointerEvents: "none",
-              }}
-            >
-              Description...
-            </div>
-          )}
         </div>
       </div>
       <br></br>
@@ -205,16 +196,17 @@ const PromptRightPanel = ({
             onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
             style={{
               minHeight: "10vh",
-              maxHeight: "15vh",
+              height: `${firstClick?"40vh":"10vh"}`,
+              maxHeight: "40vh",
               padding: "10px",
               fontSize: "16px",
               backgroundColor: "#f9f9f9",
               border: "1px solid #ddd",
               outline: "none",
             }}
-            onFocus={() => setIsFocused(true)}
+            onFocus={() => {setIsFocused(true), handleFirstClick()}}
             onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: "" }}
+            dangerouslySetInnerHTML={{ __html: `${!firstClick?"Enter your prompt...":""}` }}
           />
         </div>
       </div>

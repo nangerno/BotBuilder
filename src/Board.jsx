@@ -63,7 +63,10 @@ const Board = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [title, setTitle] = useState(""); // prompt node title
+  const [title, setTitle] = useState("");
+  const [msgNodeTitle, setMsgNodeTitle] = useState("");
+  const [promptNodeTitle, setPromptNodeTitle] = useState("");
+  const [captureNodeTitle, setCaptureNodeTitle] = useState("");
   const [editedLabel, setEditedLabel] = useState("");
   const [colorVariable, setColorVariable] = useState("");
   const nodeTypes = useMemo(
@@ -123,6 +126,14 @@ const Board = () => {
       };
       setNodes((nds) => [...nds, newNode]);
       setTitle(`${label} ${count}`);
+      switch(label){
+        case "Message node":  return setMsgNodeTitle(`${label} ${count}`)
+        case "Prompt node":  return setPromptNodeTitle(`${label} ${count}`)
+        case "Capture node":  return setCaptureNodeTitle(`${label} ${count}`)
+        default: return
+
+      }
+       
     },
     [nodes.length]
   );
@@ -364,8 +375,7 @@ const Board = () => {
             handleExtendWindow={handleExtendWindow}
             isOpenModal={isOpenModal}
             setIsOpenModal={setIsOpenModal}
-            title={title}
-            setTitle={setTitle}
+            promptNodeTitle={promptNodeTitle}
           />
         ) : (
           <PromptRightPanel
@@ -397,8 +407,7 @@ const Board = () => {
             handleConditionChange={handleConditionChange}
             variableData={variableData}
             handleExtendWindow={handleExtendWindow}
-            title={title}
-            setTitle={setTitle}
+            promptNodeTitle={promptNodeTitle}
           />
         );
 
@@ -467,6 +476,7 @@ const Board = () => {
             handleConditionChange={handleConditionChange}
             variableData={variableData}
             handleExtendWindow={handleExtendWindow}
+            captureNodeTitle={[captureNodeTitle]}
           />
         );
 

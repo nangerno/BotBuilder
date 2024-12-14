@@ -39,8 +39,7 @@ const CaptureRightPanel = ({
   handleConditionChange,
   variableData,
   handleExtendWindow,
-  title,
-  setTitle,
+  captureNodeTitle,
 }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [dropItem, setDropItem] = useState(variableData);
@@ -61,7 +60,7 @@ const CaptureRightPanel = ({
 
   const handleSelect = (item) => {
     setDropdownVisible(!isDropdownVisible);
-    if (item !== "---No variable---") {
+    if (item !== "No entities exist") {
       setSelectedItem((prevSelected) => [...prevSelected, item]);
       setDropItem((prelist) => prelist.filter((selected) => selected !== item));
     }
@@ -92,7 +91,7 @@ const CaptureRightPanel = ({
   };
 
   useEffect(() => {
-    setDropItem(variableData.length > 0 ? variableData : ["---No variable---"]);
+    setDropItem(variableData.length > 0 ? variableData : ["No entities exist"]);
   }, [variableData]);
 
   return (
@@ -115,9 +114,8 @@ const CaptureRightPanel = ({
           padding: "10px",
           paddingLeft: "0px",
         }}
-        onInput={(e) => setTitle(e.currentTarget.textContent)}
       >
-        Capture
+        {captureNodeTitle}
       </h3>
 
       <strong>Entities</strong>
@@ -160,6 +158,23 @@ const CaptureRightPanel = ({
             ))}
           </div>
         )}
+        {isDropdownVisible && dropItem.length == 0 && (
+          <div
+            style={{
+              backgroundColor: "#fff",
+              border: "1px solid #ddd",
+              borderRadius: "5px",
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+              position: "absolute",
+              top: "0",
+              left: "0",
+              zIndex: 2,
+              width: "100%",
+            }}
+          >
+            <p style={{ textAlign: "center" }}>No entities exist</p>
+          </div>
+        )}
 
         <div style={{ zIndex: 1 }}>
           {selectedItem.map((item, index) => (
@@ -178,7 +193,7 @@ const CaptureRightPanel = ({
       {[0, 1].map((index) => (
         <div key={index}>
           <p>
-            {index > 0 ? "Listen for other triggers" : "Automatically reprompt"}
+            {index > 0 ? "Automatically reprompt" : "No reply"}
             <button
               onClick={() => handleToggle(index)}
               style={{

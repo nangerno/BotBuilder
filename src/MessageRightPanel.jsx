@@ -38,13 +38,20 @@ const MessageRightPanel = ({
   setActiveTabForCondition,
   handleConditionChange,
   variableData,
-  msgNodeTitles
+  msgNodeTitles,
 }) => {
   const messageNode =
     selectedNode?.type === "Message node" ? selectedNode : null;
   const [newVariable, setNewVariable] = useState([]);
   const [count, setCount] = useState([]);
   const [selectedOption, setSelectedOption] = useState("variables");
+  const [selectedValues, setSelectedValues] = useState({});
+  const handleChange = (e, id) => {
+    setSelectedValues((prevState) => ({
+      ...prevState,
+      [id]: e.target.value,
+    }));
+  };
   useEffect(() => {
     setNewVariable(variableData);
     const len = Object.values(variantConditions).map((innerObj) => {
@@ -126,19 +133,6 @@ const MessageRightPanel = ({
           </button>
         </div>
         <div style={{ position: "relative" }}>
-          {!isFocused && !newMessage && (
-            <span
-              style={{
-                position: "absolute",
-                left: "5px",
-                top: "5px",
-                color: "#aaa",
-                pointerEvents: "none",
-              }}
-            >
-              {/* Enter your message... */}
-            </span>
-          )}
           <div
             id="nodeContentDiv"
             contentEditable
@@ -222,18 +216,18 @@ const MessageRightPanel = ({
           </div>
 
           <div style={{ position: "relative" }}>
-            {!isFocused && !variant.message && (
-              <span
-                style={{
-                  position: "absolute",
-                  left: "5px",
-                  top: "5px",
-                  color: "#aaa",
-                  pointerEvents: "none",
-                }}
-              >
-                {/* Enter your message... */}
-              </span>
+          {!isFocused && (
+            <span
+              style={{
+                position: "absolute",
+                left: "5px",
+                top: "5px",
+                color: "#aaa",
+                pointerEvents: "none",
+              }}
+            >
+              Enter agent message...
+            </span>
             )}
             <div
               contentEditable
@@ -419,6 +413,8 @@ const MessageRightPanel = ({
                       border: "none",
                       backgroundColor: "#f9f9f9",
                       outline: "none",
+                      padding: "2px",
+                      borderRadius: "5px",
                     }}
                     onChange={(e) => setSelectedOption(e.target.value)}
                   >
@@ -431,13 +427,14 @@ const MessageRightPanel = ({
                   </select>
                   <p style={{ margin: "0 5px" }}>is</p>
                   <input
-                    onChange={(e) =>
+                    onChange={(e) => {
                       handleConditionChange(
                         visibleCondition.variantId,
                         condition.id,
                         e.target.value
-                      )
-                    }
+                      ),
+                        handleChange(e, index);
+                    }}
                     value={
                       variantConditions[visibleCondition.variantId]?.[
                         condition.id
@@ -451,7 +448,10 @@ const MessageRightPanel = ({
                       border: "none",
                       outline: "none",
                     }}
-                    disabled={selectedOption === "variables"}
+                    disabled={
+                      selectedValues[condition.id] === "variables" &&
+                      condition.id == index + 1
+                    }
                   />
                   <button
                     style={{

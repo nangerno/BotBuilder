@@ -139,7 +139,6 @@ const CaptureNode = ({
             )}
           </div>
         ))}
-
       {scenariosItem && scenariosItem.length > 0 && (
         <div
           style={{

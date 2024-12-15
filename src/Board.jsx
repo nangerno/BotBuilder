@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useRef,
   useEffect,
-  useContext
+  useContext,
 } from "react";
 import ReactFlow, {
   addEdge,
@@ -71,7 +71,7 @@ const Board = () => {
 
   const [selectedItem, setSelectedItem] = useState([]); // Capture node selected item
   const [scenariosItem, setScenarios] = useState(["Exit if..."]); // Capture node scenarioItem
-  const [exitPath, setExitPath] = useState(false); // Capture node exit path 
+  const [exitPath, setExitPath] = useState(false); // Capture node exit path
   const [newPrompt, setNewPrompt] = useState(""); // System node new prompt
 
   // const updateNodeLabel = useCallback((oldLabel, newLabel) => {
@@ -88,7 +88,7 @@ const Board = () => {
   // }, []);
 
   const updateNodeTitle = useCallback((nodeId, newTitle) => {
-    console.log(newTitle)
+    console.log(newTitle);
     setMsgNodeTitles((prevTitles) => ({
       ...prevTitles,
       [nodeId]: newTitle, // Update the title for the specific nodeId
@@ -102,19 +102,22 @@ const Board = () => {
       [nodeId]: newTitle, // Update the title for the specific nodeId
     }));
   }, []);
-useEffect(()=>{
-  console.log(JSON.stringify(msgNodeTitles))
-}, [msgNodeTitles])
-const updateNodeLabel = useCallback((nodeId, newLabel) => {
-  setNodes((nds) =>
-    nds.map((node) =>
-      node.id === nodeId
-        ? { ...node, data: { ...node.data, label: newLabel } }
-        : node
-    )
+  useEffect(() => {
+    console.log(JSON.stringify(msgNodeTitles));
+  }, [msgNodeTitles]);
+  const updateNodeLabel = useCallback(
+    (nodeId, newLabel) => {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === nodeId
+            ? { ...node, data: { ...node.data, label: newLabel } }
+            : node
+        )
+      );
+      updateNodeTitle(nodeId, newLabel); // Update the corresponding title
+    },
+    [updateNodeTitle]
   );
-  updateNodeTitle(nodeId, newLabel); // Update the corresponding title
-}, [updateNodeTitle]);
 
   const nodeTypes = useMemo(
     () => ({
@@ -125,7 +128,13 @@ const updateNodeLabel = useCallback((nodeId, newLabel) => {
         <PromptNode {...props} updateNodeLabel={updateNodeLabel} />
       ),
       "Capture node": (props) => (
-        <CaptureNode {...props} updateNodeLabel={updateNodeLabel} selectedItem={selectedItem} scenariosItem={scenariosItem} exitPath={exitPath}/>
+        <CaptureNode
+          {...props}
+          updateNodeLabel={updateNodeLabel}
+          selectedItem={selectedItem}
+          scenariosItem={scenariosItem}
+          exitPath={exitPath}
+        />
       ),
     }),
     [updateNodeLabel, selectedItem, scenariosItem, exitPath]
@@ -266,7 +275,8 @@ const updateNodeLabel = useCallback((nodeId, newLabel) => {
     }
   };
 
-  const handlePromptContentChange = (value) => {  // Prompt node system prompt 
+  const handlePromptContentChange = (value) => {
+    // Prompt node system prompt
     const updatedHtml = highlightMatches(value);
     setNewPrompt(updatedHtml);
   };
@@ -291,7 +301,8 @@ const updateNodeLabel = useCallback((nodeId, newLabel) => {
 
   const handleSaveMessage = () => {
     if (selectedNode) {
-      const currentContent = document.getElementById("nodeContentDiv").innerHTML;
+      const currentContent =
+        document.getElementById("nodeContentDiv").innerHTML;
       editNode(selectedNode.id, selectedNode.data.label, currentContent);
     }
     setSelectedNode(null);
@@ -453,7 +464,7 @@ const updateNodeLabel = useCallback((nodeId, newLabel) => {
             handlePromptContentChange={handlePromptContentChange}
             newPrompt={newPrompt}
             setNewPrompt={setNewPrompt}
-            captureNodeTitles={captureNodeTitles}
+            promptNodeTitles={promptNodeTitles}
           />
         ) : (
           <PromptRightPanel
@@ -563,7 +574,7 @@ const updateNodeLabel = useCallback((nodeId, newLabel) => {
             scenariosItem={scenariosItem}
             setScenarios={setScenarios}
             exitPath={exitPath}
-            setExitPath={setExitPath }
+            setExitPath={setExitPath}
             captureNodeTitles={captureNodeTitles}
           />
         );

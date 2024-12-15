@@ -10,6 +10,7 @@ import {
   FaClock,
 } from "react-icons/fa";
 import { PiCornersOut } from "react-icons/pi";
+import { FaRegCaretSquareLeft } from "react-icons/fa";
 import { FiPlusCircle, FiMinusCircle, FiChevronsLeft } from "react-icons/fi";
 
 const PromptRightPanel = ({
@@ -65,7 +66,7 @@ const PromptRightPanel = ({
       }}
     >
       <div>
-        <FiChevronsLeft
+        <FaRegCaretSquareLeft
           size={20}
           style={{ float: "right", cursor: "pointer" }}
           onClick={handleExtendWindow}
@@ -78,7 +79,7 @@ const PromptRightPanel = ({
           paddingBottom: "10px",
         }}
       >
-        {promptNodeTitles[selectedNode?.id] || promptNode.data.label}
+        {promptNodeTitles[selectedNode?.id] || "Description"}
       </h3>
 
       <div style={{ marginBottom: "10px", borderBottom: "1px solid #ddd" }}>
@@ -151,7 +152,6 @@ const PromptRightPanel = ({
         >
           <FaBold className="icon-style" />
         </button>
-
         <button
           onClick={() => handleFormatText("italic")}
           className="message-toolbaar-icon"
@@ -180,7 +180,7 @@ const PromptRightPanel = ({
       <div
         style={{
           marginBottom: "10px",
-          marginTop: "15px",
+          marginTop: "0",
           paddingBotton: "10px",
           borderBottom: "1px solid #ddd",
         }}
@@ -217,16 +217,25 @@ const PromptRightPanel = ({
               handlePromptContentChange(e.currentTarget.innerHTML)
             }}
             style={{
+              // minHeight: "10vh",
+              // height: `${isFocused ? "40vh" : "10vh"}`,
+              // maxHeight: "40vh",
+              // padding: "10px",
+              // fontSize: "16px",
+              // backgroundColor: "#f9f9f9",
+              // border: "1px solid #ddd",
+              // outline: "none",
+              // whiteSpace: "pre-wrap",
+              // overflowY: "auto",
               minHeight: "10vh",
-              height: `${isFocused ? "40vh" : "10vh"}`,
-              maxHeight: "40vh",
-              padding: "10px",
+              // height: `${isFocused ? "40vh" : "10vh"}`,
+              paddingTop: "10px",
               fontSize: "16px",
               backgroundColor: "#f9f9f9",
-              border: "1px solid #ddd",
               outline: "none",
+              padding: "10px",
+              border: "1px solid #ddd",
               whiteSpace: "pre-wrap",
-              overflowY: "auto",
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}

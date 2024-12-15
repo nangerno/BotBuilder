@@ -41,9 +41,9 @@ const PromptNodeWindow = ({
   handleExtendWindow,
   isOpenModal,
   setIsModalOpen,
-  promptNodeTitle
+  promptNodeTitle,
+  promptNodeTitles,
 }) => {
-
   return (
     <>
       {/* Modal Overlay */}
@@ -63,7 +63,7 @@ const PromptNodeWindow = ({
           <div
             ref={promptWindowRef}
             style={{
-              width: "70%",
+              width: "50%",
               backgroundColor: "#f9f9f9",
               padding: "20px",
               border: "1px solid #ddd",
@@ -82,10 +82,7 @@ const PromptNodeWindow = ({
             }}
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
-            <h3 style={{ borderBottom: "1px solid #ddd", padding: "10px" }}>
-              {promptNodeTitle}
-            </h3>
-
+            <h3>{promptNodeTitles[selectedNode?.id] || "Description"}</h3>
             <div
               style={{ marginBottom: "10px", borderBottom: "1px solid #ddd" }}
             >
@@ -146,37 +143,63 @@ const PromptNodeWindow = ({
                   }}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
-                  dangerouslySetInnerHTML={{ __html: "Description" }}
+                  dangerouslySetInnerHTML={{ __html: "" }}
                 />
               </div>
             </div>
             <br />
             <strong>System Prompt</strong>
+            <br></br>
+            <div>
+              <button onClick={handlePlay} className="message-toolbaar-icon">
+                <FaPlay className="icon-style" />
+              </button>
+              <button
+                onClick={() => handleFormatText("bold")}
+                className="message-toolbaar-icon"
+              >
+                <FaBold className="icon-style" />
+              </button>
+              <button
+                onClick={() => handleFormatText("italic")}
+                className="message-toolbaar-icon"
+              >
+                <FaItalic className="icon-style" />
+              </button>
+              <button
+                onClick={() => handleFormatText("underline")}
+                className="message-toolbaar-icon"
+              >
+                <FaUnderline className="icon-style" />
+              </button>
+              <button
+                onClick={() => handleFormatText("strikeThrough")}
+                className="message-toolbaar-icon"
+              >
+                <FaStrikethrough className="icon-style" />
+              </button>
+              <button
+                onClick={handleInsertLink}
+                className="message-toolbaar-icon"
+              >
+                <FaLink className="icon-style" />
+              </button>
+              <button onClick={handleDelay} className="message-toolbaar-icon">
+                <FaClock className="icon-style" />
+              </button>
+            </div>
             <div>
               {variants.map((variant) => (
                 <div
                   key={variant.id}
                   style={{
                     marginBottom: "10px",
-                    marginTop: "15px",
+                    marginTop: "0",
                     paddingBotton: "10px",
                     borderBottom: "1px solid #ddd",
                   }}
                 >
                   <div style={{ position: "relative" }}>
-                    {!isFocused && !variant.message && (
-                      <span
-                        style={{
-                          position: "absolute",
-                          left: "5px",
-                          top: "5px",
-                          color: "#aaa",
-                          pointerEvents: "none",
-                        }}
-                      >
-                        {/* Enter your message... */}
-                      </span>
-                    )}
                     <div
                       contentEditable
                       suppressContentEditableWarning
@@ -184,13 +207,20 @@ const PromptNodeWindow = ({
                         handleNodeContentChange(e.currentTarget.innerHTML)
                       }
                       style={{
-                        minHeight: "50vh",
-                        maxHeight: "55vh",
-                        padding: "10px",
+                        // minHeight: "50vh",
+                        // maxHeight: "55vh",
+                        // padding: "10px",
+                        // fontSize: "16px",
+                        // backgroundColor: "#f9f9f9",
+                        // border: "1px solid #ddd",
+                        // outline: "none",
+                        minHeight: "40vh",
+                        paddingTop: "10px",
                         fontSize: "16px",
                         backgroundColor: "#f9f9f9",
-                        border: "1px solid #ddd",
                         outline: "none",
+                        padding: "10px",
+                        border: "1px solid #ddd",
                       }}
                       onFocus={() => setIsFocused(true)}
                       onBlur={() => setIsFocused(false)}

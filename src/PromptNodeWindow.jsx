@@ -30,7 +30,7 @@ const PromptNodeWindow = ({
   conditionCount,
   conditions,
   handleSaveMessage,
-  handleMessageChange,
+  handleNodeContentChange,
   handleFormatText,
   handleCondition,
   addCondition,
@@ -129,11 +129,11 @@ const PromptNodeWindow = ({
               </div>
               <div style={{ position: "relative" }}>
                 <div
-                  id="messageInput"
+                  id="nodeContentDiv"
                   contentEditable
                   suppressContentEditableWarning
                   onInput={(e) =>
-                    handleMessageChange(e.currentTarget.innerHTML)
+                    handleNodeContentChange(e.currentTarget.innerHTML)
                   }
                   style={{
                     minHeight: "100px",
@@ -181,7 +181,7 @@ const PromptNodeWindow = ({
                       contentEditable
                       suppressContentEditableWarning
                       onInput={(e) =>
-                        handleMessageChange(e.currentTarget.innerHTML)
+                        handleNodeContentChange(e.currentTarget.innerHTML)
                       }
                       style={{
                         minHeight: "50vh",

@@ -30,7 +30,7 @@ const CaptureRightPanel = ({
   conditionCount,
   conditions,
   handleSaveMessage,
-  handleMessageChange,
+  handleNodeContentChange,
   handleFormatText,
   handleCondition,
   addCondition,
@@ -40,14 +40,34 @@ const CaptureRightPanel = ({
   variableData,
   handleExtendWindow,
   captureNodeTitle,
+  selectedItem,
+  setSelectedItem,
+  scenariosItem,
+  setScenarios,
+  exitPath,
+  setExitPath,
+  captureNodeTitles
 }) => {
+  const captureNode =
+  selectedNode?.type === "Capture node" ? selectedNode : null;
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [dropItem, setDropItem] = useState(variableData);
-  const [selectedItem, setSelectedItem] = useState([]);
+  // const [selectedItem, setSelectedItem] = useState([]);
   const [toggleState, setToggleState] = useState([false, false, false]);
   const [ruleItem, setRuleItem] = useState(["Enter rule"]);
-  const [scenariosItem, setScenarios] = useState(["Exit if..."]);
+  const [firstClick, setFirstClick] = useState(false);
 
+  const handleRuleType = (index) => {
+    setFirstClick(true);
+    if (firstClick) {
+      setRuleItem((prev) => {
+        const updatedRules = [...prev];
+        updatedRules[index] = "";
+        return updatedRules;
+      });
+      setFirstClick(false);
+    }
+  };
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
   };
@@ -56,6 +76,9 @@ const CaptureRightPanel = ({
     setToggleState((prev) =>
       prev.map((state, i) => (i === index ? !state : state))
     );
+    if (index === 2) {
+      setExitPath((prev) => !prev); // Toggle exitPath if index is 2
+    }
   };
 
   const handleSelect = (item) => {
@@ -91,8 +114,9 @@ const CaptureRightPanel = ({
   };
 
   useEffect(() => {
+    setFirstClick(true);
     setDropItem(variableData.length > 0 ? variableData : ["No entities exist"]);
-  }, [variableData]);
+  }, [variableData, firstClick]);
 
   return (
     <div
@@ -115,7 +139,7 @@ const CaptureRightPanel = ({
           paddingLeft: "0px",
         }}
       >
-        {captureNodeTitle}
+        {captureNodeTitles[selectedNode?.id] || captureNode.data.label}
       </h3>
 
       <strong>Entities</strong>
@@ -150,7 +174,7 @@ const CaptureRightPanel = ({
             {dropItem.map((variable, index) => (
               <p
                 key={index}
-                style={{ textAlign: "center" }}
+                style={{ textAlign: "center", cursor: "pointer" }}
                 onClick={() => handleSelect(variable)}
               >
                 {variable}
@@ -228,16 +252,22 @@ const CaptureRightPanel = ({
           <div
             contentEditable
             suppressContentEditableWarning
-            onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+            onInput={(e) => {
+              handleNodeContentChange(e.currentTarget.innerHTML);
+            }}
             style={{
               fontSize: "16px",
               backgroundColor: "#f9f9f9",
               border: "none",
               outline: "none",
             }}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: item + " " + (index + 1) }}
+            onFocus={() => {
+              setIsFocused(true), handleRuleType(index);
+            }}
+            onBlur={() => {
+              setIsFocused(false), handleRuleType(index);
+            }}
+            dangerouslySetInnerHTML={{ __html: item }}
           />
         </div>
       ))}
@@ -259,7 +289,9 @@ const CaptureRightPanel = ({
           <div
             contentEditable
             suppressContentEditableWarning
-            onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+            onInput={(e) => {
+              handleNodeContentChange(e.currentTarget.innerHTML);
+            }}
             style={{
               fontSize: "16px",
               backgroundColor: "#f9f9f9",

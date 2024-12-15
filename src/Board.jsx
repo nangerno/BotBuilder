@@ -4,13 +4,12 @@ import React, {
   useCallback,
   useRef,
   useEffect,
+  useContext
 } from "react";
 import ReactFlow, {
   addEdge,
   Background,
   Controls,
-  MiniMap,
-  Handle,
   applyNodeChanges,
   applyEdgeChanges,
   MarkerType,
@@ -63,19 +62,73 @@ const Board = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [contextMenuPosition, setContextMenuPosition] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [title, setTitle] = useState("");
-  const [msgNodeTitle, setMsgNodeTitle] = useState("");
-  const [promptNodeTitle, setPromptNodeTitle] = useState("");
-  const [captureNodeTitle, setCaptureNodeTitle] = useState("");
-  const [editedLabel, setEditedLabel] = useState("");
+  const [msgNodeTitles, setMsgNodeTitles] = useState({});
+  const [promptNodeTitles, setPromptNodeTitles] = useState({});
+  const [captureNodeTitles, setCaptureNodeTitles] = useState({});
+  // const [promptNodeTitle, setPromptNodeTitle] = useState("");
+  // const [captureNodeTitle, setCaptureNodeTitle] = useState("");
   const [colorVariable, setColorVariable] = useState("");
+
+  const [selectedItem, setSelectedItem] = useState([]); // Capture node selected item
+  const [scenariosItem, setScenarios] = useState(["Exit if..."]); // Capture node scenarioItem
+  const [exitPath, setExitPath] = useState(false); // Capture node exit path 
+  const [newPrompt, setNewPrompt] = useState(""); // System node new prompt
+
+  // const updateNodeLabel = useCallback((oldLabel, newLabel) => {
+  //   setNodes((nds) =>
+  //     nds.map((node) =>
+  //       node.data.label === oldLabel
+  //         ? { ...node, data: { ...node.data, label: newLabel } }
+  //         : node
+  //     )
+  //   );
+  //   setMsgNodeTitle(newLabel);
+  //   setPromptNodeTitle(newLabel);
+  //   setCaptureNodeTitle(newLabel);
+  // }, []);
+
+  const updateNodeTitle = useCallback((nodeId, newTitle) => {
+    console.log(newTitle)
+    setMsgNodeTitles((prevTitles) => ({
+      ...prevTitles,
+      [nodeId]: newTitle, // Update the title for the specific nodeId
+    }));
+    setPromptNodeTitles((prevTitles) => ({
+      ...prevTitles,
+      [nodeId]: newTitle, // Update the title for the specific nodeId
+    }));
+    setCaptureNodeTitles((prevTitles) => ({
+      ...prevTitles,
+      [nodeId]: newTitle, // Update the title for the specific nodeId
+    }));
+  }, []);
+useEffect(()=>{
+  console.log(JSON.stringify(msgNodeTitles))
+}, [msgNodeTitles])
+const updateNodeLabel = useCallback((nodeId, newLabel) => {
+  setNodes((nds) =>
+    nds.map((node) =>
+      node.id === nodeId
+        ? { ...node, data: { ...node.data, label: newLabel } }
+        : node
+    )
+  );
+  updateNodeTitle(nodeId, newLabel); // Update the corresponding title
+}, [updateNodeTitle]);
+
   const nodeTypes = useMemo(
     () => ({
-      "Message node": MessageNode,
-      "Prompt node": PromptNode,
-      "Capture node": CaptureNode,
+      "Message node": (props) => (
+        <MessageNode {...props} updateNodeLabel={updateNodeLabel} />
+      ),
+      "Prompt node": (props) => (
+        <PromptNode {...props} updateNodeLabel={updateNodeLabel} />
+      ),
+      "Capture node": (props) => (
+        <CaptureNode {...props} updateNodeLabel={updateNodeLabel} selectedItem={selectedItem} scenariosItem={scenariosItem} exitPath={exitPath}/>
+      ),
     }),
-    []
+    [updateNodeLabel, selectedItem, scenariosItem, exitPath]
   );
 
   const [variableData, setVariableData] = useState([]);
@@ -91,8 +144,7 @@ const Board = () => {
             type: "smoothstep",
             markerEnd: {
               type: MarkerType.Arrow,
-              color: "#888888",
-              markerUnits: 'userSpaceOnUse',
+              markerUnits: "userSpaceOnUse",
               width: 20,
               height: 20,
             },
@@ -125,15 +177,16 @@ const Board = () => {
         },
       };
       setNodes((nds) => [...nds, newNode]);
-      setTitle(`${label} ${count}`);
-      switch(label){
-        case "Message node":  return setMsgNodeTitle(`${label} ${count}`)
-        case "Prompt node":  return setPromptNodeTitle(`${label} ${count}`)
-        case "Capture node":  return setCaptureNodeTitle(`${label} ${count}`)
-        default: return
-
-      }
-       
+      // switch (label) {
+      //   case "Message node":
+      //     return setMsgNodeTitle(`${label} ${count}`);
+      //   case "Prompt node":
+      //     return setPromptNodeTitle(`${label} ${count}`);
+      //   case "Capture node":
+      //     return setCaptureNodeTitle(`${label} ${count}`);
+      //   default:
+      //     return;
+      // }
     },
     [nodes.length]
   );
@@ -199,9 +252,11 @@ const Board = () => {
     setContextMenuPosition(null);
   };
 
-  const handleMessageChange = (id, value) => {
+  const handleNodeContentChange = (id, value) => {
     if (id === "main") {
-      setNewMessage(value);
+      const updatedHtml = highlightMatches(value);
+      setNewMessage(updatedHtml);
+      // setNewMessage(value);
     } else {
       setVariants((prevVariants) =>
         prevVariants.map((variant) =>
@@ -211,9 +266,32 @@ const Board = () => {
     }
   };
 
+  const handlePromptContentChange = (value) => {  // Prompt node system prompt 
+    const updatedHtml = highlightMatches(value);
+    setNewPrompt(updatedHtml);
+  };
+
+  const highlightMatches = (html) => {
+    if (!variableData || variableData.length === 0) return html;
+    const escapedData = variableData.map((text) =>
+      text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    );
+    const wordRegex = new RegExp(
+      `(<span[^>]*>)*\\{*(?:${escapedData.join("|")})\\}*(</span>)*`,
+      "gi"
+    );
+    const cleanUpMatch = (match) => {
+      let cleaned = match.replace(/<\/?span[^>]*>/gi, "");
+      cleaned = cleaned.replace(/[{}]/g, "");
+      return `<span style="color: blue;">{${cleaned}}</span>`;
+    };
+    let result = html.replace(wordRegex, cleanUpMatch);
+    return result;
+  };
+
   const handleSaveMessage = () => {
     if (selectedNode) {
-      const currentContent = document.getElementById("messageInput").innerHTML;
+      const currentContent = document.getElementById("nodeContentDiv").innerHTML;
       editNode(selectedNode.id, selectedNode.data.label, currentContent);
     }
     setSelectedNode(null);
@@ -222,7 +300,7 @@ const Board = () => {
 
   const handleExtendWindow = () => {
     // if (selectedNode) {
-    //   const currentContent = document.getElementById("messageInput").innerHTML;
+    //   const currentContent = document.getElementById("nodeContentDiv").innerHTML;
     //   editNode(selectedNode.id, selectedNode.data.label, currentContent);
     // }
     // setSelectedNode(null);
@@ -230,28 +308,25 @@ const Board = () => {
     // setVisibleCondition(null);
   };
 
-  useEffect(() => {
-  }, [isOpenModal]);
-
   const handleFormatText = (format) => {
     document.execCommand(format);
-    handleMessageChange(newMessage);
+    handleNodeContentChange(newMessage);
   };
 
   const handlePlay = () => {
-    const currentContent = document.getElementById("messageInput").innerHTML;
+    const currentContent = document.getElementById("nodeContentDiv").innerHTML;
     setNewMessage(currentContent);
     editNode(selectedNode.id, selectedNode.data.label, currentContent);
   };
   const handleDelay = () => {
-    alert("😊Comming soon!");
+    alert("😊Comming Soon!");
   };
 
   const handleInsertLink = () => {
     const url = prompt("Enter the URL");
     if (url) {
       document.execCommand("createLink", false, url);
-      handleMessageChange(newMessage);
+      handleNodeContentChange(newMessage);
     }
   };
   const onNodesChange = useCallback(
@@ -362,7 +437,7 @@ const Board = () => {
             handleDelay={handleDelay}
             addVariant={addVariant}
             removeVariant={removeVariant}
-            handleMessageChange={handleMessageChange}
+            handleNodeContentChange={handleNodeContentChange}
             handleSaveMessage={handleSaveMessage}
             handleFormatText={handleFormatText}
             handleCondition={handleCondition}
@@ -375,12 +450,14 @@ const Board = () => {
             handleExtendWindow={handleExtendWindow}
             isOpenModal={isOpenModal}
             setIsOpenModal={setIsOpenModal}
-            promptNodeTitle={promptNodeTitle}
+            handlePromptContentChange={handlePromptContentChange}
+            newPrompt={newPrompt}
+            setNewPrompt={setNewPrompt}
+            captureNodeTitles={captureNodeTitles}
           />
         ) : (
           <PromptRightPanel
             promptDivRef={promptDivRef}
-            conditionDivRef={conditionDivRef}
             isFocused={isFocused}
             setIsFocused={setIsFocused}
             newMessage={newMessage}
@@ -396,7 +473,7 @@ const Board = () => {
             handleDelay={handleDelay}
             addVariant={addVariant}
             removeVariant={removeVariant}
-            handleMessageChange={handleMessageChange}
+            handleNodeContentChange={handleNodeContentChange}
             handleSaveMessage={handleSaveMessage}
             handleFormatText={handleFormatText}
             handleCondition={handleCondition}
@@ -407,7 +484,10 @@ const Board = () => {
             handleConditionChange={handleConditionChange}
             variableData={variableData}
             handleExtendWindow={handleExtendWindow}
-            promptNodeTitle={promptNodeTitle}
+            handlePromptContentChange={handlePromptContentChange}
+            newPrompt={newPrompt}
+            setNewPrompt={setNewPrompt}
+            promptNodeTitles={promptNodeTitles}
           />
         );
 
@@ -431,7 +511,7 @@ const Board = () => {
             handleDelay={handleDelay}
             addVariant={addVariant}
             removeVariant={removeVariant}
-            handleMessageChange={handleMessageChange}
+            handleNodeContentChange={handleNodeContentChange}
             handleSaveMessage={handleSaveMessage}
             handleFormatText={handleFormatText}
             handleCondition={handleCondition}
@@ -442,6 +522,7 @@ const Board = () => {
             handleConditionChange={handleConditionChange}
             variableData={variableData}
             handleExtendWindow={handleExtendWindow}
+            msgNodeTitles={msgNodeTitles}
           />
         );
 
@@ -465,7 +546,7 @@ const Board = () => {
             handleDelay={handleDelay}
             addVariant={addVariant}
             removeVariant={removeVariant}
-            handleMessageChange={handleMessageChange}
+            handleNodeContentChange={handleNodeContentChange}
             handleSaveMessage={handleSaveMessage}
             handleFormatText={handleFormatText}
             handleCondition={handleCondition}
@@ -476,7 +557,14 @@ const Board = () => {
             handleConditionChange={handleConditionChange}
             variableData={variableData}
             handleExtendWindow={handleExtendWindow}
-            captureNodeTitle={[captureNodeTitle]}
+            // captureNodeTitle={[captureNodeTitle]}
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
+            scenariosItem={scenariosItem}
+            setScenarios={setScenarios}
+            exitPath={exitPath}
+            setExitPath={setExitPath }
+            captureNodeTitles={captureNodeTitles}
           />
         );
 
@@ -502,7 +590,8 @@ const Board = () => {
       >
         <Background />
         <Controls />
-        {/* <MiniMap /> */}
+        {/* <Handle />
+        <MiniMap /> */}
       </ReactFlow>
       <VariantPanel
         variableData={variableData}

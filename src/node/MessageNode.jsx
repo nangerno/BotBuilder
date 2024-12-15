@@ -1,25 +1,10 @@
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  useEffect,
-} from "react";
-import ReactFlow, {
-  addEdge,
-  Background,
-  Controls,
-  MiniMap,
-  Handle,
-  applyNodeChanges,
-  applyEdgeChanges,
-  MarkerType,
-} from "react-flow-renderer";
+import React, { useState, useEffect } from "react";
+import ReactFlow, { Handle } from "react-flow-renderer";
 
-const MessageNode = ({ data, onClick }) => {
+const MessageNode = ({ id, data, onClick, updateNodeLabel }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedLabel, setEditedLabel] = useState(data.label);
-  const [isHovered, setIsHovered] = useState(false);
+
   const handleLabelClick = (e) => {
     e.stopPropagation();
     setIsEditing(true);
@@ -32,8 +17,11 @@ const MessageNode = ({ data, onClick }) => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       setIsEditing(false);
+      setEditedLabel(e.target.value);
+      updateNodeLabel(id, e.target.value);
     }
   };
+
   return (
     <div
       style={{

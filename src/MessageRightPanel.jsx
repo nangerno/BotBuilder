@@ -30,7 +30,7 @@ const MessageRightPanel = ({
   conditionCount,
   conditions,
   handleSaveMessage,
-  handleMessageChange,
+  handleNodeContentChange,
   handleFormatText,
   handleCondition,
   addCondition,
@@ -38,12 +38,15 @@ const MessageRightPanel = ({
   setActiveTabForCondition,
   handleConditionChange,
   variableData,
+  msgNodeTitles
 }) => {
+  const messageNode =
+    selectedNode?.type === "Message node" ? selectedNode : null;
   const [newVariable, setNewVariable] = useState([]);
   const [count, setCount] = useState([]);
+  const [selectedOption, setSelectedOption] = useState("variables");
   useEffect(() => {
     setNewVariable(variableData);
-    console.log(conditions);
     const len = Object.values(variantConditions).map((innerObj) => {
       if (Object.keys(innerObj).length === 0) {
         return "Condition";
@@ -83,7 +86,7 @@ const MessageRightPanel = ({
           paddingLeft: "0px",
         }}
       >
-        Message
+        {msgNodeTitles[selectedNode?.id] || messageNode.data.label}
       </h3>
       <div style={{ marginBottom: "10px", borderBottom: "1px solid #ddd" }}>
         <div>
@@ -137,10 +140,10 @@ const MessageRightPanel = ({
             </span>
           )}
           <div
-            id="messageInput"
+            id="nodeContentDiv"
             contentEditable
             suppressContentEditableWarning
-            onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+            onInput={(e) => handleNodeContentChange(e.currentTarget.innerHTML)}
             style={{
               minHeight: "100px",
               paddingTop: "10px",
@@ -161,7 +164,6 @@ const MessageRightPanel = ({
         size={20}
         onClick={handleAddVariant}
       />
-      <br></br>
       <br></br>
       {variants.map((variant) => (
         <div
@@ -236,7 +238,9 @@ const MessageRightPanel = ({
             <div
               contentEditable
               suppressContentEditableWarning
-              onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+              onInput={(e) =>
+                handleNodeContentChange(e.currentTarget.innerHTML)
+              }
               style={{
                 minHeight: "10px",
                 padding: "5px",
@@ -394,6 +398,7 @@ const MessageRightPanel = ({
                     (e.target.style.backgroundColor = "#f9f9f9")
                   }
                   onClick={addCondition}
+                  disabled={selectedOption === "variables"}
                 >
                   +
                 </button>
@@ -415,6 +420,7 @@ const MessageRightPanel = ({
                       backgroundColor: "#f9f9f9",
                       outline: "none",
                     }}
+                    onChange={(e) => setSelectedOption(e.target.value)}
                   >
                     <option>variables</option>
                     {newVariable.map((data, index) => (
@@ -445,6 +451,7 @@ const MessageRightPanel = ({
                       border: "none",
                       outline: "none",
                     }}
+                    disabled={selectedOption === "variables"}
                   />
                   <button
                     style={{

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+
 import {
   FaBold,
   FaItalic,
@@ -13,7 +14,6 @@ import { FiPlusCircle, FiMinusCircle, FiChevronsLeft } from "react-icons/fi";
 
 const PromptRightPanel = ({
   promptDivRef,
-  conditionDivRef,
   isFocused,
   setIsFocused,
   newMessage,
@@ -30,7 +30,7 @@ const PromptRightPanel = ({
   conditionCount,
   conditions,
   handleSaveMessage,
-  handleMessageChange,
+  handleNodeContentChange,
   handleFormatText,
   handleCondition,
   addCondition,
@@ -39,17 +39,16 @@ const PromptRightPanel = ({
   handleConditionChange,
   variableData,
   handleExtendWindow,
-  promptNodeTitle
+  promptNodeTitle,
+  handlePromptContentChange,
+  newPrompt,
+  promptNodeTitles
 }) => {
-
-  const [firstClick, setFirstClick] = useState(false);
-  const [firstDesClick, setFirstDesClick] = useState(false);
-  const handleFirstClick = () => {
-    setFirstClick(true);
-  }
-  const handleFirstDesClick = () => {
-    setFirstDesClick(true);
-  }
+  const editableRef = useRef(null);
+  const promptNode =
+  selectedNode?.type === "Prompt node" ? selectedNode : null;
+  const [editorData, setEditorData] = React.useState('');
+  const keywords = ["keyword1", "keyword2", "keyword3"];
   return (
     <div
       ref={promptDivRef}
@@ -62,7 +61,6 @@ const PromptRightPanel = ({
         overflowX: "hidden",
         maxHeight: "100%",
         overflowY: "auto",
-        display: "flex",
         flexDirection: "column",
       }}
     >
@@ -80,7 +78,7 @@ const PromptRightPanel = ({
           paddingBottom: "10px",
         }}
       >
-        {promptNodeTitle}
+        {promptNodeTitles[selectedNode?.id] || promptNode.data.label}
       </h3>
 
       <div style={{ marginBottom: "10px", borderBottom: "1px solid #ddd" }}>
@@ -122,11 +120,10 @@ const PromptRightPanel = ({
         </div>
         <div style={{ position: "relative" }}>
           <div
-            id="messageInput"
+            id="nodeContentDiv"
             contentEditable
             suppressContentEditableWarning
-            onInput={(e) => {
-              handleMessageChange(e.currentTarget.innerHTML)}}
+            onInput={(e) => handleNodeContentChange(e.currentTarget.innerHTML)}
             style={{
               minHeight: "100px",
               paddingTop: "10px",
@@ -136,14 +133,13 @@ const PromptRightPanel = ({
               border: "1px solid #ddd",
               position: "relative",
             }}
-            onFocus={() => {setIsFocused(true), handleFirstDesClick()}}
-            onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: `${!firstDesClick?"Description...":""}` }}
+            dangerouslySetInnerHTML={{ __html: newMessage }}
           />
         </div>
       </div>
       <br></br>
       <strong>System prompt</strong>
+      <br></br>
       <br></br>
       <div>
         <button onClick={handlePlay} className="message-toolbaar-icon">
@@ -191,22 +187,50 @@ const PromptRightPanel = ({
       >
         <div style={{ position: "relative" }}>
           <div
+            ref={editableRef}
             contentEditable
             suppressContentEditableWarning
-            onInput={(e) => handleMessageChange(e.currentTarget.innerHTML)}
+            onInput={
+              (e) => {
+              //   const content = e.currentTarget.innerHTML;
+              //   console.log(content);
+
+              //   const foundKeywords = keywords.filter((keyword) =>
+              //     content.includes(keyword)
+              //   );
+              //   if (foundKeywords.length > 0) {
+              //     console.log("Detected keywords:", foundKeywords);
+
+              //     // Highlight detected keywords
+              //     let updatedContent = content;
+              //     foundKeywords.forEach((keyword) => {
+              //       const regex = new RegExp(`(${keyword})`, "gi"); // Create a regex to match keywords case-insensitively
+              //       updatedContent = updatedContent.replace(
+              //         regex,
+              //         `<span style="color: blue;">$1</span>`
+              //       ); // Wrap in span with blue color
+              //     });
+
+              //     e.currentTarget.innerHTML = updatedContent; // Update the innerHTML with highlighted keywords
+              //   }
+              // }
+              handlePromptContentChange(e.currentTarget.innerHTML)
+            }}
             style={{
               minHeight: "10vh",
-              height: `${firstClick?"40vh":"10vh"}`,
+              height: `${isFocused ? "40vh" : "10vh"}`,
               maxHeight: "40vh",
               padding: "10px",
               fontSize: "16px",
               backgroundColor: "#f9f9f9",
               border: "1px solid #ddd",
               outline: "none",
+              whiteSpace: "pre-wrap",
+              overflowY: "auto",
             }}
-            onFocus={() => {setIsFocused(true), handleFirstClick()}}
+            onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: `${!firstClick?"Enter your prompt...":""}` }}
+            dangerouslySetInnerHTML={{ __html: newPrompt }}
           />
         </div>
       </div>

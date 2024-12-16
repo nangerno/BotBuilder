@@ -293,7 +293,7 @@ const MessageRightPanel = ({
                 }px`,
                 right: "350px",
                 borderRadius: "10px",
-                zIndex: 10000,
+                zIndex: 800,
                 transition: "height 0.3s ease-in-out",
                 overflowX: "hidden",
                 overflowY: "auto",

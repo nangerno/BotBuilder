@@ -72,7 +72,7 @@ const PromptNodeWindow = ({
               left: "50%",
               transform: "translate(-50%, -50%)",
               overflowX: "hidden",
-              maxHeight: "80vh",
+              maxHeight: "60vh",
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
@@ -207,21 +207,15 @@ const PromptNodeWindow = ({
                         handleNodeContentChange(e.currentTarget.innerHTML)
                       }
                       style={{
-                        // minHeight: "50vh",
-                        // maxHeight: "55vh",
-                        // padding: "10px",
-                        // fontSize: "16px",
-                        // backgroundColor: "#f9f9f9",
-                        // border: "1px solid #ddd",
-                        // outline: "none",
-                        minHeight: "40vh",
-                        paddingTop: "10px",
+                        minHeight: "50vh",
+                        maxHeight: "55vh",
+                        padding: "10px",
                         fontSize: "16px",
                         backgroundColor: "#f9f9f9",
-                        outline: "none",
-                        padding: "10px",
                         border: "1px solid #ddd",
+                        outline: "none",
                       }}
+                      placeholder="Enter your prompt here"
                       onFocus={() => setIsFocused(true)}
                       onBlur={() => setIsFocused(false)}
                       dangerouslySetInnerHTML={{ __html: variant.message }}

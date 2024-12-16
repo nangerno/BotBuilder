@@ -35,16 +35,8 @@ body {
   font-size: 12px;
   filter: drop-shadow(0 0 2px #000000);
 }
-[contenteditable=true]:empty:before{
+[contenteditable="true"]:empty:before {
   content: attr(placeholder);
   pointer-events: none;
   display: block; /* For Firefox */
-}
-
-/* */
-
-div[contenteditable=true] {
-  border: 1px dashed #AAA;
-  width: 290px;
-  padding: 5px;
 }

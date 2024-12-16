@@ -43,17 +43,11 @@ const PromptRightPanel = ({
   promptNodeTitle,
   handlePromptContentChange,
   newPrompt,
-  promptNodeTitles
+  promptNodeTitles,
 }) => {
   const editableRef = useRef(null);
-  const promptNode =
-  selectedNode?.type === "Prompt node" ? selectedNode : null;
-  const [content, setContent] = useState('');
-  const handleType = (e) => {
-    const updatedContent = e.currentTarget.innerHTML;
-    // console.log(updatedContent)
-    setContent("xxx"+ updatedContent);  
-  }
+  const promptNode = selectedNode?.type === "Prompt node" ? selectedNode : null;
+
   return (
     <div
       ref={promptDivRef}
@@ -194,15 +188,14 @@ const PromptRightPanel = ({
             ref={editableRef}
             contentEditable
             suppressContentEditableWarning
-            onBlur={
-              (e) => {
-              handlePromptContentChange(e.currentTarget.innerHTML)
+            onBlur={(e) => {
+              handlePromptContentChange(e.currentTarget.innerHTML);
             }}
             style={{
               overflowY: "auto",
               minHeight: "10vh",
               height: `${isFocused ? "40vh" : "10vh"}`,
-              maxHeight: "40vh", 
+              maxHeight: "40vh",
               paddingTop: "10px",
               fontSize: "16px",
               backgroundColor: "#f9f9f9",
@@ -210,7 +203,6 @@ const PromptRightPanel = ({
               padding: "10px",
               border: "1px solid #ddd",
               whiteSpace: "pre-wrap",
-              
             }}
             placeholder="Enter your prompt here"
             onFocus={() => setIsFocused(true)}

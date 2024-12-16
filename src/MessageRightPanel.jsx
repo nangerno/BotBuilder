@@ -66,7 +66,7 @@ const MessageRightPanel = ({
   const handleAddVariant = () => {
     addVariant();
   };
-  
+
   return (
     <div
       ref={messageDivRef}
@@ -277,7 +277,7 @@ const MessageRightPanel = ({
               ref={conditionDivRef}
               style={{
                 width: "350px",
-                height: `${80 + (conditionCount - 1) * 31}px`,
+                height: `${90 + (conditionCount - 1) * 35}px`,
                 maxHeight: "40%",
                 backgroundColor: "#f9f9f9",
                 padding: "10px",
@@ -293,7 +293,7 @@ const MessageRightPanel = ({
                 }px`,
                 right: "350px",
                 borderRadius: "10px",
-                zIndex: 10001,
+                zIndex: 10000,
                 transition: "height 0.3s ease-in-out",
                 overflowX: "hidden",
                 overflowY: "auto",

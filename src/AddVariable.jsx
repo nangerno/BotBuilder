@@ -108,7 +108,7 @@ const AddVariable = ({
         left: "50%",
         transform: "translate(-50%, -50%)",
         backgroundColor: "rgba(0, 0, 0, 0.3)",
-        zIndex: "100002",
+        zIndex: "10003",
         width: "100%",
         height: "100%",
         justifyContent: "center",

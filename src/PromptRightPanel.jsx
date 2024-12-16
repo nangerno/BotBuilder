@@ -226,9 +226,10 @@ const PromptRightPanel = ({
               // border: "1px solid #ddd",
               // outline: "none",
               // whiteSpace: "pre-wrap",
-              // overflowY: "auto",
+              overflowY: "auto",
               minHeight: "10vh",
-              // height: `${isFocused ? "40vh" : "10vh"}`,
+              height: `${isFocused ? "40vh" : "10vh"}`,
+              maxHeight: "40vh", 
               paddingTop: "10px",
               fontSize: "16px",
               backgroundColor: "#f9f9f9",
@@ -236,6 +237,7 @@ const PromptRightPanel = ({
               padding: "10px",
               border: "1px solid #ddd",
               whiteSpace: "pre-wrap",
+              
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}

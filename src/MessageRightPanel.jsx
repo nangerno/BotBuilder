@@ -45,13 +45,7 @@ const MessageRightPanel = ({
   const [newVariable, setNewVariable] = useState([]);
   const [count, setCount] = useState([]);
   const [selectedOption, setSelectedOption] = useState("variables");
-  // const [selectedValues, setSelectedValues] = useState({});
-  // const handleChange = (e, id) => {
-  //   setSelectedValues((prevState) => ({
-  //     ...prevState,
-  //     [id]: e.target.value,
-  //   }));
-  // };
+
   useEffect(() => {
     setNewVariable(variableData);
     const len = Object.values(variantConditions).map((innerObj) => {
@@ -66,20 +60,13 @@ const MessageRightPanel = ({
       ).length;
       return nonEmptyCount > 0 ? nonEmptyCount : "Condition";
     });
-
     setCount(len.length > 0 ? len : ["Condition"]);
-    // console.log(JSON.stringify(variableData));
-  }, [variableData, variantConditions, conditions]);
+  }, [variableData, variantConditions, conditions, variants]);
+
   const handleAddVariant = () => {
     addVariant();
   };
-  // const handleSelectedOption = (id, value) => {
-  //   console.log("--------------", id);
-  //   setSelectedValues((prevState) => ({
-  //     ...prevState,
-  //     [id]: value,
-  //   }));
-  // };
+  
   return (
     <div
       ref={messageDivRef}
@@ -224,7 +211,7 @@ const MessageRightPanel = ({
           </div>
 
           <div style={{ position: "relative" }}>
-            {!isFocused && (
+            {/* {!isFocused && (
               <span
                 style={{
                   position: "absolute",
@@ -236,7 +223,7 @@ const MessageRightPanel = ({
               >
                 Enter agent message...
               </span>
-            )}
+            )} */}
             <div
               contentEditable
               suppressContentEditableWarning
@@ -267,7 +254,6 @@ const MessageRightPanel = ({
               marginBottom: "10px",
               border: "1px solid #ccc",
               borderRadius: "4px",
-              // backgroundColor: '#f9f9f9',
               backgroundColor: conditionCount == 0 ? "#ddd" : "#f9f9f9",
               color: "#333",
               fontSize: "14px",
@@ -283,7 +269,6 @@ const MessageRightPanel = ({
             >
               <PiCornersOut size={19} />
             </span>
-
             <div key={variant.id}>{count[variant.id]}</div>
           </button>
 
@@ -426,7 +411,7 @@ const MessageRightPanel = ({
                       borderRadius: "5px",
                     }}
                     onChange={(e) => {
-                      setSelectedOption(e.target.value)
+                      setSelectedOption(e.target.value);
                     }}
                   >
                     <option value="variables">variables</option>

@@ -12,6 +12,7 @@ import {
   FiMessageSquare,
   FiCrosshair,
 } from "react-icons/fi";
+import { FaRegStickyNote, FaRegCommentDots } from "react-icons/fa";
 import { RiColorFilterAiLine } from "react-icons/ri";
 const Toolbar = ({ nodes, addNode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -44,6 +45,8 @@ const Toolbar = ({ nodes, addNode }) => {
         padding: "10px",
         borderRadius: "15px",
         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)",
+        alignItems: "center",
+        textAlign: "center"
       }}
     >
       <div
@@ -52,14 +55,14 @@ const Toolbar = ({ nodes, addNode }) => {
         onMouseLeave={handleMouseLeave}
       >
         <FiMessageCircle
-          size={40}
+          size={30}
           style={{
             cursor: "pointer",
           }}
         />
         <div
           style={{
-            fontSize: "14px",
+            fontSize: "10px",
             fontWeight: "500",
             textAlign: "center",
           }}
@@ -177,19 +180,53 @@ const Toolbar = ({ nodes, addNode }) => {
       </div>
       <div style={{ position: "relative" }}>
         <FiSmile
-          size={40}
+          size={30}
           style={{
             cursor: "pointer",
           }}
         />
         <div
           style={{
-            fontSize: "14px",
+            fontSize: "10px",
             fontWeight: "500",
             textAlign: "center",
           }}
         >
           Listen
+        </div>
+      </div>
+      <div style={{ position: "relative" }}>
+        <FaRegStickyNote
+          size={30}
+          style={{
+            cursor: "pointer",
+          }}
+        />
+        <div
+          style={{
+            fontSize: "10px",
+            fontWeight: "500",
+            textAlign: "center",
+          }}
+        >
+          Note
+        </div>
+      </div>
+      <div style={{ position: "relative" }}>
+        <FaRegCommentDots 
+          size={30}
+          style={{
+            cursor: "pointer",
+          }}
+        />
+        <div
+          style={{
+            fontSize: "10px",
+            fontWeight: "500",
+            textAlign: "center",
+          }}
+        >
+          Comment
         </div>
       </div>
     </div>

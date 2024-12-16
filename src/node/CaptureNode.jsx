@@ -47,6 +47,22 @@ const CaptureNode = ({
       }}
       onClick={onClick}
     >
+      <Handle
+        type="target"
+        position="left"
+        style={{
+          background: "#007bff",
+          position: "absolute",
+          top: "20px",
+          left: "-5px",
+          // transform: "translateY(-50%)",
+          transition: "background-color 0.3s ease",
+          width: "5px",
+          height: "5px",
+          borderRadius: "50%",
+          zIndex: 1,
+        }}
+      />
       {isEditing ? (
         <input
           type="text"

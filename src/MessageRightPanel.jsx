@@ -45,13 +45,13 @@ const MessageRightPanel = ({
   const [newVariable, setNewVariable] = useState([]);
   const [count, setCount] = useState([]);
   const [selectedOption, setSelectedOption] = useState("variables");
-  const [selectedValues, setSelectedValues] = useState({});
-  const handleChange = (e, id) => {
-    setSelectedValues((prevState) => ({
-      ...prevState,
-      [id]: e.target.value,
-    }));
-  };
+  // const [selectedValues, setSelectedValues] = useState({});
+  // const handleChange = (e, id) => {
+  //   setSelectedValues((prevState) => ({
+  //     ...prevState,
+  //     [id]: e.target.value,
+  //   }));
+  // };
   useEffect(() => {
     setNewVariable(variableData);
     const len = Object.values(variantConditions).map((innerObj) => {
@@ -68,10 +68,18 @@ const MessageRightPanel = ({
     });
 
     setCount(len.length > 0 ? len : ["Condition"]);
+    // console.log(JSON.stringify(variableData));
   }, [variableData, variantConditions, conditions]);
   const handleAddVariant = () => {
     addVariant();
   };
+  // const handleSelectedOption = (id, value) => {
+  //   console.log("--------------", id);
+  //   setSelectedValues((prevState) => ({
+  //     ...prevState,
+  //     [id]: value,
+  //   }));
+  // };
   return (
     <div
       ref={messageDivRef}
@@ -216,18 +224,18 @@ const MessageRightPanel = ({
           </div>
 
           <div style={{ position: "relative" }}>
-          {!isFocused && (
-            <span
-              style={{
-                position: "absolute",
-                left: "5px",
-                top: "5px",
-                color: "#aaa",
-                pointerEvents: "none",
-              }}
-            >
-              Enter agent message...
-            </span>
+            {!isFocused && (
+              <span
+                style={{
+                  position: "absolute",
+                  left: "5px",
+                  top: "5px",
+                  color: "#aaa",
+                  pointerEvents: "none",
+                }}
+              >
+                Enter agent message...
+              </span>
             )}
             <div
               contentEditable
@@ -408,6 +416,7 @@ const MessageRightPanel = ({
                 >
                   <p style={{ margin: "0 5px" }}>if</p>
                   <select
+                    id={`sel-obj-${index}`}
                     style={{
                       marginRight: "15px",
                       border: "none",
@@ -416,9 +425,11 @@ const MessageRightPanel = ({
                       padding: "2px",
                       borderRadius: "5px",
                     }}
-                    onChange={(e) => setSelectedOption(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedOption(e.target.value)
+                    }}
                   >
-                    <option>variables</option>
+                    <option value="variables">variables</option>
                     {newVariable.map((data, index) => (
                       <option key={index} value={index}>
                         {data}
@@ -449,8 +460,9 @@ const MessageRightPanel = ({
                       outline: "none",
                     }}
                     disabled={
-                      selectedValues[condition.id] === "variables" &&
-                      condition.id == index + 1
+                      document.getElementById(`sel-obj-${index}`) &&
+                      document.getElementById(`sel-obj-${index}`).value ===
+                        "variables"
                     }
                   />
                   <button
@@ -493,6 +505,7 @@ const MessageRightPanel = ({
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginTop: "20px",
         }}
       >
         <button

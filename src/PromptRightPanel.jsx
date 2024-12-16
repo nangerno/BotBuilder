@@ -241,7 +241,7 @@ const PromptRightPanel = ({
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: newPrompt }}
+            dangerouslySetInnerHTML={{ __html: "" }}
           />
         </div>
       </div>

@@ -211,19 +211,6 @@ const MessageRightPanel = ({
           </div>
 
           <div style={{ position: "relative" }}>
-            {/* {!isFocused && (
-              <span
-                style={{
-                  position: "absolute",
-                  left: "5px",
-                  top: "5px",
-                  color: "#aaa",
-                  pointerEvents: "none",
-                }}
-              >
-                Enter agent message...
-              </span>
-            )} */}
             <div
               contentEditable
               suppressContentEditableWarning
@@ -238,6 +225,7 @@ const MessageRightPanel = ({
                 border: "none",
                 outline: "none",
               }}
+              placeholder="Enter agent message..."
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               dangerouslySetInnerHTML={{ __html: variant.message }}

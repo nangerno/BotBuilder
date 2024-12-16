@@ -21,7 +21,6 @@ const CaptureRightPanel = ({
   setSelectedNode,
   handlePlay,
   handleInsertLink,
-  handleDelay,
   addVariant,
   removeVariant,
   variants,
@@ -46,15 +45,15 @@ const CaptureRightPanel = ({
   setScenarios,
   exitPath,
   setExitPath,
-  captureNodeTitles
+  captureNodeTitles,
 }) => {
   const captureNode =
-  selectedNode?.type === "Capture node" ? selectedNode : null;
+    selectedNode?.type === "Capture node" ? selectedNode : null;
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [dropItem, setDropItem] = useState(variableData);
   // const [selectedItem, setSelectedItem] = useState([]);
   const [toggleState, setToggleState] = useState([false, false, false]);
-  const [ruleItem, setRuleItem] = useState(["Enter rule"]);
+  const [ruleItem, setRuleItem] = useState([""]);
   const [firstClick, setFirstClick] = useState(false);
 
   const handleRuleType = (index) => {
@@ -97,7 +96,7 @@ const CaptureRightPanel = ({
   };
 
   const addRule = () => {
-    setRuleItem((prelist) => [...prelist, "Enter rule"]);
+    setRuleItem((prelist) => [...prelist, ""]);
   };
   const removeRule = (indexToRemove) => {
     setRuleItem((prevItems) =>
@@ -105,7 +104,7 @@ const CaptureRightPanel = ({
     );
   };
   const addScenarios = () => {
-    setScenarios((prelist) => [...prelist, "Exit if..."]);
+    setScenarios((prelist) => [...prelist, ""]);
   };
   const removeScenarios = (indexToRemove) => {
     setScenarios((prevItems) =>
@@ -262,11 +261,12 @@ const CaptureRightPanel = ({
               outline: "none",
             }}
             onFocus={() => {
-              setIsFocused(true), handleRuleType(index);
+              setIsFocused(true);
             }}
             onBlur={() => {
-              setIsFocused(false), handleRuleType(index);
+              setIsFocused(false);
             }}
+            placeholder={`Enter rule ${index + 1}...`}
             dangerouslySetInnerHTML={{ __html: item }}
           />
         </div>
@@ -298,9 +298,10 @@ const CaptureRightPanel = ({
               border: "none",
               outline: "none",
             }}
+            placeholder={`Exit if... ${index + 1}`}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: item + " " + (index + 1) }}
+            dangerouslySetInnerHTML={{ __html: item }}
           />
         </div>
       ))}

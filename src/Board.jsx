@@ -70,7 +70,7 @@ const Board = () => {
   const [colorVariable, setColorVariable] = useState("");
 
   const [selectedItem, setSelectedItem] = useState([]); // Capture node selected item
-  const [scenariosItem, setScenarios] = useState(["Exit if..."]); // Capture node scenarioItem
+  const [scenariosItem, setScenarios] = useState([""]); // Capture node scenarioItem
   const [exitPath, setExitPath] = useState(false); // Capture node exit path
   const [newPrompt, setNewPrompt] = useState(""); // System node new prompt
 

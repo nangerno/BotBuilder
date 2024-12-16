@@ -48,8 +48,12 @@ const PromptRightPanel = ({
   const editableRef = useRef(null);
   const promptNode =
   selectedNode?.type === "Prompt node" ? selectedNode : null;
-  const [editorData, setEditorData] = React.useState('');
-  const keywords = ["keyword1", "keyword2", "keyword3"];
+  const [content, setContent] = useState('');
+  const handleType = (e) => {
+    const updatedContent = e.currentTarget.innerHTML;
+    // console.log(updatedContent)
+    setContent("xxx"+ updatedContent);  
+  }
   return (
     <div
       ref={promptDivRef}
@@ -190,42 +194,11 @@ const PromptRightPanel = ({
             ref={editableRef}
             contentEditable
             suppressContentEditableWarning
-            onInput={
+            onBlur={
               (e) => {
-              //   const content = e.currentTarget.innerHTML;
-              //   console.log(content);
-
-              //   const foundKeywords = keywords.filter((keyword) =>
-              //     content.includes(keyword)
-              //   );
-              //   if (foundKeywords.length > 0) {
-              //     console.log("Detected keywords:", foundKeywords);
-
-              //     // Highlight detected keywords
-              //     let updatedContent = content;
-              //     foundKeywords.forEach((keyword) => {
-              //       const regex = new RegExp(`(${keyword})`, "gi"); // Create a regex to match keywords case-insensitively
-              //       updatedContent = updatedContent.replace(
-              //         regex,
-              //         `<span style="color: blue;">$1</span>`
-              //       ); // Wrap in span with blue color
-              //     });
-
-              //     e.currentTarget.innerHTML = updatedContent; // Update the innerHTML with highlighted keywords
-              //   }
-              // }
               handlePromptContentChange(e.currentTarget.innerHTML)
             }}
             style={{
-              // minHeight: "10vh",
-              // height: `${isFocused ? "40vh" : "10vh"}`,
-              // maxHeight: "40vh",
-              // padding: "10px",
-              // fontSize: "16px",
-              // backgroundColor: "#f9f9f9",
-              // border: "1px solid #ddd",
-              // outline: "none",
-              // whiteSpace: "pre-wrap",
               overflowY: "auto",
               minHeight: "10vh",
               height: `${isFocused ? "40vh" : "10vh"}`,
@@ -239,9 +212,10 @@ const PromptRightPanel = ({
               whiteSpace: "pre-wrap",
               
             }}
+            placeholder="Enter your prompt here"
             onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            dangerouslySetInnerHTML={{ __html: "" }}
+            // onBlur={() => setIsFocused(false)}
+            dangerouslySetInnerHTML={{ __html: newPrompt }}
           />
         </div>
       </div>

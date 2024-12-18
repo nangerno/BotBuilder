@@ -55,6 +55,7 @@ const Board = () => {
   const promptWindowRef = useRef(null);
   const captureRef = useRef(null);
   const [variants, setVariants] = useState([{ id: 0, message: "" }]);
+
   const [visibleCondition, setVisibleCondition] = useState(null);
   const [variantConditions, setVariantConditions] = useState({});
   const [conditions, setConditions] = useState([{ id: 1 }]);
@@ -65,8 +66,6 @@ const Board = () => {
   const [msgNodeTitles, setMsgNodeTitles] = useState({});
   const [promptNodeTitles, setPromptNodeTitles] = useState({});
   const [captureNodeTitles, setCaptureNodeTitles] = useState({});
-  // const [promptNodeTitle, setPromptNodeTitle] = useState("");
-  // const [captureNodeTitle, setCaptureNodeTitle] = useState("");
   const [colorVariable, setColorVariable] = useState("");
 
   const [selectedItem, setSelectedItem] = useState([]); // Capture node selected item
@@ -74,37 +73,21 @@ const Board = () => {
   const [exitPath, setExitPath] = useState(false); // Capture node exit path
   const [newPrompt, setNewPrompt] = useState(""); // System node new prompt
 
-  // const updateNodeLabel = useCallback((oldLabel, newLabel) => {
-  //   setNodes((nds) =>
-  //     nds.map((node) =>
-  //       node.data.label === oldLabel
-  //         ? { ...node, data: { ...node.data, label: newLabel } }
-  //         : node
-  //     )
-  //   );
-  //   setMsgNodeTitle(newLabel);
-  //   setPromptNodeTitle(newLabel);
-  //   setCaptureNodeTitle(newLabel);
-  // }, []);
-
   const updateNodeTitle = useCallback((nodeId, newTitle) => {
-    console.log(newTitle);
     setMsgNodeTitles((prevTitles) => ({
       ...prevTitles,
-      [nodeId]: newTitle, // Update the title for the specific nodeId
+      [nodeId]: newTitle,
     }));
     setPromptNodeTitles((prevTitles) => ({
       ...prevTitles,
-      [nodeId]: newTitle, // Update the title for the specific nodeId
+      [nodeId]: newTitle,
     }));
     setCaptureNodeTitles((prevTitles) => ({
       ...prevTitles,
-      [nodeId]: newTitle, // Update the title for the specific nodeId
+      [nodeId]: newTitle,
     }));
   }, []);
-  useEffect(() => {
-    console.log(JSON.stringify(msgNodeTitles));
-  }, [msgNodeTitles]);
+
   const updateNodeLabel = useCallback(
     (nodeId, newLabel) => {
       setNodes((nds) =>

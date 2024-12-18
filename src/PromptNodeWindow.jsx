@@ -63,22 +63,22 @@ const PromptNodeWindow = ({
           <div
             ref={promptWindowRef}
             style={{
-              width: "50%",
+              width: "70%",
               backgroundColor: "#f9f9f9",
-              padding: "20px",
+              padding: "0 20px 20px 20px",
               border: "1px solid #ddd",
               position: "absolute",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
               overflowX: "hidden",
-              maxHeight: "60vh",
+              maxHeight: "80vh",
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
               zIndex: 100003,
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
-              borderRadius: "10px",
+              borderRadius: "4px",
             }}
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
@@ -143,7 +143,7 @@ const PromptNodeWindow = ({
                   }}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
-                  dangerouslySetInnerHTML={{ __html: "" }}
+                  dangerouslySetInnerHTML={{ __html: newMessage }}
                 />
               </div>
             </div>

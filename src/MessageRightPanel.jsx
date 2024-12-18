@@ -45,8 +45,20 @@ const MessageRightPanel = ({
   const [newVariable, setNewVariable] = useState([]);
   const [count, setCount] = useState([]);
   const [selectedOption, setSelectedOption] = useState("variables");
-
+  const [dropdownValues, setDropdownValues] = useState({});
   useEffect(() => {
+    setDropdownValues((prev) => {
+      const newDropdownValues = conditions.reduce((acc, condition) => {
+        const key = condition.id - 1;
+        acc[key] = prev[key] || "variables";
+        return acc;
+      }, {});
+      if (JSON.stringify(prev) !== JSON.stringify(newDropdownValues)) {
+        return newDropdownValues;
+      }
+      return prev;
+    });
+
     setNewVariable(variableData);
     const len = Object.values(variantConditions).map((innerObj) => {
       if (Object.keys(innerObj).length === 0) {
@@ -61,7 +73,7 @@ const MessageRightPanel = ({
       return nonEmptyCount > 0 ? nonEmptyCount : "Condition";
     });
     setCount(len.length > 0 ? len : ["Condition"]);
-  }, [variableData, variantConditions, conditions, variants]);
+  }, [variableData, variantConditions, conditions, variants, dropdownValues]);
 
   const handleAddVariant = () => {
     addVariant();
@@ -257,7 +269,7 @@ const MessageRightPanel = ({
             >
               <PiCornersOut size={19} />
             </span>
-            <div key={variant.id}>{count[variant.id]}</div>
+            <div key={variant.id}>{count[variant.id]?count[variant.id]:"Condition"}</div>
           </button>
 
           {visibleCondition !== null && (
@@ -272,13 +284,13 @@ const MessageRightPanel = ({
                 border: "1px solid #ddd",
                 display: visibleCondition !== null ? "block" : "none",
                 position: "absolute",
-                top: `${
-                  350 +
-                  variants.findIndex(
-                    (v) => v.id === visibleCondition.variantId
-                  ) *
-                    100
-                }px`,
+                top: (() => {
+                  const variantIndex = variants.findIndex((v) => v.id === visibleCondition.variantId);
+                  const calculatedTop = 350 + variantIndex * 100;
+                  const windowHeight = window.innerHeight;
+                  const maxTop = windowHeight - 100;
+                  return Math.min(calculatedTop, maxTop) + "px";
+                })(),
                 right: "350px",
                 borderRadius: "10px",
                 zIndex: 800,
@@ -400,6 +412,7 @@ const MessageRightPanel = ({
                     }}
                     onChange={(e) => {
                       setSelectedOption(e.target.value);
+                      setDropdownValues((prev) => ({ ...prev, [index]: e.target.value}));
                     }}
                   >
                     <option value="variables">variables</option>
@@ -416,8 +429,7 @@ const MessageRightPanel = ({
                         visibleCondition.variantId,
                         condition.id,
                         e.target.value
-                      ),
-                        handleChange(e, index);
+                      )
                     }}
                     value={
                       variantConditions[visibleCondition.variantId]?.[
@@ -432,11 +444,7 @@ const MessageRightPanel = ({
                       border: "none",
                       outline: "none",
                     }}
-                    disabled={
-                      document.getElementById(`sel-obj-${index}`) &&
-                      document.getElementById(`sel-obj-${index}`).value ===
-                        "variables"
-                    }
+                    disabled={dropdownValues[index] === "variables"}
                   />
                   <button
                     style={{
@@ -449,9 +457,8 @@ const MessageRightPanel = ({
                       outline: "none",
                       backgroundColor: "#f9f9f9",
                       fontSize: "30px",
-                      paddingRight: "10px",
-                      paddingLeft: "10px",
-                      marginRight: "30px",
+                      position: "absolute",
+                      right: "15px"
                     }}
                     onClick={() =>
                       conditions.length > 1 &&
